@@ -84,6 +84,11 @@ function jodyn_enqueue_assets() {
 	jodyn_enqueue_script( 'jodyn-particles', 'particles.js' );
 	wp_enqueue_script( 'jodyn-motion' );
 
+	if ( is_page( 'about-us' ) ) {
+		wp_enqueue_style( 'jodyn-about', "$uri/assets/css/about.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/about.css' ) );
+		jodyn_enqueue_script( 'jodyn-about-hero', 'about-hero.js', array( 'jodyn-motion' ) );
+	}
+
 	if ( is_front_page() ) {
 		wp_enqueue_style( 'jodyn-front', "$uri/assets/css/front-page.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/front-page.css' ) );
 		wp_enqueue_style( 'jodyn-home-who', "$uri/assets/css/home-who.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-who.css' ) );

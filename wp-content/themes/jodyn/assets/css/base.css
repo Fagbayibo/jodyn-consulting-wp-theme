@@ -87,8 +87,9 @@ html.lenis, html.lenis body { height: auto; }
 
 /* Pages without a full-screen hero clear the floating pill header */
 .has-solid-header .jd-main { padding-top: calc(72px + 16px + var(--space-7)); }
+/* Templates whose first section clears the header itself */
+.has-solid-header .jd-main--flush { padding-top: 0; }
 
-/* TEMPORARY footer until the footer component is built */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }

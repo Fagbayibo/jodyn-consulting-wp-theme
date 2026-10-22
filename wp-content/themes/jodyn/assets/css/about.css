@@ -1,0 +1,37 @@
+/* =========================================================================
+   About us
+   ========================================================================= */
+
+/* ---- 1. Hero: white, centred heading, photo strip ---- */
+.jd-about-hero { position: relative; overflow: clip; background: var(--surface); color: var(--ink); padding-block: calc(72px + 16px + clamp(48px, 5vw, 80px)) clamp(64px, 7vw, 104px); }
+.jd-about-hero > .jd-container, .jd-about-hero__strip { position: relative; z-index: 1; }
+.jd-about-hero__copy { display: grid; justify-items: center; gap: var(--space-5); max-width: 880px; margin-inline: auto; text-align: center; }
+.jd-about-hero__copy .jd-eyebrow { justify-content: center; }
+.jd-about-hero__title { margin: 0; font-size: var(--fs-h1); font-weight: 500; line-height: 1.06; letter-spacing: -.025em; }
+.jd-about-hero__title em { padding: 0 .06em; font-style: normal; color: var(--forest); background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); }
+.jd-about-hero__text { margin: 0 0 var(--space-2); max-width: 54ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-muted); }
+
+.jd-about-hero__strip { display: grid; grid-template-columns: 1.1fr 1.5fr .7fr 1.5fr 1.1fr; gap: var(--space-4); align-items: end; margin-top: clamp(48px, 6vw, 88px); padding-inline: var(--space-4); }
+.jd-about-hero__ph, .jd-about-hero__tile { margin: 0; overflow: hidden; border-radius: var(--radius-lg); background: var(--forest-tint); }
+.jd-about-hero__ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.jd-about-hero__ph--1, .jd-about-hero__ph--5 { height: clamp(200px, 22vw, 320px); }
+.jd-about-hero__ph--2, .jd-about-hero__ph--4 { height: clamp(260px, 30vw, 440px); }
+.jd-about-hero__ph--1 img { object-position: 50% 25%; }
+.jd-about-hero__ph--5 img { object-position: 45% 30%; }
+.jd-about-hero__tile { position: relative; height: clamp(160px, 16vw, 230px); background: var(--lime); }
+/* Three-step mark, echoing the stepped blocks in the logo */
+.jd-about-hero__mark { position: absolute; left: 50%; top: 50%; display: flex; gap: 6px; transform: translate(-50%, -50%); }
+.jd-about-hero__mark i { width: 16px; height: 16px; border-radius: 4px; background: var(--forest); }
+.jd-about-hero__mark i:nth-child(2) { opacity: .55; }
+.jd-about-hero__mark i:nth-child(3) { opacity: .25; }
+
+@media (max-width: 1023px) {
+  .jd-about-hero__strip { grid-template-columns: 1fr 1.4fr 1fr; }
+  .jd-about-hero__ph--1, .jd-about-hero__tile { display: none; }
+  .jd-about-hero__ph--5 { height: clamp(200px, 30vw, 300px); }
+}
+@media (max-width: 639px) {
+  .jd-about-hero__strip { grid-template-columns: 1fr 1fr; }
+  .jd-about-hero__ph--5 { display: none; }
+  .jd-about-hero__ph--2, .jd-about-hero__ph--4 { height: 240px; }
+}

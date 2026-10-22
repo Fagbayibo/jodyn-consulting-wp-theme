@@ -127,7 +127,7 @@ function jodyn_footer_nav_fallback( $args ) {
 		__( 'Advisory', 'jodyn' )            => home_url( '/services/advisory/' ),
 		__( 'Systems Audit', 'jodyn' )       => home_url( '/services/systems-audit/' ),
 		__( 'Tax Consultancy', 'jodyn' )     => home_url( '/services/tax-consultancy/' ),
-		__( 'Training Programmes', 'jodyn' ) => home_url( '/services/training/' ),
+		__( 'Training Programmes', 'jodyn' ) => home_url( '/training/programmes/' ),
 		__( 'Training Calendar', 'jodyn' )   => home_url( '/training/calendar/' ),
 		__( 'Insights', 'jodyn' )            => $blog ? get_permalink( $blog ) : home_url( '/insights/' ),
 		__( 'Contact', 'jodyn' )             => home_url( '/contact-us/' ),

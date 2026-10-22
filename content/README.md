@@ -25,5 +25,6 @@ Use only the fields a section needs. Leave a section out entirely if the page do
 ## Pages
 
 - [home.md](pages/home.md) — rebalanced to ~60% advisory, audit and tax / 40% training; the client's original is in [source/](source/)
+- [about.md](pages/about.md) — About us, trimmed to 7 sections and rebalanced to the four service lines
 
 Other pages are added here as the client sends their copy.

@@ -4,7 +4,8 @@
  *
  * Opens with the closing call to action as a lime card that lifts over the edge of the
  * last section, then the forest footer: brand, quick links, contact, social, legal.
- * Copy: content/pages/home.md, sections 12 and 13 (approved).
+ * Copy: content/pages/home.md, sections 12 and 13 (approved). Pages can swap the card's heading
+ * and text through the 'jodyn_footer_cta' filter (see page-about-us.php).
  * Contact details and social links come from Customizer → Contact & social; empty ones are hidden.
  * Quick links come from the "Footer navigation" menu, with the approved list as the fallback.
  *
@@ -16,6 +17,17 @@ $jodyn_social  = jodyn_social_links();
 $jodyn_privacy = get_privacy_policy_url();
 // The call to action points at the contact page, so it isn't repeated there.
 $jodyn_has_cta = ! is_page( 'contact-us' );
+/**
+ * Filter the footer card's heading (may contain <em> for the boxed word) and text,
+ * so a page can end with its own closing call to action.
+ */
+$jodyn_cta = apply_filters(
+	'jodyn_footer_cta',
+	array(
+		'title' => 'How Can We Help You <em>Grow?</em>',
+		'text'  => 'Whether you need strategic advice, an independent review of your systems, support with your taxes or a training programme for your team, our advisors are ready to listen. Tell us about your goals, and we will recommend the right next step.',
+	)
+);
 ?>
 <footer class="jd-footer<?php echo $jodyn_has_cta ? ' has-cta' : ''; ?>" data-jd-particles="forest" data-jd-keep-out=".jd-footer__cta, .jd-footer__cols > *, .jd-footer__bottom">
 	<div class="jd-particles" aria-hidden="true"><canvas></canvas></div>
@@ -24,8 +36,8 @@ $jodyn_has_cta = ! is_page( 'contact-us' );
 		<?php if ( $jodyn_has_cta ) : ?>
 			<section class="jd-footer__cta" aria-labelledby="jd-footer-cta-title" data-jd-reveal>
 				<div class="jd-footer__cta-copy">
-					<h2 class="jd-footer__cta-title" id="jd-footer-cta-title" data-jd-lines>How Can We Help You <em>Grow?</em></h2>
-					<p class="jd-footer__cta-text">Whether you need strategic advice, an independent review of your systems, support with your taxes or a training programme for your team, our advisors are ready to listen. Tell us about your goals, and we will recommend the right next step.</p>
+					<h2 class="jd-footer__cta-title" id="jd-footer-cta-title" data-jd-lines><?php echo wp_kses( $jodyn_cta['title'], array( 'em' => array() ) ); ?></h2>
+					<p class="jd-footer__cta-text"><?php echo esc_html( $jodyn_cta['text'] ); ?></p>
 				</div>
 				<div class="jd-footer__cta-act">
 					<div class="jd-footer__btns">
