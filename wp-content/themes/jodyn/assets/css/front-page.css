@@ -1,0 +1,241 @@
+/* ==========================================================================
+   Front page — hero + TEMPORARY review filler
+   ========================================================================== */
+
+/* ---------- Hero ---------- */
+.jd-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  min-height: max(680px, 100svh);
+  padding-block: calc(var(--header-height) + var(--space-8)) var(--space-9);
+  background: var(--forest-deep);
+  color: var(--on-forest);
+}
+.jd-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.jd-hero__poster,
+.jd-hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* The film fades in over the poster once it is actually playing */
+.jd-hero__video {
+  opacity: 0;
+  transition: opacity 1200ms var(--ease-out);
+}
+.jd-hero.is-playing .jd-hero__video {
+  opacity: 1;
+}
+/* Without a film (or on Data Saver): a slow push-in keeps the still alive */
+@keyframes jd-push-in {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.jd-hero:not(.is-playing) .jd-hero__poster {
+  animation: jd-push-in 18s var(--ease-out) both;
+}
+.jd-hero.is-paused .jd-hero__poster {
+  animation-play-state: paused;
+}
+/* Scrim: darker at the top (header legibility) and bottom (headline) */
+.jd-hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10, 20, 16, 0.6) 0%,
+      rgba(10, 20, 16, 0.1) 26%,
+      rgba(10, 20, 16, 0.3) 50%,
+      rgba(10, 20, 16, 0.88) 100%
+    ),
+    var(--scrim);
+  opacity: 0.85;
+}
+
+/* Layout (chosen option C): the headline sits on three set lines on the left,
+     Advisory that turns / strategy into measurable / growth
+   with the lead + button in their own right-hand column, aligned to the last line.
+   Aligned to the logo edge like the header. */
+.jd-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  width: 100%;
+  min-width: 0;
+  padding-inline: var(--gutter);
+}
+.jd-hero__title {
+  margin: var(--space-5) 0 0;
+  max-width: none;
+  text-wrap: pretty;
+  font-size: clamp(36px, 10vw, 56px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.jd-hero__aside {
+  justify-self: end;
+  display: grid;
+  justify-items: end;
+  gap: var(--space-6);
+  max-width: 34rem;
+  margin-top: clamp(40px, 5vw, 80px);
+  text-align: right;
+}
+
+/*
+ * Set lines from 768px up; the side column joins at 1200px, where there is room for both. The middle line ("strategy into measurable", the longest)
+ * measures 10.87em in Google Sans Flex (plus the highlight's padding); dividing the space available by 11.4 keeps it
+ * on one line at every width with a small margin. Phones wrap naturally instead.
+ */
+@media (min-width: 768px) {
+  .jd-hero__line {
+    display: block;
+    white-space: nowrap;
+  }
+  .jd-hero__title {
+    font-size: min(120px, calc((100vw - 2 * var(--gutter) - 20px) / 11.4));
+  }
+}
+@media (min-width: 1200px) {
+  .jd-hero__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    column-gap: var(--space-8);
+    align-items: end;
+  }
+  .jd-hero__inner > .jd-eyebrow {
+    grid-column: 1 / -1;
+  }
+  .jd-hero__title {
+    grid-column: 1;
+    font-size: min(
+      120px,
+      calc((100vw - 2 * var(--gutter) - 24rem - var(--space-8) - 20px) / 11.4)
+    );
+  }
+  .jd-hero__aside {
+    grid-column: 2;
+    margin-top: 0;
+    padding-bottom: 0.9em;
+  }
+}
+.jd-hero__lead {
+  margin: 0;
+  font-size: clamp(17px, 0.9rem + 0.4vw, 21px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Highlighter: a band that starts below the line above, so it never covers descenders */
+.jd-hl {
+  color: var(--on-lime);
+  padding: 0 0.1em;
+  margin: 0 -0.04em;
+  border-radius: 0.14em;
+  background: linear-gradient(
+    transparent 20%,
+    var(--lime) 20%,
+    var(--lime) 96%,
+    transparent 96%
+  );
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Hero entrance */
+@keyframes jd-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+.jd-hero__inner > .jd-eyebrow,
+.jd-hero__title,
+.jd-hero__aside > * {
+  animation: jd-rise 1100ms var(--ease-out) both;
+}
+.jd-hero__inner > .jd-eyebrow {
+  animation-delay: 300ms;
+}
+.jd-hero__title {
+  animation-delay: 420ms;
+}
+.jd-hero__aside > :nth-child(1) {
+  animation-delay: 680ms;
+}
+.jd-hero__aside > :nth-child(2) {
+  animation-delay: 800ms;
+}
+
+.jd-hero__pause {
+  position: absolute;
+  left: var(--gutter);
+  bottom: var(--space-6);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-pill);
+  background: rgba(10, 20, 16, 0.25);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+.jd-hero__pause:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #fff;
+}
+.jd-hero__pause:focus-visible {
+  outline: 2px solid var(--focus-ring-inverse);
+  outline-offset: 3px;
+}
+.jd-hero__play-icon {
+  display: none;
+}
+.jd-hero.is-paused .jd-hero__pause-icon {
+  display: none;
+}
+.jd-hero.is-paused .jd-hero__play-icon {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .jd-hero {
+    padding-block-end: var(--space-8);
+  }
+  /* On phones a right-aligned paragraph reads poorly: lead and button go left */
+  .jd-hero__aside {
+    justify-self: start;
+    justify-items: start;
+    text-align: left;
+    margin-top: var(--space-6);
+  }
+  .jd-hero__pause {
+    top: calc(var(--header-height) + 8px);
+    bottom: auto;
+    left: auto;
+    right: var(--gutter);
+    width: 40px;
+    height: 40px;
+  }
+}

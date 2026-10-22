@@ -1,0 +1,45 @@
+/* =========================================================================
+   Home · 8. Who we serve
+   Forest section: five audience photo cards and the industries as pills.
+   ========================================================================= */
+.jd-serve { position: relative; overflow: clip; background: var(--forest); color: var(--on-forest); padding-block: clamp(64px, 7vw, 104px); }
+.jd-serve > .jd-container { position: relative; z-index: 1; }
+
+/* ---- Head ---- */
+.jd-serve__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: end; }
+.jd-serve__title { margin: var(--space-4) 0 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-serve__title em { font-style: normal; color: var(--lime); }
+.jd-serve__text { margin: 0; max-width: 52ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--on-forest-muted); }
+
+/* ---- Audience cards ---- */
+.jd-serve__cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-4); margin: var(--space-8) 0 0; padding: 0; list-style: none; }
+.jd-serve__card { display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-radius: var(--radius-lg); background: var(--forest-deep); transition: transform var(--dur-slow) var(--ease-out); }
+.jd-serve__card:hover { transform: translateY(-6px); }
+.jd-serve__media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--forest); }
+.jd-serve__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out); }
+.jd-serve__card:hover .jd-serve__media img { transform: scale(1.06); }
+.jd-serve__body { display: grid; align-content: start; justify-items: start; gap: var(--space-3); padding: var(--space-5) var(--space-5) var(--space-6); }
+/* Icon tab overlapping the photo's bottom edge */
+.jd-serve__icon { position: relative; z-index: 1; display: grid; place-items: center; width: 48px; height: 48px; margin-top: calc(-1 * (var(--space-5) + 24px)); border-radius: 14px; background: var(--lime); color: var(--on-lime); }
+.jd-serve__icon svg { width: 22px; height: 22px; }
+.jd-serve__body h3 { margin: 0; font-size: var(--fs-h4); font-weight: 500; line-height: 1.3; }
+.jd-serve__body p { margin: 0; font-size: var(--fs-small); line-height: 1.6; color: var(--on-forest-muted); }
+
+/* ---- Industries ---- */
+.jd-serve__industries { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); align-items: center; margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid rgba(255, 255, 255, .14); }
+.jd-serve__sub { margin: 0; font-size: var(--fs-caption); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); white-space: nowrap; }
+.jd-serve__chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.jd-serve__chips li { padding: 10px 18px; border: 1px solid rgba(255, 255, 255, .26); border-radius: var(--radius-pill); font-size: var(--fs-small); font-weight: 500; transition: background-color var(--dur-base), color var(--dur-base), border-color var(--dur-base); }
+.jd-serve__chips li:hover { background: var(--lime); border-color: var(--lime); color: var(--on-lime); }
+
+@media (max-width: 1279px) {
+  .jd-serve__cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1023px) {
+  .jd-serve__head { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+}
+@media (max-width: 767px) {
+  .jd-serve__cards { grid-template-columns: minmax(0, 1fr); }
+  .jd-serve__media { aspect-ratio: 16 / 10; }
+  .jd-serve__industries { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+}

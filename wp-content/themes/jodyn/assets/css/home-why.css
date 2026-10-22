@@ -1,0 +1,45 @@
+/* =========================================================================
+   Home · 7. Why JoDyn
+   White section: the logo in a forest circle with three reasons each side,
+   joined by connector lines (drawn by why-jodyn.js on wide screens).
+   ========================================================================= */
+.jd-why { position: relative; overflow: clip; background: var(--surface); color: var(--ink); padding-block: clamp(64px, 7vw, 104px); }
+.jd-why > .jd-container { position: relative; z-index: 1; }
+
+/* ---- Head (centred) ---- */
+.jd-why__head { display: grid; justify-items: center; gap: var(--space-4); max-width: 720px; margin: 0 auto; text-align: center; }
+.jd-why__title { margin: 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-why__title em { font-style: normal; color: var(--forest); }
+.jd-why__text { margin: 0; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-muted); }
+
+/* ---- Hub ---- */
+.jd-why__hub { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 300px) minmax(0, 1fr); gap: var(--space-8); align-items: center; margin-top: var(--space-8); }
+.jd-why__lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.jd-why__lines path { fill: none; stroke: var(--forest); stroke-width: 1.5; opacity: .35; }
+.jd-why__lines circle { fill: var(--lime); stroke: var(--forest); stroke-width: 1.5; }
+
+.jd-why__side { position: relative; display: grid; gap: var(--space-7); margin: 0; padding: 0; list-style: none; }
+.jd-why__item { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: var(--space-4); align-items: start; }
+.jd-why__side--start .jd-why__item { grid-template-columns: minmax(0, 1fr) 52px; text-align: right; }
+.jd-why__side--start .jd-why__icon { order: 2; }
+.jd-why__icon { position: relative; z-index: 1; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--forest); color: var(--lime); transition: background-color var(--dur-base), color var(--dur-base); }
+.jd-why__item:hover .jd-why__icon { background: var(--lime); color: var(--forest); }
+.jd-why__icon svg { width: 24px; height: 24px; }
+.jd-why__item h3 { margin: 0 0 6px; font-size: var(--fs-h4); font-weight: 500; line-height: 1.3; }
+.jd-why__item p { margin: 0; font-size: var(--fs-small); line-height: 1.6; color: var(--ink-muted); }
+
+.jd-why__core { position: relative; z-index: 1; display: grid; place-items: center; aspect-ratio: 1; border-radius: 50%; background: var(--forest); box-shadow: 0 30px 60px -30px rgba(35, 56, 49, .6); }
+.jd-why__core img { width: 52%; height: auto; }
+.jd-why__ring { position: absolute; inset: -14px; border: 1.5px solid var(--forest); border-radius: 50%; opacity: .25; }
+.jd-why__ring + .jd-why__ring { inset: -32px; opacity: .12; }
+
+.jd-why__cta { display: flex; justify-content: center; margin-top: var(--space-8); }
+
+/* ---- Below desktop: circle on top, reasons in one list, no lines ---- */
+@media (max-width: 1023px) {
+  .jd-why__hub { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .jd-why__core { order: -1; width: 200px; justify-self: center; margin-bottom: var(--space-5); }
+  .jd-why__side--start .jd-why__item { grid-template-columns: 52px minmax(0, 1fr); text-align: left; }
+  .jd-why__side--start .jd-why__icon { order: 0; }
+  .jd-why__lines { display: none; }
+}

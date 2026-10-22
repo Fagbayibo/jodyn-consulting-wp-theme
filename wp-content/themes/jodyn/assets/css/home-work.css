@@ -1,0 +1,64 @@
+/* =========================================================================
+   Home · 6. How we work
+   Soft green section: four tall photo panels, the open one wide with its
+   text, the others slim strips. Stacked accordion on phones. --fs-* only.
+   ========================================================================= */
+.jd-work { position: relative; overflow: clip; background: var(--forest-tint); color: var(--ink); padding-block: clamp(64px, 7vw, 104px); }
+.jd-work > .jd-container { position: relative; z-index: 1; }
+
+/* ---- Head ---- */
+.jd-work__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: end; }
+.jd-work__title { margin: var(--space-4) 0 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-work__title em { font-style: normal; color: var(--forest); }
+.jd-work__head-right { display: grid; justify-items: start; gap: var(--space-5); }
+.jd-work__text { margin: 0; max-width: 52ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-muted); }
+
+/* ---- Panels ---- */
+.jd-work__panels { display: flex; gap: var(--space-3); height: clamp(480px, 42vw, 600px); margin: var(--space-8) 0 0; padding: 0; list-style: none; }
+.jd-work__panel { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: var(--radius-lg); background: var(--forest); color: var(--on-forest); transition: flex-grow 900ms var(--ease-out); }
+.jd-work__panel.is-active { flex-grow: 4.2; }
+.jd-work__panel img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; filter: grayscale(.35) brightness(.8); transform: scale(1.08); transition: transform 1.4s var(--ease-out), filter 900ms var(--ease-out); }
+.jd-work__panel.is-active img { filter: none; transform: none; }
+.jd-work__panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23, 38, 31, .25) 0%, rgba(23, 38, 31, .1) 35%, rgba(23, 38, 31, .9) 100%); pointer-events: none; }
+.jd-work__panel:not(.is-active)::after { background: rgba(23, 38, 31, .62); }
+
+.jd-work__hit { position: absolute; inset: 0; z-index: 2; display: flex; align-items: flex-end; justify-content: center; padding: 0 0 var(--space-6); border: 0; background: none; color: var(--on-forest); font: inherit; cursor: pointer; }
+.jd-work__panel.is-active .jd-work__hit { cursor: default; }
+.jd-work__hit:focus-visible { outline: 3px solid var(--lime); outline-offset: -3px; border-radius: var(--radius-lg); }
+.jd-work__vtitle { writing-mode: vertical-rl; transform: rotate(180deg); font-size: var(--fs-h4); font-weight: 500; letter-spacing: -.01em; white-space: nowrap; transition: opacity 400ms; }
+.jd-work__panel.is-active .jd-work__vtitle { opacity: 0; }
+
+.jd-work__num {
+  position: absolute; z-index: 3; left: 50%; top: var(--space-5); transform: translateX(-50%);
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px;
+  background: rgba(255, 255, 255, .16); color: var(--on-forest); font-weight: 600; backdrop-filter: blur(8px); pointer-events: none;
+  transition: left 900ms var(--ease-out), transform 900ms var(--ease-out), background-color 400ms, color 400ms;
+}
+.jd-work__panel.is-active .jd-work__num { left: var(--space-6); transform: none; background: var(--lime); color: var(--on-lime); }
+
+.jd-work__body {
+  position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; display: grid; gap: var(--space-3); max-width: 620px; padding: clamp(24px, 3vw, 40px);
+  opacity: 0; transform: translateY(20px); visibility: hidden; pointer-events: none;
+  transition: opacity 500ms, transform 700ms var(--ease-out), visibility 0s 500ms;
+}
+.jd-work__panel.is-active .jd-work__body { opacity: 1; transform: none; visibility: visible; transition-delay: 350ms, 350ms, 0s; }
+.jd-work__body h3 { margin: 0; font-size: var(--fs-h3); font-weight: 500; line-height: 1.2; }
+.jd-work__body p { margin: 0; font-size: var(--fs-body); line-height: 1.6; color: rgba(255, 255, 255, .88); }
+.jd-work__progress { display: block; height: 3px; margin-top: var(--space-3); overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, .2); }
+.jd-work__progress i { display: block; height: 100%; background: var(--lime); transform: scaleX(0); transform-origin: left; }
+.jd-work__panels.is-idle .jd-work__progress { display: none; }
+
+@media (max-width: 1023px) {
+  .jd-work__head { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+}
+/* Phones: a stacked accordion */
+@media (max-width: 767px) {
+  .jd-work__panels { flex-direction: column; height: auto; }
+  .jd-work__panel { flex: none; height: 84px; transition: height 800ms var(--ease-out); }
+  .jd-work__panel.is-active { height: 460px; }
+  /* The text covers more of the photo here, so darken more of it */
+  .jd-work__panel.is-active::after { background: linear-gradient(180deg, rgba(23, 38, 31, .2) 0%, rgba(23, 38, 31, .6) 38%, rgba(23, 38, 31, .95) 70%); }
+  .jd-work__hit { align-items: center; justify-content: flex-start; padding: 0 0 0 88px; }
+  .jd-work__vtitle { writing-mode: horizontal-tb; transform: none; }
+  .jd-work__num, .jd-work__panel.is-active .jd-work__num { left: var(--space-5); top: 18px; transform: none; }
+}

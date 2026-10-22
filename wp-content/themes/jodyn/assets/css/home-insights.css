@@ -1,0 +1,46 @@
+/* =========================================================================
+   Home · 10. Insights
+   White section: forest panel with the heading and button, beside the
+   three latest posts as horizontal cards.
+   ========================================================================= */
+.jd-insights { position: relative; overflow: clip; background: var(--surface); color: var(--ink); padding-block: clamp(64px, 7vw, 104px); }
+.jd-insights > .jd-container { position: relative; z-index: 1; }
+.jd-insights__wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-5); align-items: stretch; }
+
+/* ---- Forest panel ---- */
+.jd-insights__panel { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-5); padding: clamp(32px, 4vw, 56px); overflow: hidden; border-radius: var(--radius-lg); background: var(--forest); color: var(--on-forest); }
+.jd-insights__title { margin: 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-insights__title em { font-style: normal; color: var(--lime); }
+.jd-insights__text { margin: 0 0 var(--space-3); font-size: var(--fs-lead); line-height: 1.5; color: var(--on-forest-muted); }
+/* Three-step mark, echoing the stepped blocks in the logo */
+.jd-insights__mark { position: absolute; right: clamp(32px, 4vw, 56px); bottom: clamp(32px, 4vw, 56px); display: flex; gap: 6px; }
+.jd-insights__mark i { width: 16px; height: 16px; border-radius: 4px; background: var(--lime); }
+.jd-insights__mark i:nth-child(2) { opacity: .55; }
+.jd-insights__mark i:nth-child(3) { opacity: .25; }
+
+/* ---- Post cards ---- */
+.jd-insights__list { display: grid; gap: var(--space-4); margin: 0; padding: 0; list-style: none; }
+.jd-insights__card a {
+  display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: var(--space-5); align-items: center; height: 100%;
+  padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); color: inherit; text-decoration: none;
+  transition: box-shadow var(--dur-slow) var(--ease-out), border-color var(--dur-base), transform var(--dur-slow) var(--ease-out);
+}
+.jd-insights__card a:hover { transform: translateX(-6px); border-color: transparent; box-shadow: var(--shadow-lift); }
+.jd-insights__card a:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+.jd-insights__thumb { aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius-md); background: var(--forest-tint); }
+.jd-insights__thumb img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 1.2s var(--ease-out); }
+.jd-insights__card a:hover .jd-insights__thumb img { transform: scale(1.08); }
+.jd-insights__body { display: grid; gap: var(--space-2); padding-right: var(--space-4); }
+.jd-insights__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); font-size: var(--fs-small); color: var(--ink-subtle); }
+.jd-insights__cat { padding: 4px 12px; border-radius: var(--radius-pill); background: var(--forest-tint); color: var(--forest); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.jd-insights__body h3 { margin: 0; font-size: var(--fs-h4); font-weight: 500; line-height: 1.3; }
+.jd-insights__read { display: inline-flex; align-items: center; gap: 8px; margin-top: var(--space-1); font-size: var(--fs-small); font-weight: 600; color: var(--forest); }
+
+@media (max-width: 1023px) {
+  .jd-insights__wrap { grid-template-columns: minmax(0, 1fr); }
+  .jd-insights__mark { display: none; }
+}
+@media (max-width: 559px) {
+  .jd-insights__card a { grid-template-columns: minmax(0, 1fr); }
+  .jd-insights__body { padding: 0 var(--space-2) var(--space-3); }
+}

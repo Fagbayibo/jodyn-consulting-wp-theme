@@ -1,0 +1,9 @@
+# Design previews and screenshots (large; kept locally)
+/design/
+# Raw client brand files (the theme ships its own logo exports)
+/jodyn assets/
+# Tooling
+.playwright-mcp/
+node_modules/
+.DS_Store
+Thumbs.db

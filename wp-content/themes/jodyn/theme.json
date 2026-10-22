@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "color": {
+      "custom": false,
+      "customGradient": false,
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "palette": [
+        { "slug": "surface", "name": "White", "color": "#ffffff" },
+        { "slug": "surface-soft", "name": "Soft white", "color": "#f3f6f2" },
+        { "slug": "forest-tint", "name": "Forest tint", "color": "#e3ebe6" },
+        { "slug": "forest", "name": "Forest", "color": "#233831" },
+        { "slug": "forest-deep", "name": "Deep forest", "color": "#17261f" },
+        { "slug": "lime", "name": "Lime", "color": "#e5fd4a" },
+        { "slug": "black", "name": "Black", "color": "#000000" },
+        { "slug": "ink-muted", "name": "Muted text", "color": "#4a5a54" }
+      ]
+    },
+    "layout": { "contentSize": "720px", "wideSize": "1360px" },
+    "spacing": {
+      "units": [ "px", "rem", "%", "vw" ],
+      "spacingSizes": [
+        { "slug": "20", "name": "XS", "size": "8px" },
+        { "slug": "30", "name": "S", "size": "16px" },
+        { "slug": "40", "name": "M", "size": "24px" },
+        { "slug": "50", "name": "L", "size": "48px" },
+        { "slug": "60", "name": "XL", "size": "clamp(64px, 8vw, 128px)" }
+      ]
+    },
+    "typography": {
+      "customFontSize": false,
+      "dropCap": false,
+      "fontFamilies": [
+        {
+          "slug": "sans",
+          "name": "Google Sans Flex",
+          "fontFamily": "\"Google Sans Flex\", \"Google Sans\", ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", sans-serif"
+        }
+      ],
+      "fontSizes": [
+        { "slug": "caption", "name": "Caption", "size": "13px" },
+        { "slug": "small", "name": "Small", "size": "15px" },
+        { "slug": "body", "name": "Body", "size": "17px" },
+        { "slug": "lead", "name": "Lead", "size": "clamp(19px, 1rem + 0.4vw, 22px)" },
+        { "slug": "h4", "name": "Heading 4", "size": "21px" },
+        { "slug": "h3", "name": "Heading 3", "size": "clamp(24px, 1.2rem + 0.6vw, 28px)" },
+        { "slug": "h2", "name": "Heading 2", "size": "clamp(30px, 1.4rem + 1.4vw, 40px)" },
+        { "slug": "h1", "name": "Heading 1", "size": "clamp(36px, 1.6rem + 2.4vw, 56px)" }
+      ]
+    }
+  },
+  "styles": {
+    "color": { "background": "var(--wp--preset--color--surface)", "text": "var(--wp--preset--color--black)" },
+    "typography": { "fontFamily": "var(--wp--preset--font-family--sans)", "fontSize": "var(--wp--preset--font-size--body)", "lineHeight": "1.65" },
+    "elements": {
+      "heading": { "typography": { "fontWeight": "500", "lineHeight": "1.08", "letterSpacing": "-0.02em" } }
+    }
+  }
+}

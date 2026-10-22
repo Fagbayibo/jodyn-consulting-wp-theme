@@ -1,0 +1,95 @@
+/* Base element styles and shared components (Button, Eyebrow) from the design system. */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--surface); color: var(--ink);
+  font-family: var(--font-sans); font-size: 17px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+img, svg, video { display: block; max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3, h4 { text-wrap: balance; }
+p { text-wrap: pretty; }
+body.is-locked { overflow: hidden; }
+
+.screen-reader-text {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.skip-link:focus {
+  position: fixed !important; top: 12px; left: 12px; z-index: 200; width: auto; height: auto; clip: auto; margin: 0;
+  padding: 12px 20px; border-radius: var(--radius-pill); background: var(--lime); color: var(--on-lime);
+  font-weight: 600; text-decoration: none; outline: 2px solid var(--forest); outline-offset: 2px;
+}
+.jd-container { width: 100%; max-width: calc(var(--container) + var(--gutter) * 2); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* ---------- Eyebrow ---------- */
+.jd-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0; color: var(--ink);
+  font-size: 13px; font-weight: 600; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.jd-eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: var(--radius-pill); background: var(--forest); flex: none; }
+.jd-eyebrow--inverse { color: var(--on-forest-muted); }
+.jd-eyebrow--inverse::before { background: var(--lime); }
+
+/* ---------- Arrow swap ---------- */
+.jd-swap { position: relative; display: inline-grid; width: 18px; height: 18px; overflow: hidden; flex: none; }
+.jd-swap > svg { grid-area: 1 / 1; width: 18px; height: 18px; transition: transform var(--dur-base) var(--ease-out); }
+.jd-swap__b { transform: translateX(-140%); }
+a:hover .jd-swap__a, button:hover .jd-swap__a { transform: translateX(140%); }
+a:hover .jd-swap__b, button:hover .jd-swap__b { transform: translateX(0); }
+
+/* ---------- Button ---------- */
+.jd-btn {
+  --_bg: var(--forest); --_fg: var(--on-forest); --_wipe: var(--forest-deep); --_wipe-fg: var(--on-forest);
+  --_border: transparent; --_disc: var(--lime); --_disc-fg: var(--on-lime); --_ring: var(--focus-ring);
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3);
+  height: 52px; padding: 0 var(--space-5); border-radius: var(--radius-pill);
+  border: 1px solid var(--_border); background: var(--_bg); color: var(--_fg);
+  font: inherit; font-size: 15px; font-weight: 500; line-height: 1; letter-spacing: 0.01em;
+  text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: color var(--dur-base) var(--ease-out), background-color var(--dur-slow) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.jd-btn::before {
+  content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: inherit;
+  background: var(--_wipe); transform: scaleX(0); transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.jd-btn:hover::before { transform: scaleX(1); }
+.jd-btn:hover { color: var(--_wipe-fg); }
+.jd-btn:focus-visible { outline: 2px solid var(--_ring); outline-offset: 3px; }
+.jd-btn--arrow { padding-right: 6px; }
+.jd-btn__disc {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius-pill);
+  background: var(--_disc); color: var(--_disc-fg);
+  transition: background-color var(--dur-slow) var(--ease-out), color var(--dur-slow) var(--ease-out);
+}
+.jd-btn--lg { height: 60px; font-size: 17px; padding-left: var(--space-6); }
+.jd-btn--lg.jd-btn--arrow { padding-right: 8px; }
+.jd-btn--lg .jd-btn__disc { width: 44px; height: 44px; }
+.jd-btn--accent { --_bg: var(--lime); --_fg: var(--on-lime); --_wipe: var(--lime-press); --_wipe-fg: var(--on-lime); --_disc: var(--forest); --_disc-fg: var(--lime); }
+.jd-btn--secondary { --_bg: transparent; --_fg: var(--forest); --_border: var(--forest); --_wipe: var(--forest); --_wipe-fg: var(--on-forest); --_disc: var(--forest); --_disc-fg: var(--on-forest); }
+.jd-btn--inverse { --_bg: transparent; --_fg: var(--on-forest); --_border: var(--on-forest-muted); --_wipe: var(--on-forest); --_wipe-fg: var(--forest); --_disc: var(--lime); --_disc-fg: var(--on-lime); --_ring: var(--focus-ring-inverse); }
+
+/* ---------- Brand particles (assets/js/particles.js) ----------
+   A viewport-tall canvas that sticks while its section scrolls past. The section needs
+   position: relative, and its content a z-index above 0. */
+.jd-particles { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.jd-particles canvas { position: sticky; top: 0; display: block; width: 100%; height: 100vh; }
+
+/* ---------- Lenis smooth scroll (lenis.css 1.1.13) ---------- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* Pages without a full-screen hero clear the floating pill header */
+.has-solid-header .jd-main { padding-top: calc(72px + 16px + var(--space-7)); }
+
+/* TEMPORARY footer until the footer component is built */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

@@ -1,0 +1,67 @@
+/* JoDyn design tokens — mirrors tokens.json in the Jodyn design system. Change values there first. */
+:root {
+  /* Colour */
+  --surface: #ffffff;
+  --surface-soft: #f3f6f2;
+  --forest-tint: #e3ebe6;
+  --forest: #233831;
+  --forest-deep: #17261f;
+  --lime: #e5fd4a;
+  --lime-press: #d4ec2a;
+  --black: #000000;
+  --ink: var(--black);
+  --ink-muted: #4a5a54;
+  --ink-subtle: #5f6f68;
+  --line: #dbe2de;
+  --line-strong: #76867f;
+  --on-forest: #ffffff;
+  --on-forest-muted: #b9c8c1;
+  --on-lime: var(--forest);
+  --scrim: rgba(10, 20, 16, 0.52);
+  --focus-ring: var(--forest);
+  --focus-ring-inverse: var(--lime);
+  --danger: #b42318;
+  --success: #0b6378;
+
+  /* Type */
+  --font-sans: "Google Sans Flex", "Google Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Type scale: same values as settings.typography.fontSizes in theme.json. Sections use these, never ad-hoc sizes.
+     The home hero headline is the one display-size exception. */
+  --fs-caption: 13px;
+  --fs-small: 15px;
+  --fs-body: 17px;
+  --fs-lead: clamp(19px, 1rem + 0.4vw, 22px);
+  --fs-h4: 21px;
+  --fs-h3: clamp(24px, 1.2rem + 0.6vw, 28px);
+  --fs-h2: clamp(30px, 1.4rem + 1.4vw, 40px);
+  --fs-h1: clamp(36px, 1.6rem + 2.4vw, 56px);
+
+  /* Spacing */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px;
+  --space-7: 48px; --space-8: 64px; --space-9: 96px; --space-10: 128px; --space-11: 176px;
+
+  /* Radius */
+  --radius-0: 0; --radius-xs: 4px; --radius-md: 16px; --radius-lg: 28px; --radius-pill: 999px;
+
+  /* Shadow */
+  --shadow-lift: 0 24px 48px -24px rgba(35, 56, 49, 0.28);
+  --shadow-header: 0 8px 32px -12px rgba(35, 56, 49, 0.18);
+
+  /* Layout */
+  --container: 1360px;
+  --container-text: 720px;
+  --gutter: 48px;
+  --header-height: 112px;
+
+  /* Motion */
+  --dur-fast: 160ms; --dur-base: 320ms; --dur-slow: 700ms; --dur-reveal: 1100ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Layers */
+  --z-header: 50; --z-menu: 80; --z-modal: 100;
+}
+
+@media (max-width: 1023px) {
+  :root { --gutter: 20px; --header-height: 84px; }
+}

@@ -1,0 +1,93 @@
+/* =========================================================================
+   Site footer
+   A lime call-to-action card lifts over the edge of the last section, then the
+   forest footer: brand, quick links, contact, social and the legal bar.
+
+   The lift: the footer is pulled up by --jd-lift and its top band is transparent,
+   while the last section in <main> grows by the same amount in its own colour.
+   So the card overlaps whatever section comes before it without covering its content.
+   ========================================================================= */
+:root { --jd-lift: 160px; }
+
+.jd-footer { position: relative; overflow: clip; background: var(--forest); color: var(--on-forest); }
+.jd-footer.has-cta { margin-top: calc(var(--jd-lift) * -1); background: linear-gradient(to bottom, transparent 0 var(--jd-lift), var(--forest) var(--jd-lift)); }
+.jd-footer.has-cta .jd-particles { clip-path: inset(var(--jd-lift) 0 0 0); }
+.jd-main:has(+ .jd-footer.has-cta) > :last-child::after { content: ""; display: block; height: var(--jd-lift); }
+.jd-footer > .jd-container { position: relative; z-index: 1; }
+.jd-footer :where(a:not(.jd-btn)) { color: inherit; text-decoration: none; }
+.jd-footer :where(a):focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 4px; }
+
+/* ---- Call-to-action card ---- */
+.jd-footer__cta {
+  position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-7); align-items: end;
+  padding: clamp(32px, 4.5vw, 64px); overflow: hidden; border-radius: var(--radius-lg);
+  background: var(--lime); color: var(--forest); box-shadow: 0 30px 60px -30px rgba(23, 38, 31, .45);
+}
+.jd-footer__cta-copy { display: grid; gap: var(--space-4); }
+.jd-footer__cta-title { margin: 0; padding-right: 72px; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-footer__cta-title em { font-style: normal; padding: 0 .12em; border-radius: 10px; background: var(--forest); color: var(--lime); }
+.jd-footer__cta-text { margin: 0; max-width: 58ch; font-size: var(--fs-lead); line-height: 1.5; }
+.jd-footer__cta-act { display: grid; justify-items: start; gap: var(--space-5); }
+.jd-footer__btns { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.jd-footer__cta .jd-btn:focus-visible { --_ring: var(--forest); }
+.jd-footer__line { margin: 0; font-size: var(--fs-small); }
+.jd-footer__line a { font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.jd-footer__cta .jd-footer__line a:focus-visible { outline-color: var(--forest); }
+/* Three-step mark, echoing the stepped blocks in the logo */
+.jd-footer__mark { position: absolute; right: clamp(32px, 4.5vw, 64px); top: clamp(32px, 4.5vw, 64px); display: flex; gap: 6px; }
+.jd-footer__mark i { width: 16px; height: 16px; border-radius: 4px; background: var(--forest); }
+.jd-footer__mark i:nth-child(2) { opacity: .55; }
+.jd-footer__mark i:nth-child(3) { opacity: .25; }
+
+/* ---- Columns ---- */
+.jd-footer__cols { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-7); padding-block: var(--space-9) var(--space-8); }
+.jd-footer__logo { display: inline-block; margin-bottom: var(--space-5); }
+.jd-footer__logo img { display: block; width: 128px; height: auto; }
+.jd-footer__brand p { margin: 0; max-width: 40ch; font-size: var(--fs-small); line-height: 1.6; color: var(--on-forest-muted); }
+.jd-footer__h { margin: 0 0 var(--space-4); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+
+.jd-footer__links { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); gap: var(--space-3) var(--space-6); margin: 0; padding: 0; list-style: none; font-size: var(--fs-small); }
+.jd-footer__links a { position: relative; color: var(--on-forest-muted); transition: color var(--dur-base); }
+.jd-footer__links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: var(--lime); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-slow) var(--ease-out); }
+.jd-footer__links a:hover, .jd-footer__links .current-menu-item > a { color: var(--on-forest); }
+.jd-footer__links a:hover::after { transform: scaleX(1); }
+
+.jd-footer__contact { display: grid; gap: var(--space-4); margin: 0; padding: 0; list-style: none; font-size: var(--fs-small); color: var(--on-forest-muted); }
+.jd-footer__contact li { display: flex; gap: var(--space-3); align-items: flex-start; }
+.jd-footer__contact svg { flex: none; width: 18px; height: 18px; margin-top: 2px; color: var(--lime); }
+.jd-footer__contact address { font-style: normal; }
+.jd-footer__contact a { overflow-wrap: anywhere; transition: color var(--dur-base); }
+.jd-footer__contact a:hover { color: var(--on-forest); }
+
+.jd-footer__social { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.jd-footer__social a {
+  display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid rgba(255, 255, 255, .22); border-radius: 50%;
+  transition: background-color var(--dur-base), color var(--dur-base), border-color var(--dur-base), transform var(--dur-slow) var(--ease-out);
+}
+.jd-footer__social svg { width: 18px; height: 18px; }
+.jd-footer__social a:hover { background: var(--lime); border-color: var(--lime); color: var(--forest); transform: translateY(-3px); }
+
+/* ---- Legal bar ---- */
+.jd-footer__bottom { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); padding-block: var(--space-5); border-top: 1px solid rgba(255, 255, 255, .14); font-size: var(--fs-caption); color: var(--on-forest-muted); }
+.jd-footer__bottom p { margin: 0 auto 0 0; }
+.jd-footer__bottom ul { display: flex; gap: var(--space-5); margin: 0; padding: 0; list-style: none; }
+.jd-footer__bottom ul a:hover { color: var(--lime); }
+.jd-footer__top { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--lime); color: var(--forest) !important; transition: transform var(--dur-slow) var(--ease-out); }
+.jd-footer__top svg { width: 18px; height: 18px; }
+.jd-footer__top:hover { transform: translateY(-4px); }
+
+@media (max-width: 1023px) {
+  :root { --jd-lift: 96px; }
+  .jd-footer__cta { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .jd-footer__cta-title { padding-right: 0; }
+  .jd-footer__mark { display: none; }
+  .jd-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-7) var(--space-6); padding-block: var(--space-8) var(--space-7); }
+  .jd-footer__brand { grid-column: 1 / -1; }
+}
+@media (max-width: 559px) {
+  .jd-footer__cols { grid-template-columns: minmax(0, 1fr); }
+  .jd-footer__bottom p { flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jd-footer__social a:hover, .jd-footer__top:hover { transform: none; }
+}

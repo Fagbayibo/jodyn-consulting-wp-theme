@@ -1,0 +1,43 @@
+/* =========================================================================
+   Home · 9. Outcomes
+   Soft green section: five blocks rising like steps, the stepped mark from
+   the logo. The last step is lime. Offset stack below desktop.
+   ========================================================================= */
+.jd-outcomes { position: relative; overflow: clip; background: var(--forest-tint); color: var(--ink); padding-block: clamp(64px, 7vw, 104px); }
+.jd-outcomes > .jd-container { position: relative; z-index: 1; }
+
+/* ---- Head ---- */
+.jd-outcomes__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: end; }
+.jd-outcomes__title { margin: var(--space-4) 0 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-outcomes__title em { font-style: normal; color: var(--forest); }
+.jd-outcomes__head-right { display: grid; justify-items: start; gap: var(--space-5); }
+.jd-outcomes__text { margin: 0; max-width: 52ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-muted); }
+
+/* ---- Staircase ---- */
+.jd-outcomes__stairs {
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-3); align-items: end;
+  height: 560px; margin: var(--space-8) 0 0; padding: 0; list-style: none; border-bottom: 2px solid var(--forest);
+}
+/* Each step is 12% taller than the one before, starting at 52% */
+.jd-outcomes__step { display: flex; height: calc(52% + var(--step) * 12%); }
+.jd-outcomes__block {
+  display: flex; flex-direction: column; gap: var(--space-3); width: 100%; padding: clamp(20px, 2vw, 28px);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0; background: var(--forest); color: var(--on-forest); transform-origin: bottom;
+}
+/* Forest shades step by step (lighter forest tints, then deep), ending on lime */
+.jd-outcomes__step:nth-child(2) .jd-outcomes__block { background: #2b463d; }
+.jd-outcomes__step:nth-child(3) .jd-outcomes__block { background: #335349; }
+.jd-outcomes__step:nth-child(4) .jd-outcomes__block { background: var(--forest-deep); }
+.jd-outcomes__step:nth-child(5) .jd-outcomes__block { background: var(--lime); color: var(--on-lime); }
+.jd-outcomes__num { font-size: var(--fs-h3); font-weight: 600; letter-spacing: -.02em; color: var(--lime); }
+.jd-outcomes__step:nth-child(5) .jd-outcomes__num { color: var(--forest); }
+.jd-outcomes__block h3 { margin: 0; font-size: var(--fs-h4); font-weight: 500; line-height: 1.25; }
+.jd-outcomes__block p { margin: 0; font-size: var(--fs-small); line-height: 1.55; opacity: .85; }
+
+@media (max-width: 1023px) {
+  .jd-outcomes__head { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .jd-outcomes__stairs { grid-template-columns: minmax(0, 1fr); height: auto; align-items: start; border-bottom: 0; }
+  /* Offset stack: each step steps in a little further */
+  .jd-outcomes__step { height: auto; margin-left: calc(var(--step) * 4%); }
+  .jd-outcomes__block { border-radius: var(--radius-md); }
+}

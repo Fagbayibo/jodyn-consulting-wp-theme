@@ -1,0 +1,70 @@
+/* =========================================================================
+   Home · 3. How we help
+   Forest section: the service lines are tabs, each panel holds summary,
+   photo, four services and a link. Type sizes come only from --fs-* tokens.
+   ========================================================================= */
+.jd-help { position: relative; overflow: clip; background: var(--forest); color: var(--on-forest); padding-block: clamp(64px, 7vw, 104px); }
+.jd-help > .jd-container { position: relative; z-index: 1; }
+
+/* ---- Head: title left, intro right ---- */
+.jd-help__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: end; }
+.jd-help__title { margin: var(--space-4) 0 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-help__title em { font-style: normal; color: var(--lime); }
+.jd-help__intro { margin: 0; max-width: 52ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--on-forest-muted); }
+
+/* ---- Tabs ---- */
+.jd-help__wrap { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-7); align-items: start; margin-top: var(--space-8); }
+.jd-help__tabs { display: grid; border-top: 1px solid rgba(255, 255, 255, .16); }
+.jd-help__tab {
+  position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr) 20px; gap: var(--space-3); align-items: center;
+  width: 100%; padding: var(--space-5) 0; border: 0; border-bottom: 1px solid rgba(255, 255, 255, .16);
+  background: none; color: var(--on-forest-muted); font: inherit; text-align: left; cursor: pointer;
+  transition: color var(--dur-base) var(--ease-out);
+}
+.jd-help__tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--lime); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-slow) var(--ease-out); }
+.jd-help__tab:hover, .jd-help__tab[aria-selected="true"] { color: var(--on-forest); }
+.jd-help__tab[aria-selected="true"]::after { transform: scaleX(1); }
+.jd-help__tab:focus-visible { outline: 2px solid var(--lime); outline-offset: 4px; border-radius: var(--radius-xs); }
+.jd-help__num { font-size: var(--fs-caption); font-weight: 600; letter-spacing: .14em; }
+.jd-help__tab[aria-selected="true"] .jd-help__num { color: var(--lime); }
+.jd-help__name { font-size: var(--fs-h3); font-weight: 500; line-height: 1.2; letter-spacing: -.01em; }
+.jd-help__chev { width: 20px; height: 20px; opacity: 0; transform: translateX(-8px); transition: opacity var(--dur-base), transform var(--dur-base) var(--ease-out); }
+.jd-help__tab:hover .jd-help__chev, .jd-help__tab[aria-selected="true"] .jd-help__chev { opacity: 1; transform: none; }
+
+/* ---- Panel ---- */
+.jd-help__panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); overflow: hidden; border-radius: var(--radius-lg); background: var(--forest-deep); }
+.jd-help__panel[hidden] { display: none; }
+.jd-help__body { display: grid; align-content: start; justify-items: start; gap: var(--space-4); padding: clamp(28px, 3vw, 44px); }
+.jd-help__kicker { margin: 0; font-size: var(--fs-caption); font-weight: 600; letter-spacing: .14em; color: var(--lime); }
+.jd-help__panel-title { margin: 0; font-size: var(--fs-h3); font-weight: 500; line-height: 1.2; }
+.jd-help__text { margin: 0 0 var(--space-3); font-size: var(--fs-body); line-height: 1.6; color: var(--on-forest-muted); }
+.jd-help__media { position: relative; min-height: 320px; overflow: hidden; background: var(--forest); }
+.jd-help__media img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.jd-help__items {
+  grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5) var(--space-6);
+  margin: 0; padding: var(--space-6) clamp(28px, 3vw, 44px) clamp(28px, 3vw, 44px); list-style: none; border-top: 1px solid rgba(255, 255, 255, .1);
+}
+.jd-help__items li { display: grid; align-content: start; gap: 6px; }
+.jd-help__items h4 { margin: 0; font-size: var(--fs-body); font-weight: 600; line-height: 1.35; color: var(--on-forest); }
+.jd-help__items h4::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 10px; border-radius: 2px; background: var(--lime); vertical-align: .1em; }
+.jd-help__items p { margin: 0; font-size: var(--fs-small); line-height: 1.55; color: var(--on-forest-muted); }
+
+/* ---- Tablet and phone: tabs become swipeable pills above the panel ---- */
+@media (max-width: 1023px) {
+  .jd-help__head, .jd-help__wrap { grid-template-columns: minmax(0, 1fr); }
+  .jd-help__head { gap: var(--space-5); }
+  .jd-help__wrap { gap: var(--space-5); }
+  .jd-help__tabs {
+    display: flex; gap: var(--space-2); overflow-x: auto; border: 0; scrollbar-width: none;
+    margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
+  }
+  .jd-help__tabs::-webkit-scrollbar { display: none; }
+  .jd-help__tab { flex: none; width: auto; grid-template-columns: auto auto; padding: 10px 16px; border: 1px solid rgba(255, 255, 255, .2); border-radius: var(--radius-pill); }
+  .jd-help__tab::after, .jd-help__chev { display: none; }
+  .jd-help__tab[aria-selected="true"] { background: var(--lime); border-color: var(--lime); color: var(--on-lime); }
+  .jd-help__tab[aria-selected="true"] .jd-help__num { color: var(--on-lime); }
+  .jd-help__name { font-size: var(--fs-small); font-weight: 600; }
+  .jd-help__panel { grid-template-columns: minmax(0, 1fr); }
+  .jd-help__media { grid-row: 1; min-height: 220px; }
+  .jd-help__items { grid-template-columns: minmax(0, 1fr); }
+}
