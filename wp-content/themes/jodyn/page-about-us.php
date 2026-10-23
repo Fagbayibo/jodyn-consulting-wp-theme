@@ -4,7 +4,12 @@
  *
  * 1. Hero: template-parts/about/hero.php.
  * 2. Our story: template-parts/about/story.php.
- * Sections 3-7 (mission, values, what we do, approach, experts) follow as they are built.
+ * 3. Mission and vision: template-parts/about/mission.php.
+ * 4. Values: template-parts/about/values.php.
+ * 5. What we do: template-parts/about/what-we-do.php.
+ * 6. Our approach: template-parts/about/approach.php.
+ * 7. Facilitators and advisors: template-parts/about/experts.php.
+ * Leadership is deferred until the client sends team photos and bios.
  * Copy: content/pages/about.md (approved).
  *
  * @package JoDyn
@@ -27,6 +32,16 @@ get_header();
 	<?php get_template_part( 'template-parts/about/hero' ); ?>
 
 	<?php get_template_part( 'template-parts/about/story' ); ?>
+
+	<?php get_template_part( 'template-parts/about/mission' ); ?>
+
+	<?php get_template_part( 'template-parts/about/values' ); ?>
+
+	<?php get_template_part( 'template-parts/about/what-we-do' ); ?>
+
+	<?php get_template_part( 'template-parts/about/approach' ); ?>
+
+	<?php get_template_part( 'template-parts/about/experts' ); ?>
 
 </main>
 <?php

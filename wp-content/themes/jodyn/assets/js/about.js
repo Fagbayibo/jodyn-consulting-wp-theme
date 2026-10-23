@@ -7,6 +7,12 @@
  *
  * Our story: each gap card starts "open" (✕) and closes (✓) as it scrolls into view.
  * The markup is the closed state, so without JS or with reduced motion every gap shows ✓.
+ *
+ * What we do: the lime line joining the four services draws itself as you scroll
+ * (left to right on desktop, top to bottom on phones). At rest it is fully drawn.
+ *
+ * Our approach (desktop only): the five belief cards arrive fanned out like a hand of cards
+ * and straighten as you scroll in. At rest they sit in a straight row.
  */
 (function () {
   'use strict';
@@ -31,5 +37,30 @@
         onLeaveBack: function () { li.classList.add('is-open'); }
       });
     });
+
+    var chain = document.querySelector('[data-jd-wwd-chain]');
+    if (chain) {
+      var line = chain.querySelector('[data-jd-wwd-line]');
+      ScrollTrigger.matchMedia({
+        '(min-width: 1024px)': function () {
+          gsap.fromTo(line, { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: chain, start: 'top 80%', end: 'top 35%', scrub: true } });
+        },
+        '(max-width: 1023px)': function () {
+          gsap.fromTo(line, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: chain, start: 'top 70%', end: 'bottom 60%', scrub: true } });
+        }
+      });
+    }
+
+    var fan = document.querySelector('[data-jd-approach-fan]');
+    if (fan) {
+      ScrollTrigger.matchMedia({
+        '(min-width: 1024px)': function () {
+          var rot = [-14, -7, 0, 7, 14], dx = [180, 90, 0, -90, -180], dy = [70, 18, 0, 18, 70];
+          gsap.fromTo(fan.children,
+            { rotation: function (i) { return rot[i]; }, x: function (i) { return dx[i]; }, y: function (i) { return dy[i]; } },
+            { rotation: 0, x: 0, y: 0, ease: 'none', scrollTrigger: { trigger: fan, start: 'top bottom', end: 'top 25%', scrub: true } });
+        }
+      });
+    }
   });
 })();
