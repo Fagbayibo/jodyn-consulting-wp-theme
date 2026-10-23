@@ -15,6 +15,7 @@ require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/programmes.php';
 require_once get_template_directory() . '/inc/calendar-download.php';
 require_once get_template_directory() . '/inc/contact.php';
+require_once get_template_directory() . '/inc/updater.php';
 
 /**
  * Theme supports and menu locations.

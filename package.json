@@ -1,0 +1,12 @@
+{
+  "name": "jodyn-consulting-wp-theme",
+  "private": true,
+  "description": "JoDyn Advisory & Consulting WordPress theme. The theme itself lives in wp-content/themes/jodyn.",
+  "scripts": {
+    "zip": "node dev/make-zip.js",
+    "release": "node dev/release.js"
+  },
+  "devDependencies": {
+    "archiver": "^7.0.1"
+  }
+}

@@ -2,6 +2,8 @@
 /design/
 # Raw client brand files (the theme ships its own logo exports)
 /jodyn assets/
+# Built theme zip (published on GitHub Releases)
+/dist/
 # Tooling
 .playwright-mcp/
 node_modules/
