@@ -47,6 +47,7 @@ function jodyn_icon( $name, $class = '' ) {
 		'search'         => 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4',
 		'receipt'        => 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3',
 		'cap'            => 'M2 9l10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5M22 9v6',
+		'monitor'        => 'M3.5 5h17v11h-17zM8 20h8M12 16v4',
 	);
 	if ( ! isset( $paths[ $name ] ) ) {
 		return '';

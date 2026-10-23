@@ -10,7 +10,7 @@ update_option( 'blogdescription', 'Advisory that turns strategy into measurable 
 update_option( 'permalink_structure', '/%postname%/' );
 
 $page_ids = array();
-foreach ( array( 'Home', 'About us', 'Services', 'Training calendar', 'Insights', 'Careers', 'Contact us' ) as $title ) {
+foreach ( array( 'Home', 'About us', 'Services', 'Training', 'Training calendar', 'Insights', 'Careers', 'Contact us' ) as $title ) {
 	$existing = get_page_by_path( sanitize_title( $title ) );
 	$page_ids[ $title ] = $existing ? $existing->ID : wp_insert_post(
 		array(
@@ -21,16 +21,17 @@ foreach ( array( 'Home', 'About us', 'Services', 'Training calendar', 'Insights'
 		)
 	);
 }
-// Service pages live under Services, e.g. /services/advisory/.
-foreach ( array( 'Advisory' ) as $title ) {
-	if ( ! get_page_by_path( 'services/' . sanitize_title( $title ) ) ) {
+// Service pages live under Services (/services/advisory/), training pages under Training
+// (/training/programmes/).
+foreach ( array( 'Advisory' => 'Services', 'Programmes' => 'Training' ) as $title => $parent ) {
+	if ( ! get_page_by_path( sanitize_title( $parent ) . '/' . sanitize_title( $title ) ) ) {
 		wp_insert_post(
 			array(
 				'post_title'   => $title,
 				'post_name'    => sanitize_title( $title ),
 				'post_type'    => 'page',
 				'post_status'  => 'publish',
-				'post_parent'  => $page_ids['Services'],
+				'post_parent'  => $page_ids[ $parent ],
 				'post_content' => '<p>Placeholder content for ' . esc_html( $title ) . '.</p>',
 			)
 		);
@@ -137,31 +138,49 @@ flush_rewrite_rules();
 
 echo "Seeded menu {$menu_id}\n";
 
-// Sample training programmes (dates always in the future) and a placeholder calendar PDF.
-$programmes = array(
-	array( 'Leadership Essentials for New Managers', 'Make a confident transition into management. Learn how to lead former peers, delegate effectively, give feedback and motivate your team to deliver.', '+23 days', 'in-person', '₦250,000', 'leadership-essentials.jpg' ),
-	array( 'Strategic Thinking and Execution', 'Move from ideas to results. Learn practical tools for setting priorities, making sound decisions and turning strategy into action across your team.', '+37 days', 'online', '₦180,000', 'strategic-thinking.jpg' ),
-	array( 'Effective Communication and Stakeholder Management', 'Communicate with clarity and influence. Build the skills to present ideas, manage difficult conversations and strengthen relationships with stakeholders.', '+48 days', 'hybrid', '₦220,000', 'effective-communication.jpg' ),
+// Training programmes: the client's sample titles in the six areas (training.md, section 3).
+// Three carry a sample upcoming run (dates always in the future) for the home page and calendar.
+$runs = array(
+	'Leadership Essentials for New Managers'          => array( 'Make a confident transition into management. Learn how to lead former peers, delegate effectively, give feedback and motivate your team to deliver.', '+23 days', 'in-person', '₦250,000', 'leadership-essentials.jpg' ),
+	'Strategic Thinking and Planning'                 => array( 'Move from ideas to results. Learn practical tools for setting priorities, making sound decisions and turning strategy into action across your team.', '+37 days', 'online', '₦180,000', 'strategic-thinking.jpg' ),
+	'Effective Communication and Presentation Skills' => array( 'Communicate with clarity and influence. Build the skills to present ideas, manage difficult conversations and strengthen relationships with stakeholders.', '+48 days', 'hybrid', '₦220,000', 'effective-communication.jpg' ),
 );
-foreach ( $programmes as $p ) {
-	if ( get_posts( array( 'post_type' => 'jodyn_programme', 'title' => $p[0], 'fields' => 'ids', 'numberposts' => 1 ) ) ) {
-		continue;
-	}
-	$id = wp_insert_post(
-		array(
-			'post_type'    => 'jodyn_programme',
-			'post_status'  => 'publish',
-			'post_title'   => $p[0],
-			'post_excerpt' => $p[1],
-			'post_content' => '<p>' . $p[1] . '</p>',
-		)
-	);
-	update_post_meta( $id, '_jodyn_start', gmdate( 'Y-m-d', strtotime( $p[2] ) ) );
-	update_post_meta( $id, '_jodyn_format', $p[3] );
-	update_post_meta( $id, '_jodyn_fee', $p[4] );
-	$photo = $import( '/wordpress/dev-media/programmes/' . $p[5] );
-	if ( $photo ) {
-		set_post_thumbnail( $id, $photo );
+$catalogue = array(
+	'leadership'   => array( 'Leadership Essentials for New Managers', 'Leading High-Performance Teams', 'Strategic Leadership for Senior Executives', 'Coaching and Mentoring Skills for Managers', 'Emotional Intelligence for Leaders', 'Leading Through Change' ),
+	'strategy'     => array( 'Strategic Thinking and Planning', 'From Strategy to Execution: Delivering Results', 'Setting Goals, KPIs and OKRs', 'Problem Solving and Decision Making', 'Business Planning for Growth' ),
+	'hr'           => array( 'Performance Management That Works', 'Talent Management and Succession Planning', 'Building a High-Performance Culture', 'Employee Engagement and Retention Strategies', 'HR for Non-HR Managers', 'Training Needs Analysis and Learning Evaluation' ),
+	'professional' => array( 'Effective Communication and Presentation Skills', 'Time Management and Personal Productivity', 'Business Writing and Report Writing', 'Teamwork and Collaboration', 'Stakeholder Management and Influencing', 'Workplace Ethics and Professionalism' ),
+	'customer'     => array( 'Customer Service Excellence', 'Managing Difficult Customers and Complaints', 'Sales and Negotiation Skills', 'Building Customer-Centric Teams', 'Business Development and Relationship Management' ),
+	'projects'     => array( 'Project Management Fundamentals', 'Process Improvement and Operational Efficiency', 'Risk Management Essentials', 'Managing Change in Organisations', 'Monitoring and Evaluation for Programmes and Projects' ),
+);
+$order = 0;
+foreach ( $catalogue as $area => $titles ) {
+	foreach ( $titles as $title ) {
+		++$order;
+		if ( get_posts( array( 'post_type' => 'jodyn_programme', 'title' => $title, 'fields' => 'ids', 'numberposts' => 1 ) ) ) {
+			continue;
+		}
+		$run = isset( $runs[ $title ] ) ? $runs[ $title ] : null;
+		$id  = wp_insert_post(
+			array(
+				'post_type'    => 'jodyn_programme',
+				'post_status'  => 'publish',
+				'post_title'   => $title,
+				'post_excerpt' => $run ? $run[0] : '',
+				'post_content' => $run ? '<p>' . $run[0] . '</p>' : '',
+				'menu_order'   => $order,
+			)
+		);
+		update_post_meta( $id, '_jodyn_area', $area );
+		if ( $run ) {
+			update_post_meta( $id, '_jodyn_start', gmdate( 'Y-m-d', strtotime( $run[1] ) ) );
+			update_post_meta( $id, '_jodyn_format', $run[2] );
+			update_post_meta( $id, '_jodyn_fee', $run[3] );
+			$photo = $import( '/wordpress/dev-media/programmes/' . $run[4] );
+			if ( $photo ) {
+				set_post_thumbnail( $id, $photo );
+			}
+		}
 	}
 }
 $pdf = $import( '/wordpress/dev-media/programmes/jodyn-training-calendar-sample.pdf' );

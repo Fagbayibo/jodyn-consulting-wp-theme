@@ -53,27 +53,6 @@
 .jd-prog__link:hover span { background-size: 100% 1.5px; }
 .jd-prog__link:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; border-radius: var(--radius-xs); }
 
-/* ---- Download dialog ---- */
-.jd-dl { width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 0; border-radius: var(--radius-lg); background: var(--forest); color: var(--on-forest); box-shadow: 0 40px 80px -24px rgba(0, 0, 0, .5); }
-.jd-dl::backdrop { background: rgba(10, 20, 16, .6); backdrop-filter: blur(4px); }
-.jd-dl[open] { animation: jd-dl-in var(--dur-slow) var(--ease-out); }
-@keyframes jd-dl-in { from { opacity: 0; transform: translateY(24px) scale(.98); } }
-.jd-dl__form { position: relative; display: grid; gap: var(--space-4); padding: clamp(28px, 5vw, 40px); }
-.jd-dl__close { position: absolute; right: 16px; top: 16px; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid rgba(255, 255, 255, .24); border-radius: 50%; background: none; color: inherit; cursor: pointer; transition: background-color var(--dur-base), border-color var(--dur-base); }
-.jd-dl__close:hover { border-color: var(--lime); }
-.jd-dl__close:focus-visible, .jd-dl__field input:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
-.jd-dl__icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--lime); color: var(--forest); }
-.jd-dl__icon svg { width: 22px; height: 22px; }
-.jd-dl__title { margin: 0 0 var(--space-2); padding-right: 48px; font-size: var(--fs-h3); font-weight: 500; line-height: 1.2; }
-.jd-dl__field { display: grid; gap: 6px; font-size: var(--fs-small); color: var(--on-forest-muted); }
-.jd-dl__field input { height: 52px; padding: 0 16px; border: 1px solid rgba(255, 255, 255, .24); border-radius: 12px; background: rgba(255, 255, 255, .06); color: #fff; font: inherit; font-size: var(--fs-body); }
-.jd-dl__field input[aria-invalid="true"] { border-color: #ffb4a8; }
-.jd-dl__trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-.jd-dl__status { min-height: 1.5em; margin: 0; font-size: var(--fs-small); color: var(--lime); }
-.jd-dl__status.is-error { color: #ffb4a8; }
-.jd-dl__submit { justify-self: start; }
-.jd-dl__submit[disabled] { opacity: .7; cursor: progress; }
-
 @media (max-width: 1023px) {
   .jd-prog__head, .jd-prog__grid { grid-template-columns: minmax(0, 1fr); }
   .jd-prog__head { gap: var(--space-5); }

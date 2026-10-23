@@ -94,6 +94,12 @@ function jodyn_enqueue_assets() {
 		jodyn_enqueue_script( 'jodyn-advisory', 'advisory.js', array( 'jodyn-motion' ) );
 	}
 
+	if ( is_page( 'programmes' ) ) {
+		wp_enqueue_style( 'jodyn-training', "$uri/assets/css/training.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/training.css' ) );
+		jodyn_enqueue_script( 'jodyn-training', 'training.js', array( 'jodyn-motion' ) );
+		jodyn_enqueue_calendar_download();
+	}
+
 	if ( is_front_page() ) {
 		wp_enqueue_style( 'jodyn-front', "$uri/assets/css/front-page.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/front-page.css' ) );
 		wp_enqueue_style( 'jodyn-home-who', "$uri/assets/css/home-who.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-who.css' ) );
@@ -110,21 +116,31 @@ function jodyn_enqueue_assets() {
 		jodyn_enqueue_script( 'jodyn-work', 'how-we-work.js', array( 'jodyn-motion' ) );
 		jodyn_enqueue_script( 'jodyn-why', 'why-jodyn.js', array( 'jodyn-motion' ) );
 		jodyn_enqueue_script( 'jodyn-outcomes', 'outcomes.js', array( 'jodyn-motion' ) );
-		jodyn_enqueue_script( 'jodyn-download', 'calendar-download.js' );
-		wp_localize_script(
-			'jodyn-download',
-			'jodynDownload',
-			array(
-				'endpoint' => esc_url_raw( rest_url( 'jodyn/v1/calendar-download' ) ),
-				'i18n'     => array(
-					'invalid' => __( 'Please enter your name and a valid email address.', 'jodyn' ),
-					'sending' => __( 'Preparing your download…', 'jodyn' ),
-					'success' => __( 'Your download is starting.', 'jodyn' ),
-					'error'   => __( 'Something went wrong. Please try again.', 'jodyn' ),
-				),
-			)
-		);
+		jodyn_enqueue_calendar_download();
 	}
+}
+
+/**
+ * The training calendar download dialog (template-parts/calendar-download.php): its styles,
+ * script and endpoint. Called on every page that shows the "Download Training Calendar" button.
+ */
+function jodyn_enqueue_calendar_download() {
+	$uri = get_template_directory_uri();
+	wp_enqueue_style( 'jodyn-download', "$uri/assets/css/calendar-download.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/calendar-download.css' ) );
+	jodyn_enqueue_script( 'jodyn-download', 'calendar-download.js' );
+	wp_localize_script(
+		'jodyn-download',
+		'jodynDownload',
+		array(
+			'endpoint' => esc_url_raw( rest_url( 'jodyn/v1/calendar-download' ) ),
+			'i18n'     => array(
+				'invalid' => __( 'Please enter your name and a valid email address.', 'jodyn' ),
+				'sending' => __( 'Preparing your download…', 'jodyn' ),
+				'success' => __( 'Your download is starting.', 'jodyn' ),
+				'error'   => __( 'Something went wrong. Please try again.', 'jodyn' ),
+			),
+		)
+	);
 }
 
 /**

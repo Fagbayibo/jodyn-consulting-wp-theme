@@ -1,10 +1,12 @@
 <?php
 /**
- * Training programmes: a "Programmes" list in the admin, one entry per scheduled run.
+ * Training programmes: a "Programmes" list in the admin, one entry per programme.
  *
  * Title, summary (excerpt), photo (featured image) and description are the normal fields;
- * the "Programme details" box adds the start date, format, venue, fee and registration link.
- * The home page shows the next upcoming ones via jodyn_get_upcoming_programmes().
+ * the "Programme details" box adds the area, and for a scheduled run the start date, format,
+ * venue, fee and registration link. The home page shows the next upcoming ones via
+ * jodyn_get_upcoming_programmes(); the Training programmes page lists every one, filterable,
+ * via jodyn_get_all_programmes().
  *
  * @package JoDyn
  */
@@ -23,6 +25,22 @@ function jodyn_programme_formats() {
 		'in-person' => __( 'In-person', 'jodyn' ),
 		'online'    => __( 'Online', 'jodyn' ),
 		'hybrid'    => __( 'Hybrid', 'jodyn' ),
+	);
+}
+
+/**
+ * The six training areas, keyed by stored value (also the ?area= value on the Training page).
+ *
+ * @return array<string,string>
+ */
+function jodyn_programme_areas() {
+	return array(
+		'leadership'   => __( 'Leadership & Management Development', 'jodyn' ),
+		'strategy'     => __( 'Strategy, Planning & Execution', 'jodyn' ),
+		'hr'           => __( 'Human Resources & People Management', 'jodyn' ),
+		'professional' => __( 'Personal Effectiveness & Professional Skills', 'jodyn' ),
+		'customer'     => __( 'Customer Service & Business Development', 'jodyn' ),
+		'projects'     => __( 'Project Management & Operational Excellence', 'jodyn' ),
 	);
 }
 
@@ -74,14 +92,22 @@ add_action( 'add_meta_boxes', 'jodyn_programme_meta_box' );
  */
 function jodyn_programme_meta_box_html( $post ) {
 	wp_nonce_field( 'jodyn_programme_save', 'jodyn_programme_nonce' );
+	$area   = get_post_meta( $post->ID, '_jodyn_area', true );
 	$start  = get_post_meta( $post->ID, '_jodyn_start', true );
 	$format = get_post_meta( $post->ID, '_jodyn_format', true );
 	$venue  = get_post_meta( $post->ID, '_jodyn_venue', true );
 	$fee    = get_post_meta( $post->ID, '_jodyn_fee', true );
 	$url    = get_post_meta( $post->ID, '_jodyn_register_url', true );
 	?>
+	<p><label for="jodyn-area"><strong><?php esc_html_e( 'Area', 'jodyn' ); ?></strong></label><br>
+		<select id="jodyn-area" name="jodyn_area" style="width:100%">
+			<?php foreach ( jodyn_programme_areas() as $value => $label ) : ?>
+				<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $area, $value ); ?>><?php echo esc_html( $label ); ?></option>
+			<?php endforeach; ?>
+		</select></p>
 	<p><label for="jodyn-start"><strong><?php esc_html_e( 'Start date', 'jodyn' ); ?></strong></label><br>
-		<input type="date" id="jodyn-start" name="jodyn_start" value="<?php echo esc_attr( $start ); ?>" style="width:100%"></p>
+		<input type="date" id="jodyn-start" name="jodyn_start" value="<?php echo esc_attr( $start ); ?>" style="width:100%">
+		<span class="description"><?php esc_html_e( 'Leave empty until the next run is scheduled. The format, venue, fee and registration link apply to that run.', 'jodyn' ); ?></span></p>
 	<p><label for="jodyn-format"><strong><?php esc_html_e( 'Format', 'jodyn' ); ?></strong></label><br>
 		<select id="jodyn-format" name="jodyn_format" style="width:100%">
 			<?php foreach ( jodyn_programme_formats() as $value => $label ) : ?>
@@ -110,6 +136,9 @@ function jodyn_programme_save( $post_id ) {
 		return;
 	}
 
+	$area = isset( $_POST['jodyn_area'] ) ? sanitize_key( $_POST['jodyn_area'] ) : '';
+	update_post_meta( $post_id, '_jodyn_area', array_key_exists( $area, jodyn_programme_areas() ) ? $area : 'leadership' );
+
 	$start = isset( $_POST['jodyn_start'] ) ? sanitize_text_field( wp_unslash( $_POST['jodyn_start'] ) ) : '';
 	$start = preg_match( '/^\d{4}-\d{2}-\d{2}$/', $start ) ? $start : '';
 	update_post_meta( $post_id, '_jodyn_start', $start );
@@ -131,6 +160,7 @@ add_action( 'save_post_jodyn_programme', 'jodyn_programme_save' );
 function jodyn_programme_columns( $columns ) {
 	$date = $columns['date'];
 	unset( $columns['date'] );
+	$columns['jodyn_area']   = __( 'Area', 'jodyn' );
 	$columns['jodyn_start']  = __( 'Starts', 'jodyn' );
 	$columns['jodyn_format'] = __( 'Format', 'jodyn' );
 	$columns['jodyn_fee']    = __( 'Fee', 'jodyn' );
@@ -145,7 +175,9 @@ add_filter( 'manage_jodyn_programme_posts_columns', 'jodyn_programme_columns' );
  */
 function jodyn_programme_column_content( $column, $post_id ) {
 	$p = jodyn_programme_data( $post_id );
-	if ( 'jodyn_start' === $column ) {
+	if ( 'jodyn_area' === $column ) {
+		echo esc_html( $p['area_label'] );
+	} elseif ( 'jodyn_start' === $column ) {
 		echo esc_html( $p['date_full'] ? $p['date_full'] : '—' );
 	} elseif ( 'jodyn_format' === $column ) {
 		echo esc_html( $p['format'] );
@@ -201,6 +233,46 @@ function jodyn_get_upcoming_programmes( $limit = 3 ) {
 }
 
 /**
+ * Every programme for the Training page: scheduled runs first (soonest first), then the rest
+ * in area order, keeping the order they were added in within an area.
+ *
+ * @return array[] jodyn_programme_data() for each.
+ */
+function jodyn_get_all_programmes() {
+	$posts = get_posts(
+		array(
+			'post_type'        => 'jodyn_programme',
+			'post_status'      => 'publish',
+			'numberposts'      => -1,
+			'orderby'          => array(
+				'menu_order' => 'ASC',
+				'ID'         => 'ASC',
+			),
+			'suppress_filters' => false,
+		)
+	);
+	$order = array_flip( array_keys( jodyn_programme_areas() ) );
+	$items = array_map( 'jodyn_programme_data', $posts );
+	$rank  = array_flip( wp_list_pluck( $items, 'id' ) );
+	usort(
+		$items,
+		static function ( $a, $b ) use ( $order, $rank ) {
+			if ( $a['upcoming'] !== $b['upcoming'] ) {
+				return $a['upcoming'] ? -1 : 1;
+			}
+			if ( $a['upcoming'] && $a['datetime'] !== $b['datetime'] ) {
+				return strcmp( $a['datetime'], $b['datetime'] );
+			}
+			if ( $a['area'] !== $b['area'] ) {
+				return $order[ $a['area'] ] - $order[ $b['area'] ];
+			}
+			return $rank[ $a['id'] ] - $rank[ $b['id'] ];
+		}
+	);
+	return $items;
+}
+
+/**
  * Everything a template needs about one programme.
  *
  * @param int|WP_Post $post Programme.
@@ -214,18 +286,26 @@ function jodyn_programme_data( $post ) {
 	$format  = get_post_meta( $post->ID, '_jodyn_format', true );
 	$venue   = get_post_meta( $post->ID, '_jodyn_venue', true );
 	$url     = get_post_meta( $post->ID, '_jodyn_register_url', true );
+	$areas   = jodyn_programme_areas();
+	$area    = get_post_meta( $post->ID, '_jodyn_area', true );
+	$area    = isset( $areas[ $area ] ) ? $area : 'leadership';
 
 	return array(
-		'id'        => $post->ID,
-		'title'     => get_the_title( $post ),
-		'summary'   => get_the_excerpt( $post ),
-		'day'       => $time ? wp_date( 'd', $time, new DateTimeZone( 'UTC' ) ) : '',
-		'month'     => $time ? wp_date( 'M', $time, new DateTimeZone( 'UTC' ) ) : '',
-		'date_full' => $time ? wp_date( 'j M Y', $time, new DateTimeZone( 'UTC' ) ) : '',
-		'datetime'  => $start,
-		'format'    => ( isset( $formats[ $format ] ) ? $formats[ $format ] : $formats['in-person'] ) . ( $venue ? ' · ' . $venue : '' ),
-		'fee'       => get_post_meta( $post->ID, '_jodyn_fee', true ),
-		'url'       => $url ? $url : get_permalink( $post ),
-		'image'     => get_post_thumbnail_id( $post ),
+		'id'         => $post->ID,
+		'title'      => get_the_title( $post ),
+		'summary'    => get_the_excerpt( $post ),
+		'day'        => $time ? wp_date( 'd', $time, new DateTimeZone( 'UTC' ) ) : '',
+		'month'      => $time ? wp_date( 'M', $time, new DateTimeZone( 'UTC' ) ) : '',
+		'date_full'  => $time ? wp_date( 'j M Y', $time, new DateTimeZone( 'UTC' ) ) : '',
+		'datetime'   => $start,
+		'upcoming'   => $start && $start >= current_time( 'Y-m-d' ),
+		'area'       => $area,
+		'area_label' => $areas[ $area ],
+		'format_key' => isset( $formats[ $format ] ) ? $format : 'in-person',
+		'format'     => ( isset( $formats[ $format ] ) ? $formats[ $format ] : $formats['in-person'] ) . ( $venue ? ' · ' . $venue : '' ),
+		'fee'        => get_post_meta( $post->ID, '_jodyn_fee', true ),
+		'url'        => $url ? $url : get_permalink( $post ),
+		'slug'       => $post->post_name,
+		'image'      => get_post_thumbnail_id( $post ),
 	);
 }
