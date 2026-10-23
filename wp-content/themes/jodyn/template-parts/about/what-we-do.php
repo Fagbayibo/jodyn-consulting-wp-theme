@@ -5,14 +5,14 @@
  * White. The four services as a linked chain: four columns whose icons are joined by a lime
  * line that draws itself as you scroll (assets/js/about.js). On phones the chain runs down
  * the left. At rest (no JS, reduced motion) the line is fully drawn.
- * Copy: content/pages/about.md, section 5 (approved; Systems Audit and Tax scope still to be
- * confirmed by the client).
+ * Copy: content/pages/about.md, section 5 (approved; Systems Audit and Tax scope confirmed by
+ * the client 2026-10-23).
  *
  * @package JoDyn
  */
 
 $jodyn_services = array(
-	array( 'Advisory', 'compass', 'We help leaders make better decisions and build stronger organisations. Our advisory work covers strategy and business advisory, organisational transformation, people and culture, and performance improvement. We work with leadership teams to diagnose challenges, design practical solutions and support implementation.', 'Explore Advisory Services', '/services/advisory/' ),
+	array( 'Advisory', 'compass', 'We help leaders make better decisions and build stronger organisations. Our advisory work covers strategy and business advisory, organisational transformation, people and culture, performance improvement, and learning and development. We work with leadership teams to diagnose challenges, design practical solutions and support implementation.', 'Explore Advisory Services', '/services/advisory/' ),
 	array( 'Systems Audit', 'search', 'Independent reviews of the systems, processes and controls your organisation runs on, so you can see clearly where the risks and inefficiencies are and fix them before they become costly. Our reviews cover internal controls, processes and operations, IT and information systems, and governance and compliance.', 'Explore Systems Audit', '/services/systems-audit/' ),
 	array( 'Tax Consultancy', 'receipt', 'Practical tax advice and compliance support that keeps your organisation compliant, reduces risk and avoids costly surprises. Our support covers compliance and filing, tax planning, tax health checks and support during reviews by the tax authorities.', 'Explore Tax Consultancy', '/services/tax-consultancy/' ),
 	array( 'Training & Development', 'cap', 'We equip individuals and teams with the skills to perform and lead. Our training portfolio includes leadership and management development, corporate in-house programmes, open programmes, capacity building and professional skills training, delivered in person, online or in a hybrid format.', 'Explore Training Programmes', '/training/programmes/' ),

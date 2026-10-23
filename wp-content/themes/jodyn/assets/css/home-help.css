@@ -45,6 +45,8 @@
   margin: 0; padding: var(--space-6) clamp(28px, 3vw, 44px) clamp(28px, 3vw, 44px); list-style: none; border-top: 1px solid rgba(255, 255, 255, .1);
 }
 .jd-help__items li { display: grid; align-content: start; gap: 6px; }
+/* An odd item out (Advisory has five) spans the full row */
+.jd-help__items li:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .jd-help__items h4 { margin: 0; font-size: var(--fs-body); font-weight: 600; line-height: 1.35; color: var(--on-forest); }
 .jd-help__items h4::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 10px; border-radius: 2px; background: var(--lime); vertical-align: .1em; }
 .jd-help__items p { margin: 0; font-size: var(--fs-small); line-height: 1.55; color: var(--on-forest-muted); }

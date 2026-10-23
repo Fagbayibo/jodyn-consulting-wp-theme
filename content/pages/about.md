@@ -86,16 +86,18 @@ Heading: Four Services, Working Together
 Text: Our work is built on four connected areas of expertise. Many clients start with one and discover the value of combining them.
 
 ### Advisory
-Text: We help leaders make better decisions and build stronger organisations. Our advisory work covers strategy and business advisory, organisational transformation, people and culture, and performance improvement. We work with leadership teams to diagnose challenges, design practical solutions and support implementation.
+Text: We help leaders make better decisions and build stronger organisations. Our advisory work covers strategy and business advisory, organisational transformation, people and culture, performance improvement, and learning and development. We work with leadership teams to diagnose challenges, design practical solutions and support implementation.
 Button: Explore Advisory Services → /services/advisory/
 
+> Changed (2026-10-23): "and learning and development" added to the advisory scope, to match the Advisory page's fifth service.
+
 ### Systems Audit
-> NEW, confirm with client: same scope as the home page, section 3
+> NEW, confirmed by client 2026-10-23: same scope as the home page, section 3
 Text: Independent reviews of the systems, processes and controls your organisation runs on, so you can see clearly where the risks and inefficiencies are and fix them before they become costly. Our reviews cover internal controls, processes and operations, IT and information systems, and governance and compliance.
 Button: Explore Systems Audit → /services/systems-audit/
 
 ### Tax Consultancy
-> NEW, confirm with client: same scope as the home page, section 3
+> NEW, confirmed by client 2026-10-23: same scope as the home page, section 3
 Text: Practical tax advice and compliance support that keeps your organisation compliant, reduces risk and avoids costly surprises. Our support covers compliance and filing, tax planning, tax health checks and support during reviews by the tax authorities.
 Button: Explore Tax Consultancy → /services/tax-consultancy/
 

@@ -21,6 +21,21 @@ foreach ( array( 'Home', 'About us', 'Services', 'Training calendar', 'Insights'
 		)
 	);
 }
+// Service pages live under Services, e.g. /services/advisory/.
+foreach ( array( 'Advisory' ) as $title ) {
+	if ( ! get_page_by_path( 'services/' . sanitize_title( $title ) ) ) {
+		wp_insert_post(
+			array(
+				'post_title'   => $title,
+				'post_name'    => sanitize_title( $title ),
+				'post_type'    => 'page',
+				'post_status'  => 'publish',
+				'post_parent'  => $page_ids['Services'],
+				'post_content' => '<p>Placeholder content for ' . esc_html( $title ) . '.</p>',
+			)
+		);
+	}
+}
 update_option( 'show_on_front', 'page' );
 update_option( 'page_on_front', $page_ids['Home'] );
 

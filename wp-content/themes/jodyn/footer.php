@@ -18,14 +18,19 @@ $jodyn_privacy = get_privacy_policy_url();
 // The call to action points at the contact page, so it isn't repeated there.
 $jodyn_has_cta = ! is_page( 'contact-us' );
 /**
- * Filter the footer card's heading (may contain <em> for the boxed word) and text,
- * so a page can end with its own closing call to action.
+ * Filter the footer card's heading (may contain <em> for the boxed word), text and buttons,
+ * so a page can end with its own closing call to action. Each button is
+ * array( label, path ); the first is solid, any second one is the outline style.
  */
 $jodyn_cta = apply_filters(
 	'jodyn_footer_cta',
 	array(
-		'title' => 'How Can We Help You <em>Grow?</em>',
-		'text'  => 'Whether you need strategic advice, an independent review of your systems, support with your taxes or a training programme for your team, our advisors are ready to listen. Tell us about your goals, and we will recommend the right next step.',
+		'title'   => 'How Can We Help You <em>Grow?</em>',
+		'text'    => 'Whether you need strategic advice, an independent review of your systems, support with your taxes or a training programme for your team, our advisors are ready to listen. Tell us about your goals, and we will recommend the right next step.',
+		'buttons' => array(
+			array( 'Talk to an Advisor', '/contact-us/' ),
+			array( 'View Training Calendar', '/training/calendar/' ),
+		),
 	)
 );
 ?>
@@ -41,14 +46,12 @@ $jodyn_cta = apply_filters(
 				</div>
 				<div class="jd-footer__cta-act">
 					<div class="jd-footer__btns">
-						<a class="jd-btn jd-btn--arrow" href="<?php echo esc_url( home_url( '/contact-us/' ) ); ?>">
-							Talk to an Advisor
-							<span class="jd-btn__disc"><?php echo jodyn_arrow_swap(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-						</a>
-						<a class="jd-btn jd-btn--secondary jd-btn--arrow" href="<?php echo esc_url( home_url( '/training/calendar/' ) ); ?>">
-							View Training Calendar
-							<span class="jd-btn__disc"><?php echo jodyn_arrow_swap(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-						</a>
+						<?php foreach ( $jodyn_cta['buttons'] as $i => $jodyn_button ) : ?>
+							<a class="jd-btn<?php echo $i ? ' jd-btn--secondary' : ''; ?> jd-btn--arrow" href="<?php echo esc_url( home_url( $jodyn_button[1] ) ); ?>">
+								<?php echo esc_html( $jodyn_button[0] ); ?>
+								<span class="jd-btn__disc"><?php echo jodyn_arrow_swap(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+							</a>
+						<?php endforeach; ?>
 					</div>
 					<?php if ( $jodyn_contact['tel'] || $jodyn_contact['email'] ) : ?>
 						<p class="jd-footer__line">

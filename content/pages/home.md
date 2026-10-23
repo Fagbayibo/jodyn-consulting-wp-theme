@@ -61,10 +61,13 @@ Text: Expert guidance to help your organisation make better decisions, work more
 - Organisational Transformation — We redesign processes, structures and ways of working so your organisation runs more efficiently and responds faster to change.
 - People & Culture Advisory — We align your people, roles and culture with your business goals, from organisational design to performance management.
 - Performance Improvement — We identify what is holding performance back and work with you to implement solutions that raise productivity and accountability.
+- Learning & Development Advisory — We identify your real capability gaps and build learning strategies that develop the skills your business needs.
 Button: Explore Advisory Services → /services/advisory/
 
+> Changed (2026-10-23): Learning & Development Advisory added as the fifth advisory service, to match the Advisory page. Its line is condensed from the client's Advisory page wording.
+
 ### Systems Audit
-> NEW, confirm with client: scope and the four items below
+> NEW, confirmed by client 2026-10-23: scope and the four items below
 Text: Independent reviews of the systems, processes and controls your organisation runs on, so you can see clearly where the risks and inefficiencies are and fix them before they become costly.
 - Internal Controls Review — We test how well your controls protect your assets, data and decisions, and show you where the gaps are.
 - Process & Operations Audit — We trace how work actually flows through your organisation and pinpoint delays, duplication and weak points.
@@ -73,7 +76,7 @@ Text: Independent reviews of the systems, processes and controls your organisati
 Button: Explore Systems Audit → /services/systems-audit/
 
 ### Tax Consultancy
-> NEW, confirm with client: scope and the four items below
+> NEW, confirmed by client 2026-10-23: scope and the four items below
 Text: Practical tax advice and compliance support that keeps your organisation compliant, reduces risk and avoids costly surprises.
 - Tax Compliance & Filing — Accurate, on-time returns and filings, so you meet every obligation without the last-minute rush.
 - Tax Planning & Advisory — Structuring decisions and transactions to manage your tax position efficiently and within the law.

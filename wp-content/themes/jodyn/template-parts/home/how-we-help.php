@@ -24,6 +24,7 @@ $jodyn_services = array(
 			array( 'Organisational Transformation', 'We redesign processes, structures and ways of working so your organisation runs more efficiently and responds faster to change.' ),
 			array( 'People & Culture Advisory', 'We align your people, roles and culture with your business goals, from organisational design to performance management.' ),
 			array( 'Performance Improvement', 'We identify what is holding performance back and work with you to implement solutions that raise productivity and accountability.' ),
+			array( 'Learning & Development Advisory', 'We identify your real capability gaps and build learning strategies that develop the skills your business needs.' ),
 		),
 	),
 	array(
