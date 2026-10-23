@@ -107,8 +107,8 @@ function jodyn_fallback_menu_item( $id, $parent, $title, $url, $description = ''
 }
 
 /**
- * Shown until a menu is assigned to the Primary location, so a fresh install
- * still has a complete header. Mirrors the agreed site map.
+ * Shown until a menu is assigned to the Primary location (the site setup assigns one), so the
+ * header is never empty. Built from jodyn_site_map() in inc/setup.php.
  *
  * @param array $args wp_nav_menu() arguments.
  */
@@ -117,31 +117,15 @@ function jodyn_nav_fallback( $args ) {
 	$items = array();
 	$id    = 900000;
 
-	$tree = array(
-		array( __( 'About us', 'jodyn' ), '/about-us/' ),
-		array(
-			__( 'Services', 'jodyn' ),
-			'/services/',
-			array(
-				array( __( 'Strategy & advisory', 'jodyn' ), __( 'Direction, priorities and the plan to get there', 'jodyn' ) ),
-				array( __( 'People & organisation', 'jodyn' ), __( 'Structures, talent and culture that perform', 'jodyn' ) ),
-				array( __( 'Innovation consulting', 'jodyn' ), __( 'New products, models and ways of working', 'jodyn' ) ),
-				array( __( 'Project management', 'jodyn' ), __( 'Delivery that lands on time and on budget', 'jodyn' ) ),
-				array( __( 'Research & insights', 'jodyn' ), __( 'Evidence for the decisions that matter', 'jodyn' ) ),
-				array( __( 'Training & capability', 'jodyn' ), __( 'Programmes from the training calendar', 'jodyn' ) ),
-			),
-		),
-		array( __( 'Training calendar', 'jodyn' ), '/training-calendar/' ),
-		array( __( 'Insights', 'jodyn' ), '/insights/' ),
-		array( __( 'Careers', 'jodyn' ), '/careers/' ),
-	);
-
-	foreach ( $tree as $node ) {
+	$url = static function ( $node ) {
+		return empty( $node['page'] ) ? '#' : home_url( '/' . $node['page'] . '/' );
+	};
+	foreach ( jodyn_site_map() as $node ) {
 		$parent_id = ++$id;
-		$children  = isset( $node[2] ) ? $node[2] : array();
-		$items[]   = jodyn_fallback_menu_item( $parent_id, 0, $node[0], home_url( $node[1] ), '', ! empty( $children ) );
+		$children  = isset( $node['children'] ) ? $node['children'] : array();
+		$items[]   = jodyn_fallback_menu_item( $parent_id, 0, $node['title'], $url( $node ), '', ! empty( $children ) );
 		foreach ( $children as $child ) {
-			$items[] = jodyn_fallback_menu_item( ++$id, $parent_id, $child[0], home_url( $node[1] . '#' . sanitize_title( $child[0] ) ), $child[1] );
+			$items[] = jodyn_fallback_menu_item( ++$id, $parent_id, $child['title'], $url( $child ), $child['desc'] ?? '' );
 		}
 	}
 

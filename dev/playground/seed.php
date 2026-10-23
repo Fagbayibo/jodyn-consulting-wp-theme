@@ -7,90 +7,10 @@ require_once '/wordpress/wp-load.php';
 
 update_option( 'blogname', 'JoDyn Advisory & Consulting' );
 update_option( 'blogdescription', 'Advisory that turns strategy into measurable growth' );
-update_option( 'permalink_structure', '/%postname%/' );
 
-$page_ids = array();
-foreach ( array( 'Home', 'About us', 'Services', 'Training', 'Training calendar', 'Insights', 'Careers', 'Contact us' ) as $title ) {
-	$existing = get_page_by_path( sanitize_title( $title ) );
-	$page_ids[ $title ] = $existing ? $existing->ID : wp_insert_post(
-		array(
-			'post_title'   => $title,
-			'post_type'    => 'page',
-			'post_status'  => 'publish',
-			'post_content' => '<p>Placeholder content for ' . esc_html( $title ) . '.</p>',
-		)
-	);
-}
-// Service pages live under Services (/services/advisory/), training pages under Training
-// (/training/programmes/).
-foreach ( array( 'Advisory' => 'Services', 'Programmes' => 'Training' ) as $title => $parent ) {
-	if ( ! get_page_by_path( sanitize_title( $parent ) . '/' . sanitize_title( $title ) ) ) {
-		wp_insert_post(
-			array(
-				'post_title'   => $title,
-				'post_name'    => sanitize_title( $title ),
-				'post_type'    => 'page',
-				'post_status'  => 'publish',
-				'post_parent'  => $page_ids[ $parent ],
-				'post_content' => '<p>Placeholder content for ' . esc_html( $title ) . '.</p>',
-			)
-		);
-	}
-}
-update_option( 'show_on_front', 'page' );
-update_option( 'page_on_front', $page_ids['Home'] );
-
-$menu = wp_get_nav_menu_object( 'Primary' );
-if ( $menu ) {
-	wp_delete_nav_menu( $menu->term_id );
-}
-$menu_id = wp_create_nav_menu( 'Primary' );
-
-$add_page = function ( $title, $parent = 0 ) use ( $menu_id, $page_ids ) {
-	return wp_update_nav_menu_item(
-		$menu_id,
-		0,
-		array(
-			'menu-item-title'     => $title,
-			'menu-item-object'    => 'page',
-			'menu-item-object-id' => $page_ids[ $title ],
-			'menu-item-type'      => 'post_type',
-			'menu-item-parent-id' => $parent,
-			'menu-item-status'    => 'publish',
-		)
-	);
-};
-
-$add_page( 'About us' );
-$services = $add_page( 'Services' );
-foreach (
-	array(
-		'Strategy & advisory'   => 'Direction, priorities and the plan to get there',
-		'People & organisation' => 'Structures, talent and culture that perform',
-		'Innovation consulting' => 'New products, models and ways of working',
-		'Project management'    => 'Delivery that lands on time and on budget',
-		'Research & insights'   => 'Evidence for the decisions that matter',
-		'Training & capability' => 'Programmes from the 2026 training calendar',
-	) as $title => $description
-) {
-	wp_update_nav_menu_item(
-		$menu_id,
-		0,
-		array(
-			'menu-item-title'       => $title,
-			'menu-item-url'         => home_url( '/services/#' . sanitize_title( $title ) ),
-			'menu-item-type'        => 'custom',
-			'menu-item-description' => $description,
-			'menu-item-parent-id'   => $services,
-			'menu-item-status'      => 'publish',
-		)
-	);
-}
-$add_page( 'Training calendar' );
-$add_page( 'Insights' );
-$add_page( 'Careers' );
-
-set_theme_mod( 'nav_menu_locations', array( 'primary' => $menu_id ) );
+// Pages, front page, posts page, Primary menu and the programme catalogue come from the theme's
+// own site setup (inc/setup.php), exactly as on a real install.
+jodyn_site_setup();
 
 // Hero film: import into the Media Library and set it in the Customizer, as the client will.
 require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -136,51 +56,27 @@ if ( $poster ) {
 echo "Hero film {$film}, mobile {$mobile}, poster {$poster}\n";
 flush_rewrite_rules();
 
-echo "Seeded menu {$menu_id}\n";
 
-// Training programmes: the client's sample titles in the six areas (training.md, section 3).
+// Training programmes: the catalogue comes from the theme setup above (training.md, section 3).
 // Three carry a sample upcoming run (dates always in the future) for the home page and calendar.
 $runs = array(
 	'Leadership Essentials for New Managers'          => array( 'Make a confident transition into management. Learn how to lead former peers, delegate effectively, give feedback and motivate your team to deliver.', '+23 days', 'in-person', '₦250,000', 'leadership-essentials.jpg' ),
 	'Strategic Thinking and Planning'                 => array( 'Move from ideas to results. Learn practical tools for setting priorities, making sound decisions and turning strategy into action across your team.', '+37 days', 'online', '₦180,000', 'strategic-thinking.jpg' ),
 	'Effective Communication and Presentation Skills' => array( 'Communicate with clarity and influence. Build the skills to present ideas, manage difficult conversations and strengthen relationships with stakeholders.', '+48 days', 'hybrid', '₦220,000', 'effective-communication.jpg' ),
 );
-$catalogue = array(
-	'leadership'   => array( 'Leadership Essentials for New Managers', 'Leading High-Performance Teams', 'Strategic Leadership for Senior Executives', 'Coaching and Mentoring Skills for Managers', 'Emotional Intelligence for Leaders', 'Leading Through Change' ),
-	'strategy'     => array( 'Strategic Thinking and Planning', 'From Strategy to Execution: Delivering Results', 'Setting Goals, KPIs and OKRs', 'Problem Solving and Decision Making', 'Business Planning for Growth' ),
-	'hr'           => array( 'Performance Management That Works', 'Talent Management and Succession Planning', 'Building a High-Performance Culture', 'Employee Engagement and Retention Strategies', 'HR for Non-HR Managers', 'Training Needs Analysis and Learning Evaluation' ),
-	'professional' => array( 'Effective Communication and Presentation Skills', 'Time Management and Personal Productivity', 'Business Writing and Report Writing', 'Teamwork and Collaboration', 'Stakeholder Management and Influencing', 'Workplace Ethics and Professionalism' ),
-	'customer'     => array( 'Customer Service Excellence', 'Managing Difficult Customers and Complaints', 'Sales and Negotiation Skills', 'Building Customer-Centric Teams', 'Business Development and Relationship Management' ),
-	'projects'     => array( 'Project Management Fundamentals', 'Process Improvement and Operational Efficiency', 'Risk Management Essentials', 'Managing Change in Organisations', 'Monitoring and Evaluation for Programmes and Projects' ),
-);
-$order = 0;
-foreach ( $catalogue as $area => $titles ) {
-	foreach ( $titles as $title ) {
-		++$order;
-		if ( get_posts( array( 'post_type' => 'jodyn_programme', 'title' => $title, 'fields' => 'ids', 'numberposts' => 1 ) ) ) {
-			continue;
-		}
-		$run = isset( $runs[ $title ] ) ? $runs[ $title ] : null;
-		$id  = wp_insert_post(
-			array(
-				'post_type'    => 'jodyn_programme',
-				'post_status'  => 'publish',
-				'post_title'   => $title,
-				'post_excerpt' => $run ? $run[0] : '',
-				'post_content' => $run ? '<p>' . $run[0] . '</p>' : '',
-				'menu_order'   => $order,
-			)
-		);
-		update_post_meta( $id, '_jodyn_area', $area );
-		if ( $run ) {
-			update_post_meta( $id, '_jodyn_start', gmdate( 'Y-m-d', strtotime( $run[1] ) ) );
-			update_post_meta( $id, '_jodyn_format', $run[2] );
-			update_post_meta( $id, '_jodyn_fee', $run[3] );
-			$photo = $import( '/wordpress/dev-media/programmes/' . $run[4] );
-			if ( $photo ) {
-				set_post_thumbnail( $id, $photo );
-			}
-		}
+foreach ( $runs as $title => $run ) {
+	$found = get_posts( array( 'post_type' => 'jodyn_programme', 'title' => $title, 'fields' => 'ids', 'numberposts' => 1 ) );
+	if ( ! $found || get_post_meta( $found[0], '_jodyn_start', true ) ) {
+		continue;
+	}
+	$id = $found[0];
+	wp_update_post( array( 'ID' => $id, 'post_excerpt' => $run[0], 'post_content' => '<p>' . $run[0] . '</p>' ) );
+	update_post_meta( $id, '_jodyn_start', gmdate( 'Y-m-d', strtotime( $run[1] ) ) );
+	update_post_meta( $id, '_jodyn_format', $run[2] );
+	update_post_meta( $id, '_jodyn_fee', $run[3] );
+	$photo = $import( '/wordpress/dev-media/programmes/' . $run[4] );
+	if ( $photo ) {
+		set_post_thumbnail( $id, $photo );
 	}
 }
 $pdf = $import( '/wordpress/dev-media/programmes/jodyn-training-calendar-sample.pdf' );
@@ -188,7 +84,6 @@ set_theme_mod( 'jodyn_calendar_pdf', $pdf );
 echo "Seeded programmes, calendar PDF {$pdf}\n";
 
 // Insights: the three launch articles as sample posts (titles only; the client writes the articles).
-update_option( 'page_for_posts', $page_ids['Insights'] );
 wp_delete_post( 1, true ); // "Hello world!"
 $articles = array(
 	array( 'Why Leadership Training Is a Business Investment, Not a Cost', 'Training', '-2 days', 'leadership-training.jpg' ),
