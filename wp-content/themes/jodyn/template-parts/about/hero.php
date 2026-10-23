@@ -3,7 +3,7 @@
  * About · 1. Hero.
  *
  * White, centred heading (lime highlight on the last word), then a strip of four photos
- * and a lime tile that wipe open one after another on load (assets/js/about-hero.js).
+ * and a lime tile that wipe open one after another on load (assets/js/about.js).
  * Copy: content/pages/about.md, section 1 (approved).
  *
  * @package JoDyn

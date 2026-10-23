@@ -3,7 +3,8 @@
  * About us page (slug: about-us).
  *
  * 1. Hero: template-parts/about/hero.php.
- * Sections 2-7 (story, mission, values, what we do, approach, experts) follow as they are built.
+ * 2. Our story: template-parts/about/story.php.
+ * Sections 3-7 (mission, values, what we do, approach, experts) follow as they are built.
  * Copy: content/pages/about.md (approved).
  *
  * @package JoDyn
@@ -24,6 +25,8 @@ get_header();
 <main id="main" class="jd-main jd-main--flush">
 
 	<?php get_template_part( 'template-parts/about/hero' ); ?>
+
+	<?php get_template_part( 'template-parts/about/story' ); ?>
 
 </main>
 <?php
