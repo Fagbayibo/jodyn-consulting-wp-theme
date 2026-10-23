@@ -129,7 +129,9 @@ add_filter( 'http_request_args', 'jodyn_update_skip_wporg', 10, 2 );
  * @param array       $extra    What was updated.
  */
 function jodyn_update_clear_cache( $upgrader, $extra ) {
-	if ( isset( $extra['type'] ) && 'theme' === $extra['type'] && in_array( get_template(), (array) ( $extra['themes'] ?? array() ), true ) ) {
+	// One theme updated from Dashboard → Updates arrives as 'theme'; a bulk update as 'themes'.
+	$themes = array_merge( (array) ( $extra['theme'] ?? array() ), (array) ( $extra['themes'] ?? array() ) );
+	if ( isset( $extra['type'] ) && 'theme' === $extra['type'] && in_array( get_template(), $themes, true ) ) {
 		delete_site_transient( JODYN_UPDATE_CACHE );
 	}
 }
