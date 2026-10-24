@@ -1,0 +1,137 @@
+/* =========================================================================
+   Contact page (page-contact-us.php)
+   ========================================================================= */
+
+/* ---- Hero and Ways to reach us (template-parts/contact/top.php) ----
+   White with light particles: a centred heading, then three outlined cards with a lime top edge. */
+.jd-ct-top { position: relative; overflow: clip; padding: calc(72px + 16px + clamp(40px, 5vw, 72px)) 0 clamp(56px, 6vw, 96px); background: var(--surface); color: var(--ink); }
+.jd-ct-top > .jd-container { position: relative; z-index: 1; }
+.jd-ct-top p, .jd-ct-top h3 { margin: 0; }
+.jd-ct-top__copy { display: grid; gap: var(--space-5); justify-items: center; max-width: 820px; margin: 0 auto; text-align: center; }
+.jd-ct-top__title { margin: 0; font-size: var(--fs-h1); font-weight: 500; line-height: 1.06; letter-spacing: -.025em; }
+.jd-ct-top__title em { padding: 0 .06em; font-style: normal; color: var(--forest); background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); }
+.jd-ct-top__text { max-width: 58ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-muted); }
+
+.jd-ct-top__doors { margin-top: clamp(48px, 6vw, 80px); }
+.jd-ct-top__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); margin: 0; padding: 0; list-style: none; }
+.jd-ct-top__card { display: grid; align-content: start; gap: var(--space-3); padding: clamp(24px, 2.5vw, 36px); border: 1px solid var(--line); border-top: 6px solid var(--lime); border-radius: var(--radius-lg); background: var(--surface); transition: border-color var(--dur-base), translate var(--dur-base) var(--ease-out); }
+.jd-ct-top__card:hover { border-color: var(--forest); border-top-color: var(--lime); translate: 0 -4px; }
+.jd-ct-top__ico { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: var(--space-2); border-radius: 14px; background: var(--forest); color: var(--lime); }
+.jd-ct-top__ico svg { width: 22px; height: 22px; }
+.jd-ct-top__card h3 { font-size: var(--fs-h4); font-weight: 600; line-height: 1.3; }
+.jd-ct-top__card > p { font-size: var(--fs-small); line-height: 1.6; color: var(--ink-muted); }
+.jd-ct-top__lines { display: grid; gap: 6px; margin: var(--space-2) 0 0; padding: var(--space-4) 0 0; border-top: 1px solid var(--line); list-style: none; font-size: var(--fs-small); }
+.jd-ct-top__lines li { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.jd-ct-top__lines svg { flex: none; width: 16px; height: 16px; color: var(--forest); }
+.jd-ct-top__lines a { color: inherit; text-decoration: none; overflow-wrap: anywhere; }
+.jd-ct-top__lines a:hover { color: var(--forest); text-decoration: underline; }
+.jd-ct-top__send { display: inline-flex; align-items: center; gap: 8px; width: max-content; margin-top: var(--space-2); font-size: var(--fs-small); font-weight: 600; color: var(--forest); text-decoration: underline; text-underline-offset: 4px; }
+.jd-ct-top__send svg { flex: none; width: 16px; height: 16px; transition: translate var(--dur-base) var(--ease-out); }
+.jd-ct-top__send:hover svg { translate: 4px 0; }
+
+@media (max-width: 1023px) {
+  .jd-ct-top__list { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- Form, office details and social links (template-parts/contact/form.php) ----
+   Forest with particles: the form on dark fields on the left; Visit or Call Us and Stay Connected
+   in a column on the right behind a thin line. */
+.jd-ct-form { position: relative; overflow: clip; padding-block: clamp(64px, 7vw, 112px); background: var(--forest); color: var(--on-forest); scroll-margin-top: 0; }
+.jd-ct-form > .jd-container { position: relative; z-index: 1; }
+.jd-ct-form p, .jd-ct-form h2, .jd-ct-form h3 { margin: 0; }
+.jd-ct-form [hidden] { display: none !important; }
+.jd-ct-form__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(40px, 6vw, 96px); align-items: start; }
+.jd-ct-form__head { display: grid; gap: var(--space-4); margin-bottom: var(--space-7); }
+.jd-ct-form__title { font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-ct-form__title em { font-style: normal; color: var(--lime); }
+.jd-ct-form__text { font-size: var(--fs-body); line-height: 1.6; color: var(--on-forest-muted); }
+
+.jd-ct-form__form { display: grid; gap: var(--space-5); }
+.jd-ct-form__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.jd-ct-form__field { display: grid; gap: 6px; min-width: 0; font-size: var(--fs-small); font-weight: 500; }
+.jd-ct-form__field.is-full { grid-column: 1 / -1; }
+.jd-ct-form__field i, .jd-ct-form__check i { font-style: normal; color: var(--lime); }
+.jd-ct-form input[type=text], .jd-ct-form input[type=email], .jd-ct-form input[type=tel], .jd-ct-form select, .jd-ct-form textarea {
+  width: 100%; min-width: 0; height: 52px; padding: 0 16px; border: 1px solid rgba(255, 255, 255, .22); border-radius: 12px; background: rgba(255, 255, 255, .06); color: #fff;
+  font: inherit; font-size: var(--fs-body); font-weight: 400; transition: border-color var(--dur-base), box-shadow var(--dur-base);
+}
+.jd-ct-form textarea { height: auto; padding: 14px 16px; line-height: 1.5; resize: vertical; }
+.jd-ct-form select option { color: var(--ink); }
+.jd-ct-form input:focus, .jd-ct-form select:focus, .jd-ct-form textarea:focus { outline: none; border-color: var(--lime); box-shadow: 0 0 0 3px rgba(229, 253, 74, .25); }
+.jd-ct-form [aria-invalid="true"] { border-color: #ffb4a8 !important; }
+.jd-ct-form__select { position: relative; display: block; }
+.jd-ct-form__select select { appearance: none; padding-right: 44px; cursor: pointer; }
+.jd-ct-form__select svg { position: absolute; right: 16px; top: 50%; width: 18px; height: 18px; translate: 0 -50%; pointer-events: none; color: var(--on-forest-muted); }
+.jd-ct-form__check { position: relative; display: flex; gap: 12px; align-items: flex-start; font-size: var(--fs-small); line-height: 1.55; cursor: pointer; }
+.jd-ct-form__check input { position: absolute; opacity: 0; width: 22px; height: 22px; margin: 0; }
+.jd-ct-form__check a { color: var(--lime); font-weight: 600; text-underline-offset: 3px; }
+.jd-ct-form__box { flex: none; display: grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid rgba(255, 255, 255, .5); border-radius: 6px; color: transparent; transition: background-color var(--dur-base), border-color var(--dur-base), color var(--dur-base); }
+.jd-ct-form__box svg { width: 14px; height: 14px; }
+.jd-ct-form__check input:checked + .jd-ct-form__box { border-color: var(--lime); background: var(--lime); color: var(--forest); }
+.jd-ct-form__check input:focus-visible + .jd-ct-form__box { outline: 2px solid var(--lime); outline-offset: 2px; }
+.jd-ct-form__check input[aria-invalid="true"] + .jd-ct-form__box { border-color: #ffb4a8; }
+.jd-ct-form__trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.jd-ct-form__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+.jd-ct-form__foot .jd-btn[disabled] { opacity: .7; cursor: progress; }
+.jd-ct-form__status { font-size: var(--fs-small); font-weight: 500; color: var(--lime); }
+.jd-ct-form__status.is-error { color: #ffb4a8; }
+.jd-ct-form__done { display: grid; justify-items: start; gap: var(--space-4); padding: clamp(24px, 3vw, 40px); border-radius: var(--radius-lg); background: rgba(255, 255, 255, .06); outline: none; }
+.jd-ct-form__done-ico { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: var(--lime); color: var(--forest); }
+.jd-ct-form__done-ico svg { width: 28px; height: 28px; }
+.jd-ct-form__done h3 { font-size: var(--fs-h3); font-weight: 500; }
+.jd-ct-form__done p { max-width: 54ch; line-height: 1.6; color: var(--on-forest-muted); }
+
+.jd-ct-form__side { display: grid; gap: var(--space-7); padding-left: clamp(24px, 3vw, 48px); border-left: 1px solid rgba(255, 255, 255, .16); }
+.jd-ct-form__h { margin-bottom: var(--space-5) !important; font-size: var(--fs-h3); font-weight: 500; line-height: 1.2; }
+.jd-ct-form__rows { display: grid; gap: var(--space-4); margin: 0 0 var(--space-6); padding: 0; list-style: none; font-size: var(--fs-small); }
+.jd-ct-form__rows li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; }
+.jd-ct-form__oi { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--lime); color: var(--forest); }
+.jd-ct-form__oi svg { width: 18px; height: 18px; }
+.jd-ct-form__rows b { display: block; font-size: var(--fs-caption); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--on-forest-muted); }
+.jd-ct-form__rows a { color: inherit; text-decoration: none; overflow-wrap: anywhere; }
+.jd-ct-form__rows a:hover { color: var(--lime); text-decoration: underline; }
+.jd-ct-form__office .jd-btn__disc svg { width: 18px; height: 18px; }
+.jd-ct-form__follow { display: grid; gap: var(--space-3); padding-top: var(--space-6); border-top: 1px solid rgba(255, 255, 255, .16); }
+.jd-ct-form__follow h3 { font-size: var(--fs-h4); font-weight: 600; }
+.jd-ct-form__follow p { font-size: var(--fs-small); line-height: 1.6; color: var(--on-forest-muted); }
+.jd-ct-form__social { display: flex; flex-wrap: wrap; gap: 10px; margin: var(--space-2) 0 0; padding: 0; list-style: none; }
+.jd-ct-form__social a { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid rgba(255, 255, 255, .4); border-radius: 50%; color: var(--on-forest); transition: background-color var(--dur-base), color var(--dur-base), border-color var(--dur-base); }
+.jd-ct-form__social a:hover { border-color: var(--lime); background: var(--lime); color: var(--forest); }
+.jd-ct-form__social a:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+.jd-ct-form__social svg { width: 18px; height: 18px; }
+
+@media (max-width: 1023px) {
+  .jd-ct-form__grid { grid-template-columns: minmax(0, 1fr); }
+  .jd-ct-form__side { padding: var(--space-7) 0 0; border-left: 0; border-top: 1px solid rgba(255, 255, 255, .16); }
+}
+@media (max-width: 767px) {
+  .jd-ct-form__fields { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .jd-ct-form__foot .jd-btn { width: 100%; justify-content: space-between; }
+}
+
+/* ---- Before You Reach Out (template-parts/contact/faq.php) ----
+   White with light particles: a centred heading over a narrow accordion of outlined rows; the open
+   row turns forest-edged with a lime minus. Native <details>, so no script is needed to open it. */
+.jd-ct-faq { position: relative; overflow: clip; padding-block: clamp(64px, 7vw, 112px); background: var(--surface); color: var(--ink); }
+.jd-ct-faq > .jd-container { position: relative; z-index: 1; }
+.jd-ct-faq p { margin: 0; }
+.jd-ct-faq__in { max-width: 860px; }
+.jd-ct-faq__title { margin: 0 0 clamp(32px, 4vw, 56px); font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; text-align: center; }
+.jd-ct-faq__title em { padding: 0 .06em; font-style: normal; color: var(--forest); background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); }
+.jd-ct-faq__list { display: grid; gap: var(--space-3); }
+.jd-ct-faq__item { padding: 0 var(--space-5); border: 1px solid var(--line); border-radius: 18px; background: var(--surface); transition: border-color var(--dur-base), background-color var(--dur-base); }
+.jd-ct-faq__item[open] { border-color: var(--forest); background: #fbfdf4; }
+.jd-ct-faq__item summary { display: flex; justify-content: space-between; align-items: center; gap: var(--space-5); padding: var(--space-5) 0; font-size: var(--fs-h4); font-weight: 600; line-height: 1.35; cursor: pointer; list-style: none; }
+.jd-ct-faq__item summary::-webkit-details-marker { display: none; }
+.jd-ct-faq__item summary:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; border-radius: 6px; }
+.jd-ct-faq__pm { position: relative; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--forest-tint); transition: background-color var(--dur-base); }
+.jd-ct-faq__pm i { position: absolute; left: 50%; top: 50%; width: 14px; height: 2px; margin: -1px 0 0 -7px; border-radius: 2px; background: var(--forest); transition: rotate .3s var(--ease-out), background-color var(--dur-base); }
+.jd-ct-faq__pm i + i { rotate: 90deg; }
+.jd-ct-faq__item[open] .jd-ct-faq__pm { background: var(--forest); }
+.jd-ct-faq__item[open] .jd-ct-faq__pm i { background: var(--lime); }
+.jd-ct-faq__item[open] .jd-ct-faq__pm i + i { rotate: 0deg; }
+.jd-ct-faq__a { padding: 0 64px var(--space-6) 0; }
+.jd-ct-faq__a p { max-width: 62ch; font-size: var(--fs-body); line-height: 1.7; color: var(--ink-muted); }
+@media (max-width: 600px) { .jd-ct-faq__item { padding: 0 var(--space-4); } .jd-ct-faq__a { padding-right: 0; } }

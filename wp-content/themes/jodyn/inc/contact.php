@@ -48,16 +48,26 @@ function jodyn_contact_customize_register( $wp_customize ) {
 		'jodyn_contact',
 		array(
 			'title'       => __( 'Contact & social', 'jodyn' ),
-			'description' => __( 'Shown in the footer. Leave a field empty to hide it.', 'jodyn' ),
+			'description' => __( 'Shown in the footer and on the Contact page. Leave a field empty to hide it.', 'jodyn' ),
 			'priority'    => 32,
 		)
 	);
 
 	$fields = array(
-		'jodyn_contact_address' => array( __( 'Office address', 'jodyn' ), 'textarea', 'sanitize_textarea_field' ),
-		'jodyn_contact_phone'   => array( __( 'Phone number', 'jodyn' ), 'text', 'sanitize_text_field' ),
-		'jodyn_contact_email'   => array( __( 'Email address', 'jodyn' ), 'email', 'sanitize_email' ),
+		'jodyn_contact_address'  => array( __( 'Office address', 'jodyn' ), 'textarea', 'sanitize_textarea_field' ),
+		'jodyn_contact_phone'    => array( __( 'Phone number', 'jodyn' ), 'text', 'sanitize_text_field' ),
+		'jodyn_contact_email'    => array( __( 'Email address', 'jodyn' ), 'email', 'sanitize_email' ),
+		'jodyn_contact_whatsapp' => array( __( 'WhatsApp number', 'jodyn' ), 'text', 'sanitize_text_field', __( 'With the country code, e.g. +234 803 000 0000. Shows the Chat on WhatsApp button on the Contact page.', 'jodyn' ) ),
+		'jodyn_contact_hours'    => array( __( 'Office hours', 'jodyn' ), 'text', 'sanitize_text_field', __( 'e.g. Monday to Friday, 9:00 am to 5:00 pm (WAT)', 'jodyn' ) ),
+		'jodyn_contact_response' => array( __( 'Response time', 'jodyn' ), 'text', 'sanitize_text_field', __( 'How soon you reply, e.g. one working day. Used on the Contact page.', 'jodyn' ) ),
 	);
+	// Contact page, "Ways to reach us": each line can have its own email and phone
+	foreach ( jodyn_contact_lines() as $key => $line ) {
+		/* translators: %s: enquiry line, e.g. Training Enquiries. */
+		$fields[ "jodyn_contact_{$key}_email" ] = array( sprintf( __( '%s: email (optional)', 'jodyn' ), $line ), 'email', 'sanitize_email', __( 'Leave empty to use the main email address.', 'jodyn' ) );
+		/* translators: %s: enquiry line, e.g. Training Enquiries. */
+		$fields[ "jodyn_contact_{$key}_phone" ] = array( sprintf( __( '%s: phone (optional)', 'jodyn' ), $line ), 'text', 'sanitize_text_field', __( 'Leave empty to use the main phone number.', 'jodyn' ) );
+	}
 	foreach ( jodyn_social_networks() as $key => $network ) {
 		/* translators: %s: social network name. */
 		$fields[ "jodyn_social_$key" ] = array( sprintf( __( '%s link', 'jodyn' ), $network['label'] ), 'url', 'esc_url_raw' );
@@ -74,9 +84,10 @@ function jodyn_contact_customize_register( $wp_customize ) {
 		$wp_customize->add_control(
 			$id,
 			array(
-				'label'   => $field[0],
-				'section' => 'jodyn_contact',
-				'type'    => $field[1],
+				'label'       => $field[0],
+				'description' => isset( $field[3] ) ? $field[3] : '',
+				'section'     => 'jodyn_contact',
+				'type'        => $field[1],
 			)
 		);
 	}
@@ -86,15 +97,50 @@ add_action( 'customize_register', 'jodyn_contact_customize_register' );
 /**
  * The saved contact details. Empty strings for anything not filled in.
  *
- * @return array{address: string, phone: string, tel: string, email: string}
+ * @return array{address: string, phone: string, tel: string, email: string, whatsapp: string, wa: string, hours: string}
  */
 function jodyn_contact() {
-	$phone = trim( (string) get_theme_mod( 'jodyn_contact_phone', '' ) );
+	$phone    = trim( (string) get_theme_mod( 'jodyn_contact_phone', '' ) );
+	$whatsapp = trim( (string) get_theme_mod( 'jodyn_contact_whatsapp', '' ) );
 	return array(
-		'address' => trim( (string) get_theme_mod( 'jodyn_contact_address', '' ) ),
-		'phone'   => $phone,
-		'tel'     => preg_replace( '/[^\d+]/', '', $phone ),
-		'email'   => trim( (string) get_theme_mod( 'jodyn_contact_email', '' ) ),
+		'address'  => trim( (string) get_theme_mod( 'jodyn_contact_address', '' ) ),
+		'phone'    => $phone,
+		'tel'      => preg_replace( '/[^\d+]/', '', $phone ),
+		'email'    => trim( (string) get_theme_mod( 'jodyn_contact_email', '' ) ),
+		'whatsapp' => $whatsapp,
+		'wa'       => preg_replace( '/\D/', '', $whatsapp ), // wa.me wants digits only, country code first
+		'hours'    => trim( (string) get_theme_mod( 'jodyn_contact_hours', '' ) ),
+	);
+}
+
+/**
+ * The Contact page's three ways to reach us (content/pages/contact.md, section 2).
+ *
+ * @return array key => title
+ */
+function jodyn_contact_lines() {
+	return array(
+		'advisory' => __( 'Advisory, Audit and Tax Enquiries', 'jodyn' ),
+		'training' => __( 'Training Enquiries', 'jodyn' ),
+		'general'  => __( 'General Enquiries', 'jodyn' ),
+	);
+}
+
+/**
+ * One line's email and phone, falling back to the main details.
+ *
+ * @param string $key advisory, training or general.
+ * @return array{email: string, phone: string, tel: string}
+ */
+function jodyn_contact_line( $key ) {
+	$main  = jodyn_contact();
+	$email = trim( (string) get_theme_mod( "jodyn_contact_{$key}_email", '' ) );
+	$phone = trim( (string) get_theme_mod( "jodyn_contact_{$key}_phone", '' ) );
+	$phone = $phone ? $phone : $main['phone'];
+	return array(
+		'email' => $email ? $email : $main['email'],
+		'phone' => $phone,
+		'tel'   => preg_replace( '/[^\d+]/', '', $phone ),
 	);
 }
 

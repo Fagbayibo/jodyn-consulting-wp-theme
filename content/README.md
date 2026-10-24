@@ -30,5 +30,6 @@ Use only the fields a section needs. Leave a section out entirely if the page do
 - [training.md](pages/training.md) — Training programmes (/training/programmes/), 6 sections; request form and FAQs moved out
 - [training-calendar.md](pages/training-calendar.md) — Training calendar (/training/calendar/), 5 sections; client copy for Registration, Insights, Contact and the legal pages is in [source/](source/)
 - [registration.md](pages/registration.md) — Registration (/register/), hero, how it works, form, on-screen confirmation and confirmation email
+- [contact.md](pages/contact.md) — Contact (/contact-us/), hero, ways to reach us, form, office details, follow us, quick answers
 
 Other pages are added here as the client sends their copy.

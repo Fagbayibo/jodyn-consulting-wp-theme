@@ -15,6 +15,7 @@ require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/programmes.php';
 require_once get_template_directory() . '/inc/calendar-download.php';
 require_once get_template_directory() . '/inc/registration.php';
+require_once get_template_directory() . '/inc/enquiries.php';
 require_once get_template_directory() . '/inc/contact.php';
 require_once get_template_directory() . '/inc/updater.php';
 require_once get_template_directory() . '/inc/setup.php';
@@ -107,6 +108,23 @@ function jodyn_enqueue_assets() {
 		wp_enqueue_style( 'jodyn-calendar', "$uri/assets/css/calendar.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/calendar.css' ) );
 		jodyn_enqueue_script( 'jodyn-calendar', 'calendar.js', array( 'jodyn-motion' ) );
 		jodyn_enqueue_calendar_download();
+	}
+
+	if ( is_page( 'contact-us' ) ) {
+		wp_enqueue_style( 'jodyn-contact', "$uri/assets/css/contact.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/contact.css' ) );
+		jodyn_enqueue_script( 'jodyn-contact', 'contact.js', array( 'jodyn-motion' ) );
+		wp_localize_script(
+			'jodyn-contact',
+			'jodynContact',
+			array(
+				'endpoint' => esc_url_raw( rest_url( 'jodyn/v1/contact' ) ),
+				'i18n'     => array(
+					'invalid' => __( 'Please complete the fields marked *.', 'jodyn' ),
+					'sending' => __( 'Sending your message…', 'jodyn' ),
+					'error'   => __( 'Something went wrong. Please try again.', 'jodyn' ),
+				),
+			)
+		);
 	}
 
 	if ( is_page( 'register' ) ) {
