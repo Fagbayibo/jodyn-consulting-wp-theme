@@ -1,0 +1,155 @@
+/* =========================================================================
+   Registration page (page-register.php)
+   ========================================================================= */
+
+/* ---- Hero and How registration works (template-parts/register/top.php) ----
+   Soft green under the solid header; the four steps as one ticket. */
+.jd-reg-top { padding: calc(72px + 16px + clamp(40px, 5vw, 72px)) 0 clamp(56px, 6vw, 96px); background: var(--forest-tint); color: var(--ink); }
+.jd-reg-top p, .jd-reg-top h3 { margin: 0; }
+.jd-reg-top__copy { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-8); align-items: end; }
+.jd-reg-top__title { margin: 0; font-size: var(--fs-h1); font-weight: 500; line-height: 1.06; letter-spacing: -.025em; }
+.jd-reg-top__title em { padding: 0 .06em; font-style: normal; color: var(--forest); background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); }
+.jd-reg-top__text { max-width: 56ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-muted); }
+
+.jd-reg-top__pass { display: grid; grid-template-columns: 150px minmax(0, 1fr); margin-top: clamp(40px, 5vw, 64px); overflow: hidden; border-radius: 24px; background: var(--surface); box-shadow: 0 30px 60px -40px rgba(23, 38, 31, .55); }
+.jd-reg-top__stub { display: grid; place-content: center; justify-items: center; gap: 2px; margin: 0; background: var(--lime); color: var(--forest); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; border-right: 2px dashed rgba(35, 56, 49, .35); }
+.jd-reg-top__stub b { font-size: var(--fs-h1); line-height: 1; letter-spacing: 0; }
+.jd-reg-top__steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.jd-reg-top__steps li { display: grid; gap: var(--space-2); align-content: start; padding: var(--space-6); }
+.jd-reg-top__steps li + li { border-left: 2px dashed var(--line); }
+.jd-reg-top__n { width: max-content; padding: 4px 10px; border-radius: 99px; background: var(--forest); color: var(--lime); font-size: var(--fs-caption); font-weight: 600; }
+.jd-reg-top__steps h3 { font-size: var(--fs-h4); font-weight: 600; line-height: 1.3; }
+.jd-reg-top__steps p { font-size: var(--fs-small); line-height: 1.55; color: var(--ink-muted); }
+
+@media (max-width: 1100px) {
+  .jd-reg-top__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jd-reg-top__steps li:nth-child(3) { border-left: 0; }
+  .jd-reg-top__steps li:nth-child(n+3) { border-top: 2px dashed var(--line); }
+}
+@media (max-width: 1023px) {
+  .jd-reg-top__copy { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+}
+@media (max-width: 600px) {
+  .jd-reg-top__pass { grid-template-columns: minmax(0, 1fr); }
+  .jd-reg-top__stub { grid-auto-flow: column; align-items: center; gap: 10px; padding: 14px; border-right: 0; border-bottom: 2px dashed rgba(35, 56, 49, .35); }
+  .jd-reg-top__stub b { font-size: var(--fs-h3); }
+  .jd-reg-top__steps { grid-template-columns: minmax(0, 1fr); }
+  .jd-reg-top__steps li + li { border-left: 0; border-top: 2px dashed var(--line); }
+}
+
+/* ---- Form and summary (template-parts/register/form.php) ----
+   White. Three steps with a progress bar on the left, a soft-green summary sticking on the right
+   (below the form on phones); the thank-you message replaces both after sending. */
+.jd-reg-form { padding-block: clamp(56px, 6vw, 96px); background: var(--surface); color: var(--ink); }
+.jd-reg-form p { margin: 0; }
+.jd-reg-form [hidden] { display: none !important; }
+.jd-reg-form .jd-dl__trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.jd-reg-form__grid { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: clamp(32px, 4vw, 64px); align-items: start; }
+.jd-reg-form__card { padding: clamp(24px, 3vw, 44px); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.jd-reg-form__form { display: grid; gap: var(--space-6); }
+
+.jd-reg-form__prog { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.jd-reg-form__prog li { display: flex; align-items: center; gap: 10px; padding-top: 14px; border-top: 4px solid var(--line); font-size: var(--fs-small); font-weight: 600; color: var(--ink-subtle); transition: border-color var(--dur-base), color var(--dur-base); }
+.jd-reg-form__prog li span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--surface-soft); font-size: var(--fs-caption); }
+.jd-reg-form__prog li.is-done, .jd-reg-form__prog li[aria-current] { border-color: var(--forest); color: var(--ink); }
+.jd-reg-form__prog li.is-done span, .jd-reg-form__prog li[aria-current] span { background: var(--lime); color: var(--forest); }
+
+.jd-reg-form__pane { display: grid; gap: var(--space-7); }
+.jd-reg-form__group { min-width: 0; margin: 0; padding: 0; border: 0; }
+.jd-reg-form__group legend { float: left; width: 100%; margin-bottom: var(--space-5); padding: 0; font-size: var(--fs-h4); font-weight: 600; }
+.jd-reg-form__group legend + * { clear: both; }
+.jd-reg-form__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.jd-reg-form__fields.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.jd-reg-form__field { display: grid; gap: 6px; min-width: 0; align-content: start; font-size: var(--fs-small); font-weight: 500; }
+.jd-reg-form__field.is-full { grid-column: 1 / -1; }
+.jd-reg-form__field i { font-style: normal; color: var(--forest); }
+.jd-reg-form__field small { font-size: var(--fs-caption); font-weight: 400; color: var(--ink-subtle); }
+.jd-reg-form input[type=text], .jd-reg-form input[type=email], .jd-reg-form input[type=tel], .jd-reg-form input[type=number], .jd-reg-form select, .jd-reg-form textarea {
+  width: 100%; min-width: 0; height: 52px; padding: 0 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink);
+  font: inherit; font-size: var(--fs-body); font-weight: 400; transition: border-color var(--dur-base), box-shadow var(--dur-base);
+}
+.jd-reg-form textarea { height: auto; padding: 14px 16px; line-height: 1.5; resize: vertical; }
+.jd-reg-form input:focus, .jd-reg-form select:focus, .jd-reg-form textarea:focus { outline: none; border-color: var(--forest); box-shadow: 0 0 0 3px rgba(35, 56, 49, .18); }
+.jd-reg-form [aria-invalid="true"] { border-color: #b3261e !important; }
+.jd-reg-form__select { position: relative; display: block; }
+.jd-reg-form__select select { appearance: none; padding-right: 44px; cursor: pointer; }
+.jd-reg-form__select svg { position: absolute; right: 16px; top: 50%; translate: 0 -50%; pointer-events: none; color: var(--ink-muted); }
+
+.jd-reg-form__pills { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.jd-reg-form__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+.jd-reg-form__pill, .jd-reg-form__choice { position: relative; cursor: pointer; }
+.jd-reg-form__pill input, .jd-reg-form__choice input { position: absolute; opacity: 0; }
+.jd-reg-form__pill span { display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border: 1px solid var(--line); border-radius: var(--radius-pill); font-weight: 600; transition: background-color var(--dur-base), color var(--dur-base), border-color var(--dur-base); }
+.jd-reg-form__pill input:checked + span { border-color: var(--forest); background: var(--forest); color: var(--lime); }
+.jd-reg-form__choice span { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 20px; border: 1px solid var(--line); border-radius: 14px; font-size: var(--fs-body); font-weight: 600; transition: border-color var(--dur-base), box-shadow var(--dur-base), background-color var(--dur-base); }
+.jd-reg-form__choice span::before { content: ""; flex: none; width: 20px; height: 20px; border: 1.5px solid var(--line-strong); border-radius: 50%; transition: border var(--dur-base), background-color var(--dur-base); }
+.jd-reg-form__choice input:checked + span { border-color: var(--forest); box-shadow: inset 0 0 0 1px var(--forest); background: var(--forest-tint); }
+.jd-reg-form__choice input:checked + span::before { border: 6px solid var(--forest); background: var(--lime); }
+.jd-reg-form__pill input:focus-visible + span, .jd-reg-form__choice input:focus-visible + span { outline: 2px solid var(--forest); outline-offset: 2px; }
+
+.jd-reg-form__sub { margin-top: var(--space-6); }
+.jd-reg-form__subhead { margin-bottom: var(--space-3) !important; font-size: var(--fs-small); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-subtle); }
+.jd-reg-form__people { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.jd-reg-form__people li { display: grid; grid-template-columns: 120px repeat(3, minmax(0, 1fr)); gap: var(--space-3); align-items: end; padding: var(--space-4); border-radius: 14px; background: var(--surface-soft); }
+.jd-reg-form__person { align-self: center; font-size: var(--fs-small); font-weight: 700; color: var(--forest); }
+
+.jd-reg-form__checks { display: grid; gap: var(--space-4); }
+.jd-reg-form__check { position: relative; display: flex; gap: 12px; align-items: flex-start; font-size: var(--fs-small); line-height: 1.55; cursor: pointer; }
+.jd-reg-form__check input { position: absolute; opacity: 0; width: 22px; height: 22px; margin: 0; }
+.jd-reg-form__check i { font-style: normal; color: var(--forest); }
+.jd-reg-form__check a { color: var(--forest); font-weight: 600; text-underline-offset: 3px; }
+.jd-reg-form__box { flex: none; display: grid; place-items: center; width: 22px; height: 22px; border: 1.5px solid var(--line-strong); border-radius: 6px; background: var(--surface); color: transparent; transition: background-color var(--dur-base), border-color var(--dur-base), color var(--dur-base); }
+.jd-reg-form__box svg { width: 14px; height: 14px; }
+.jd-reg-form__check input:checked + .jd-reg-form__box { border-color: var(--forest); background: var(--forest); color: var(--lime); }
+.jd-reg-form__check input:focus-visible + .jd-reg-form__box { outline: 2px solid var(--forest); outline-offset: 2px; }
+.jd-reg-form__check input[aria-invalid="true"] + .jd-reg-form__box { border-color: #b3261e; }
+
+.jd-reg-form__nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); padding-top: var(--space-5); border-top: 1px solid var(--line); }
+.jd-reg-form__nav .jd-btn { margin-left: auto; }
+.jd-reg-form__nav .jd-btn[disabled] { opacity: .7; cursor: progress; }
+.jd-reg-form__back { padding: 8px 0; border: 0; background: none; color: var(--forest); font: 600 var(--fs-small) / 1 var(--font-sans); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.jd-reg-form__status { min-height: 1.4em; font-size: var(--fs-small); font-weight: 500; color: var(--forest); text-align: right; }
+.jd-reg-form__status.is-error { color: #b3261e; }
+.jd-reg-form__help { display: flex; gap: 8px; align-items: flex-start; font-size: var(--fs-small); line-height: 1.5; color: var(--ink-muted); }
+.jd-reg-form__help svg { flex: none; width: 16px; height: 16px; margin-top: 3px; color: var(--forest); }
+.jd-reg-form__help a { color: var(--forest); font-weight: 600; }
+
+/* the summary */
+.jd-reg-form__side { position: sticky; top: 112px; }
+.jd-reg-form__sum { padding: clamp(24px, 3vw, 36px); border-radius: var(--radius-lg); background: var(--forest-tint); }
+.jd-reg-form__sum-empty { font-size: var(--fs-small); color: var(--ink-muted); }
+.jd-reg-form__sum-title { margin: 0 0 var(--space-5); font-size: var(--fs-h3); font-weight: 500; line-height: 1.25; }
+.jd-reg-form__sum-list { display: grid; gap: var(--space-4); margin: 0; padding: 0; list-style: none; font-size: var(--fs-small); }
+.jd-reg-form__sum-list li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; }
+.jd-reg-form__sum-list svg { width: 18px; height: 18px; margin-top: 2px; color: var(--forest); }
+.jd-reg-form__sum-list b { display: block; font-size: var(--fs-caption); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-subtle); }
+.jd-reg-form__sum-total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: var(--space-5) !important; padding-top: var(--space-4); border-top: 1px dashed var(--line-strong); font-size: var(--fs-small); }
+.jd-reg-form__sum-total strong { font-size: var(--fs-h3); font-weight: 600; color: var(--forest); }
+.jd-reg-form__sum-deal { display: flex; align-items: center; gap: 8px; margin-top: var(--space-3) !important; padding: 8px 12px; border-radius: 10px; background: var(--lime); color: var(--forest); font-size: var(--fs-small); font-weight: 600; }
+.jd-reg-form__sum-deal svg { flex: none; width: 16px; height: 16px; }
+
+/* thank you, and nothing open */
+.jd-reg-form__done, .jd-reg-form__none { display: grid; justify-items: center; gap: var(--space-4); max-width: 760px; margin: 0 auto; padding: clamp(32px, 5vw, 64px); border-radius: var(--radius-lg); background: var(--forest-tint); text-align: center; outline: none; }
+.jd-reg-form__done-ico { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: var(--lime); color: var(--forest); }
+.jd-reg-form__done-ico svg { width: 32px; height: 32px; }
+.jd-reg-form__done h2, .jd-reg-form__none h2 { margin: 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.15; }
+.jd-reg-form__done p { max-width: 56ch; font-size: var(--fs-body); line-height: 1.6; color: var(--ink-muted); }
+.jd-reg-form__done p b { color: var(--ink); }
+.jd-reg-form__done-small { font-size: var(--fs-small) !important; }
+.jd-reg-form__done a:not(.jd-btn) { color: var(--forest); font-weight: 600; }
+.jd-reg-form__none-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }
+
+@media (max-width: 1023px) {
+  .jd-reg-form__grid { grid-template-columns: minmax(0, 1fr); }
+  .jd-reg-form__side { position: static; }
+}
+@media (max-width: 767px) {
+  .jd-reg-form__fields, .jd-reg-form__fields.is-3, .jd-reg-form__cards { grid-template-columns: minmax(0, 1fr); }
+  .jd-reg-form__people li { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .jd-reg-form__prog li { gap: 0; font-size: 0; }
+  .jd-reg-form__prog li span { font-size: var(--fs-caption); }
+  .jd-reg-form__nav .jd-btn { width: 100%; justify-content: space-between; }
+  .jd-reg-form__status { text-align: left; }
+}

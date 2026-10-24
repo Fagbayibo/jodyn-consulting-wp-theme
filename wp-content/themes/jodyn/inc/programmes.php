@@ -131,6 +131,7 @@ function jodyn_programme_meta_box_html( $post ) {
 	$venue  = get_post_meta( $post->ID, '_jodyn_venue', true );
 	$fee    = get_post_meta( $post->ID, '_jodyn_fee', true );
 	$url    = get_post_meta( $post->ID, '_jodyn_register_url', true );
+	$hours  = get_post_meta( $post->ID, '_jodyn_time', true );
 	?>
 	<p><label for="jodyn-area"><strong><?php esc_html_e( 'Area', 'jodyn' ); ?></strong></label><br>
 		<select id="jodyn-area" name="jodyn_area" style="width:100%">
@@ -144,6 +145,9 @@ function jodyn_programme_meta_box_html( $post ) {
 	<p><label for="jodyn-end"><strong><?php esc_html_e( 'End date (optional)', 'jodyn' ); ?></strong></label><br>
 		<input type="date" id="jodyn-end" name="jodyn_end" value="<?php echo esc_attr( $end ); ?>" style="width:100%">
 		<span class="description"><?php esc_html_e( 'For runs longer than a day. Leave empty for a one-day programme.', 'jodyn' ); ?></span></p>
+	<p><label for="jodyn-time"><strong><?php esc_html_e( 'Time (optional)', 'jodyn' ); ?></strong></label><br>
+		<input type="text" id="jodyn-time" name="jodyn_time" value="<?php echo esc_attr( $hours ); ?>" placeholder="<?php esc_attr_e( 'e.g. 9:00am – 4:00pm', 'jodyn' ); ?>" style="width:100%">
+		<span class="description"><?php esc_html_e( 'Shown in the registration confirmation email.', 'jodyn' ); ?></span></p>
 	<p><label for="jodyn-seats"><strong><?php esc_html_e( 'Seats', 'jodyn' ); ?></strong></label><br>
 		<select id="jodyn-seats" name="jodyn_seats" style="width:100%">
 			<?php foreach ( jodyn_programme_seats() as $value => $label ) : ?>
@@ -163,7 +167,7 @@ function jodyn_programme_meta_box_html( $post ) {
 		<input type="text" id="jodyn-fee" name="jodyn_fee" value="<?php echo esc_attr( $fee ); ?>" placeholder="<?php esc_attr_e( 'e.g. ₦250,000', 'jodyn' ); ?>" style="width:100%"></p>
 	<p><label for="jodyn-register"><strong><?php esc_html_e( 'Registration link (optional)', 'jodyn' ); ?></strong></label><br>
 		<input type="url" id="jodyn-register" name="jodyn_register_url" value="<?php echo esc_attr( $url ); ?>" placeholder="https://" style="width:100%">
-		<span class="description"><?php esc_html_e( 'Leave empty to send people to this programme’s own page.', 'jodyn' ); ?></span></p>
+		<span class="description"><?php esc_html_e( 'Leave empty to use the site’s own registration form (Register page), with this programme already selected.', 'jodyn' ); ?></span></p>
 	<p class="description"><?php esc_html_e( 'Use the Excerpt for the short summary shown on the home page, and the Programme photo for its image.', 'jodyn' ); ?></p>
 	<?php
 }
@@ -197,6 +201,7 @@ function jodyn_programme_save( $post_id ) {
 
 	update_post_meta( $post_id, '_jodyn_venue', isset( $_POST['jodyn_venue'] ) ? sanitize_text_field( wp_unslash( $_POST['jodyn_venue'] ) ) : '' );
 	update_post_meta( $post_id, '_jodyn_fee', isset( $_POST['jodyn_fee'] ) ? sanitize_text_field( wp_unslash( $_POST['jodyn_fee'] ) ) : '' );
+	update_post_meta( $post_id, '_jodyn_time', isset( $_POST['jodyn_time'] ) ? sanitize_text_field( wp_unslash( $_POST['jodyn_time'] ) ) : '' );
 	update_post_meta( $post_id, '_jodyn_register_url', isset( $_POST['jodyn_register_url'] ) ? esc_url_raw( wp_unslash( $_POST['jodyn_register_url'] ) ) : '' );
 }
 add_action( 'save_post_jodyn_programme', 'jodyn_programme_save' );
@@ -349,6 +354,8 @@ function jodyn_programme_data( $post ) {
 	$end     = $start && $end > $start ? $end : '';
 	$utc     = new DateTimeZone( 'UTC' );
 	$days    = $end ? (int) round( ( strtotime( $end ) - $time ) / DAY_IN_SECONDS ) + 1 : 1;
+	$fee     = get_post_meta( $post->ID, '_jodyn_fee', true );
+	$open    = $start && $start >= current_time( 'Y-m-d' ) && 'full' !== $seat;
 
 	// "16–17 November 2026 · 2 days", "30 November – 1 December 2026 · 2 days", "24 November 2026 · 1 day"
 	$when = '';
@@ -388,8 +395,14 @@ function jodyn_programme_data( $post ) {
 		'details'     => get_permalink( $post ),
 		'format_key'  => isset( $formats[ $format ] ) ? $format : 'in-person',
 		'format'      => ( isset( $formats[ $format ] ) ? $formats[ $format ] : $formats['in-person'] ) . ( $venue ? ' · ' . $venue : '' ),
-		'fee'         => get_post_meta( $post->ID, '_jodyn_fee', true ),
-		'url'         => $url ? $url : get_permalink( $post ),
+		'format_name' => isset( $formats[ $format ] ) ? $formats[ $format ] : $formats['in-person'],
+		'venue'       => $venue,
+		'time'        => get_post_meta( $post->ID, '_jodyn_time', true ),
+		'fee'         => $fee,
+		'fee_amount'  => (int) preg_replace( '/\D/', '', (string) $fee ),
+		'open'        => $open,
+		// Register Now: the programme's own link if set, else the Register page with this run selected
+		'url'         => $url ? $url : ( $open ? add_query_arg( 'programme', $post->ID, home_url( '/register/' ) ) : get_permalink( $post ) ),
 		'slug'        => $post->post_name,
 		'image'       => get_post_thumbnail_id( $post ),
 	);

@@ -29,5 +29,6 @@ Use only the fields a section needs. Leave a section out entirely if the page do
 - [advisory.md](pages/advisory.md) — Advisory service page (/services/advisory/), 6 sections (FAQs moved to the FAQs page); five advisory services including Learning & Development Advisory
 - [training.md](pages/training.md) — Training programmes (/training/programmes/), 6 sections; request form and FAQs moved out
 - [training-calendar.md](pages/training-calendar.md) — Training calendar (/training/calendar/), 5 sections; client copy for Registration, Insights, Contact and the legal pages is in [source/](source/)
+- [registration.md](pages/registration.md) — Registration (/register/), hero, how it works, form, on-screen confirmation and confirmation email
 
 Other pages are added here as the client sends their copy.

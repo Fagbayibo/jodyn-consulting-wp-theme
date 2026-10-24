@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 1;
+const JODYN_SETUP_VERSION = 2;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -100,10 +100,12 @@ function jodyn_site_pages() {
 		'training'                 => __( 'Training', 'jodyn' ),
 		'training/programmes'      => __( 'Programmes', 'jodyn' ),
 		'training/calendar'        => __( 'Training calendar', 'jodyn' ),
+		'register'                 => __( 'Register', 'jodyn' ),
 		'insights'                 => __( 'Insights', 'jodyn' ),
 		'careers'                  => __( 'Careers', 'jodyn' ),
 		'contact-us'               => __( 'Contact us', 'jodyn' ),
 		'privacy-policy'           => __( 'Privacy Policy', 'jodyn' ),
+		'terms'                    => __( 'Terms of Use', 'jodyn' ),
 		'cookie-policy'            => __( 'Cookie Policy', 'jodyn' ),
 	);
 }

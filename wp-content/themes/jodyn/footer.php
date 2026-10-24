@@ -16,7 +16,7 @@ $jodyn_contact = jodyn_contact();
 $jodyn_social  = jodyn_social_links();
 $jodyn_privacy = get_privacy_policy_url();
 // The call to action points at the contact page, so it isn't repeated there.
-$jodyn_has_cta = ! is_page( 'contact-us' );
+$jodyn_has_cta = ! is_page( array( 'contact-us', 'register' ) );
 /**
  * Filter the footer card's heading (may contain <em> for the boxed word), text and buttons,
  * so a page can end with its own closing call to action. Each button is
