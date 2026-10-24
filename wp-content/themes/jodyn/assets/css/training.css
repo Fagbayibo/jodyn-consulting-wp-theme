@@ -202,7 +202,7 @@
 .jd-tr-up__meta { margin-bottom: var(--space-3) !important; }
 .jd-tr-up__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); margin-top: var(--space-8); }
 .jd-tr-up__dl { gap: var(--space-3); }
-.jd-tr-up__dl svg { width: 18px; height: 18px; }
+.jd-tr-up__dl svg { flex: none; width: 18px; height: 18px; }
 
 @media (max-width: 1023px) {
   .jd-tr-up__head { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }

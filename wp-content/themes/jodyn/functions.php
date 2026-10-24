@@ -102,6 +102,12 @@ function jodyn_enqueue_assets() {
 		jodyn_enqueue_calendar_download();
 	}
 
+	if ( is_page( 'calendar' ) ) {
+		wp_enqueue_style( 'jodyn-calendar', "$uri/assets/css/calendar.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/calendar.css' ) );
+		jodyn_enqueue_script( 'jodyn-calendar', 'calendar.js', array( 'jodyn-motion' ) );
+		jodyn_enqueue_calendar_download();
+	}
+
 	if ( is_front_page() ) {
 		wp_enqueue_style( 'jodyn-front', "$uri/assets/css/front-page.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/front-page.css' ) );
 		wp_enqueue_style( 'jodyn-home-who', "$uri/assets/css/home-who.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-who.css' ) );

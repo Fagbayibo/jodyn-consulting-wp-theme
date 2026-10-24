@@ -3,8 +3,12 @@
  * Training calendar download, gated by name and email.
  *
  * - The PDF is chosen in Customize → Training calendar.
- * - Each request is saved as a "Calendar download" (admin menu) with the name and email,
- *   then the visitor gets the file. Nothing is emailed yet.
+ * - Each request is saved as a "Calendar download" (admin menu) with the name, email,
+ *   organisation, job title and whether they want updates, then the visitor gets the file.
+ *   Nothing is emailed yet.
+ * - Two forms post here with the same fields: the pop-up on the Home and Training pages
+ *   (template-parts/calendar-download.php) and the form on the calendar page
+ *   (template-parts/calendar/download.php).
  * - Spam guard: a hidden honeypot field and a limit of 5 requests per visitor per 10 minutes.
  *
  * @package JoDyn
@@ -47,6 +51,9 @@ add_filter(
 			'cb'          => $columns['cb'],
 			'title'       => __( 'Name', 'jodyn' ),
 			'jodyn_email' => __( 'Email', 'jodyn' ),
+			'jodyn_org'   => __( 'Organisation', 'jodyn' ),
+			'jodyn_job'   => __( 'Job title', 'jodyn' ),
+			'jodyn_upd'   => __( 'Wants updates', 'jodyn' ),
 			'date'        => __( 'Requested', 'jodyn' ),
 		);
 	}
@@ -57,6 +64,12 @@ add_action(
 		if ( 'jodyn_email' === $column ) {
 			$email = get_post_meta( $post_id, '_jodyn_email', true );
 			printf( '<a href="mailto:%1$s">%2$s</a>', esc_attr( $email ), esc_html( $email ) );
+		} elseif ( 'jodyn_org' === $column ) {
+			echo esc_html( get_post_meta( $post_id, '_jodyn_organisation', true ) );
+		} elseif ( 'jodyn_job' === $column ) {
+			echo esc_html( get_post_meta( $post_id, '_jodyn_job_title', true ) );
+		} elseif ( 'jodyn_upd' === $column ) {
+			echo get_post_meta( $post_id, '_jodyn_updates', true ) ? esc_html__( 'Yes', 'jodyn' ) : '—';
 		}
 	},
 	10,
@@ -73,7 +86,7 @@ function jodyn_calendar_customize( $wp_customize ) {
 		'jodyn_training',
 		array(
 			'title'       => __( 'Training calendar', 'jodyn' ),
-			'description' => __( 'The PDF people receive after entering their name and email. Requests are listed under Calendar downloads.', 'jodyn' ),
+			'description' => __( 'The PDF people receive after entering their name and email (requests are listed under Calendar downloads), and the group discount on the Training calendar page.', 'jodyn' ),
 			'priority'    => 36,
 		)
 	);
@@ -95,6 +108,40 @@ function jodyn_calendar_customize( $wp_customize ) {
 			)
 		)
 	);
+
+	// "Training a Team?" on the calendar page (template-parts/calendar/team.php).
+	$wp_customize->add_setting(
+		'jodyn_group_discount',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'jodyn_group_discount',
+		array(
+			'label'       => __( 'Group discount (%)', 'jodyn' ),
+			'description' => __( 'For example 10. Shown on the Training calendar page under "Training a Team?".', 'jodyn' ),
+			'section'     => 'jodyn_training',
+			'type'        => 'text',
+		)
+	);
+	$wp_customize->add_setting(
+		'jodyn_group_size',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'jodyn_group_size',
+		array(
+			'label'       => __( 'Group size for the discount', 'jodyn' ),
+			'description' => __( 'For example three. Completes "… off when three or more participants register".', 'jodyn' ),
+			'section'     => 'jodyn_training',
+			'type'        => 'text',
+		)
+	);
 }
 add_action( 'customize_register', 'jodyn_calendar_customize' );
 
@@ -107,7 +154,8 @@ function jodyn_calendar_pdf_url() {
 }
 
 /**
- * POST /wp-json/jodyn/v1/calendar-download  { name, email, website (honeypot) }
+ * POST /wp-json/jodyn/v1/calendar-download
+ *   { name, email, organisation, job_title, updates, website (honeypot) }
  */
 function jodyn_calendar_route() {
 	register_rest_route(
@@ -117,7 +165,7 @@ function jodyn_calendar_route() {
 			'methods'             => 'POST',
 			'permission_callback' => '__return_true', // Public form; guarded by the honeypot and rate limit below.
 			'args'                => array(
-				'name'    => array(
+				'name'         => array(
 					'required'          => true,
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_text_field',
@@ -126,7 +174,7 @@ function jodyn_calendar_route() {
 						return '' !== $value && strlen( $value ) <= 120;
 					},
 				),
-				'email'   => array(
+				'email'        => array(
 					'required'          => true,
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_email',
@@ -134,7 +182,27 @@ function jodyn_calendar_route() {
 						return (bool) is_email( $value );
 					},
 				),
-				'website' => array(
+				'organisation' => array(
+					'type'              => 'string',
+					'default'           => '',
+					'sanitize_callback' => 'sanitize_text_field',
+					'validate_callback' => function ( $value ) {
+						return strlen( (string) $value ) <= 160;
+					},
+				),
+				'job_title'    => array(
+					'type'              => 'string',
+					'default'           => '',
+					'sanitize_callback' => 'sanitize_text_field',
+					'validate_callback' => function ( $value ) {
+						return strlen( (string) $value ) <= 160;
+					},
+				),
+				'updates'      => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
+				'website'      => array(
 					'type'    => 'string',
 					'default' => '',
 				),
@@ -175,6 +243,9 @@ function jodyn_calendar_download( $request ) {
 	);
 	if ( ! is_wp_error( $lead ) ) {
 		update_post_meta( $lead, '_jodyn_email', $request['email'] );
+		update_post_meta( $lead, '_jodyn_organisation', $request['organisation'] );
+		update_post_meta( $lead, '_jodyn_job_title', $request['job_title'] );
+		update_post_meta( $lead, '_jodyn_updates', $request['updates'] ? 1 : 0 );
 	}
 
 	if ( ! $url ) {

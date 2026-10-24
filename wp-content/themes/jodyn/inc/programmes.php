@@ -45,6 +45,37 @@ function jodyn_programme_areas() {
 }
 
 /**
+ * Shorter area names for the Training calendar's category filter and tags
+ * (content/pages/training-calendar.md, section 2). Same six areas, same keys.
+ *
+ * @return array key => label
+ */
+function jodyn_programme_area_short() {
+	return array(
+		'leadership'   => __( 'Leadership & Management', 'jodyn' ),
+		'strategy'     => __( 'Strategy & Execution', 'jodyn' ),
+		'hr'           => __( 'HR & People Management', 'jodyn' ),
+		'professional' => __( 'Personal Effectiveness', 'jodyn' ),
+		'customer'     => __( 'Customer Service & Business Development', 'jodyn' ),
+		'projects'     => __( 'Project Management & Operations', 'jodyn' ),
+	);
+}
+
+/**
+ * Seats status of a scheduled run, shown as a badge on the Training calendar.
+ * "Fully booked" turns its Register Now button off.
+ *
+ * @return array key => label
+ */
+function jodyn_programme_seats() {
+	return array(
+		'open' => __( 'Seats available', 'jodyn' ),
+		'few'  => __( 'Few seats left', 'jodyn' ),
+		'full' => __( 'Fully booked', 'jodyn' ),
+	);
+}
+
+/**
  * Register the post type.
  */
 function jodyn_register_programmes() {
@@ -94,6 +125,8 @@ function jodyn_programme_meta_box_html( $post ) {
 	wp_nonce_field( 'jodyn_programme_save', 'jodyn_programme_nonce' );
 	$area   = get_post_meta( $post->ID, '_jodyn_area', true );
 	$start  = get_post_meta( $post->ID, '_jodyn_start', true );
+	$end    = get_post_meta( $post->ID, '_jodyn_end', true );
+	$seats  = get_post_meta( $post->ID, '_jodyn_seats', true );
 	$format = get_post_meta( $post->ID, '_jodyn_format', true );
 	$venue  = get_post_meta( $post->ID, '_jodyn_venue', true );
 	$fee    = get_post_meta( $post->ID, '_jodyn_fee', true );
@@ -108,6 +141,16 @@ function jodyn_programme_meta_box_html( $post ) {
 	<p><label for="jodyn-start"><strong><?php esc_html_e( 'Start date', 'jodyn' ); ?></strong></label><br>
 		<input type="date" id="jodyn-start" name="jodyn_start" value="<?php echo esc_attr( $start ); ?>" style="width:100%">
 		<span class="description"><?php esc_html_e( 'Leave empty until the next run is scheduled. The format, venue, fee and registration link apply to that run.', 'jodyn' ); ?></span></p>
+	<p><label for="jodyn-end"><strong><?php esc_html_e( 'End date (optional)', 'jodyn' ); ?></strong></label><br>
+		<input type="date" id="jodyn-end" name="jodyn_end" value="<?php echo esc_attr( $end ); ?>" style="width:100%">
+		<span class="description"><?php esc_html_e( 'For runs longer than a day. Leave empty for a one-day programme.', 'jodyn' ); ?></span></p>
+	<p><label for="jodyn-seats"><strong><?php esc_html_e( 'Seats', 'jodyn' ); ?></strong></label><br>
+		<select id="jodyn-seats" name="jodyn_seats" style="width:100%">
+			<?php foreach ( jodyn_programme_seats() as $value => $label ) : ?>
+				<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $seats ? $seats : 'open', $value ); ?>><?php echo esc_html( $label ); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<span class="description"><?php esc_html_e( '"Fully booked" turns off Register Now on the Training calendar.', 'jodyn' ); ?></span></p>
 	<p><label for="jodyn-format"><strong><?php esc_html_e( 'Format', 'jodyn' ); ?></strong></label><br>
 		<select id="jodyn-format" name="jodyn_format" style="width:100%">
 			<?php foreach ( jodyn_programme_formats() as $value => $label ) : ?>
@@ -143,6 +186,12 @@ function jodyn_programme_save( $post_id ) {
 	$start = preg_match( '/^\d{4}-\d{2}-\d{2}$/', $start ) ? $start : '';
 	update_post_meta( $post_id, '_jodyn_start', $start );
 
+	$end = isset( $_POST['jodyn_end'] ) ? sanitize_text_field( wp_unslash( $_POST['jodyn_end'] ) ) : '';
+	update_post_meta( $post_id, '_jodyn_end', preg_match( '/^\d{4}-\d{2}-\d{2}$/', $end ) && $start && $end > $start ? $end : '' );
+
+	$seats = isset( $_POST['jodyn_seats'] ) ? sanitize_key( $_POST['jodyn_seats'] ) : '';
+	update_post_meta( $post_id, '_jodyn_seats', array_key_exists( $seats, jodyn_programme_seats() ) ? $seats : 'open' );
+
 	$format = isset( $_POST['jodyn_format'] ) ? sanitize_key( $_POST['jodyn_format'] ) : '';
 	update_post_meta( $post_id, '_jodyn_format', array_key_exists( $format, jodyn_programme_formats() ) ? $format : 'in-person' );
 
@@ -164,6 +213,7 @@ function jodyn_programme_columns( $columns ) {
 	$columns['jodyn_start']  = __( 'Starts', 'jodyn' );
 	$columns['jodyn_format'] = __( 'Format', 'jodyn' );
 	$columns['jodyn_fee']    = __( 'Fee', 'jodyn' );
+	$columns['jodyn_seats']  = __( 'Seats', 'jodyn' );
 	$columns['date']         = $date;
 	return $columns;
 }
@@ -178,11 +228,13 @@ function jodyn_programme_column_content( $column, $post_id ) {
 	if ( 'jodyn_area' === $column ) {
 		echo esc_html( $p['area_label'] );
 	} elseif ( 'jodyn_start' === $column ) {
-		echo esc_html( $p['date_full'] ? $p['date_full'] : '—' );
+		echo esc_html( $p['when'] ? $p['when'] : '—' );
 	} elseif ( 'jodyn_format' === $column ) {
 		echo esc_html( $p['format'] );
 	} elseif ( 'jodyn_fee' === $column ) {
 		echo esc_html( $p['fee'] ? $p['fee'] : '—' );
+	} elseif ( 'jodyn_seats' === $column ) {
+		echo esc_html( $p['upcoming'] ? $p['seats_label'] : '—' );
 	}
 }
 add_action( 'manage_jodyn_programme_posts_custom_column', 'jodyn_programme_column_content', 10, 2 );
@@ -289,23 +341,56 @@ function jodyn_programme_data( $post ) {
 	$areas   = jodyn_programme_areas();
 	$area    = get_post_meta( $post->ID, '_jodyn_area', true );
 	$area    = isset( $areas[ $area ] ) ? $area : 'leadership';
+	$short   = jodyn_programme_area_short();
+	$seats   = jodyn_programme_seats();
+	$seat    = get_post_meta( $post->ID, '_jodyn_seats', true );
+	$seat    = isset( $seats[ $seat ] ) ? $seat : 'open';
+	$end     = get_post_meta( $post->ID, '_jodyn_end', true );
+	$end     = $start && $end > $start ? $end : '';
+	$utc     = new DateTimeZone( 'UTC' );
+	$days    = $end ? (int) round( ( strtotime( $end ) - $time ) / DAY_IN_SECONDS ) + 1 : 1;
+
+	// "16–17 November 2026 · 2 days", "30 November – 1 December 2026 · 2 days", "24 November 2026 · 1 day"
+	$when = '';
+	if ( $time ) {
+		$end_time = $end ? strtotime( $end . ' 00:00:00' ) : 0;
+		if ( ! $end_time ) {
+			$range = wp_date( 'j F Y', $time, $utc );
+		} elseif ( wp_date( 'Y-m', $time, $utc ) === wp_date( 'Y-m', $end_time, $utc ) ) {
+			$range = wp_date( 'j', $time, $utc ) . '–' . wp_date( 'j F Y', $end_time, $utc );
+		} elseif ( wp_date( 'Y', $time, $utc ) === wp_date( 'Y', $end_time, $utc ) ) {
+			$range = wp_date( 'j F', $time, $utc ) . ' – ' . wp_date( 'j F Y', $end_time, $utc );
+		} else {
+			$range = wp_date( 'j F Y', $time, $utc ) . ' – ' . wp_date( 'j F Y', $end_time, $utc );
+		}
+		/* translators: %d: number of days. */
+		$when = $range . ' · ' . sprintf( _n( '%d day', '%d days', $days, 'jodyn' ), $days );
+	}
 
 	return array(
-		'id'         => $post->ID,
-		'title'      => get_the_title( $post ),
-		'summary'    => get_the_excerpt( $post ),
-		'day'        => $time ? wp_date( 'd', $time, new DateTimeZone( 'UTC' ) ) : '',
-		'month'      => $time ? wp_date( 'M', $time, new DateTimeZone( 'UTC' ) ) : '',
-		'date_full'  => $time ? wp_date( 'j M Y', $time, new DateTimeZone( 'UTC' ) ) : '',
-		'datetime'   => $start,
-		'upcoming'   => $start && $start >= current_time( 'Y-m-d' ),
-		'area'       => $area,
-		'area_label' => $areas[ $area ],
-		'format_key' => isset( $formats[ $format ] ) ? $format : 'in-person',
-		'format'     => ( isset( $formats[ $format ] ) ? $formats[ $format ] : $formats['in-person'] ) . ( $venue ? ' · ' . $venue : '' ),
-		'fee'        => get_post_meta( $post->ID, '_jodyn_fee', true ),
-		'url'        => $url ? $url : get_permalink( $post ),
-		'slug'       => $post->post_name,
-		'image'      => get_post_thumbnail_id( $post ),
+		'id'          => $post->ID,
+		'title'       => get_the_title( $post ),
+		'summary'     => get_the_excerpt( $post ),
+		'day'         => $time ? wp_date( 'd', $time, new DateTimeZone( 'UTC' ) ) : '',
+		'month'       => $time ? wp_date( 'M', $time, new DateTimeZone( 'UTC' ) ) : '',
+		'date_full'   => $time ? wp_date( 'j M Y', $time, new DateTimeZone( 'UTC' ) ) : '',
+		'datetime'    => $start,
+		'upcoming'    => $start && $start >= current_time( 'Y-m-d' ),
+		'area'        => $area,
+		'area_label'  => $areas[ $area ],
+		'area_short'  => $short[ $area ],
+		'end'         => $end,
+		'when'        => $when,
+		'weekday'     => $time ? wp_date( 'D', $time, $utc ) : '',
+		'month_key'   => $time ? wp_date( 'Y-m', $time, $utc ) : '',
+		'seats'       => $seat,
+		'seats_label' => $seats[ $seat ],
+		'details'     => get_permalink( $post ),
+		'format_key'  => isset( $formats[ $format ] ) ? $format : 'in-person',
+		'format'      => ( isset( $formats[ $format ] ) ? $formats[ $format ] : $formats['in-person'] ) . ( $venue ? ' · ' . $venue : '' ),
+		'fee'         => get_post_meta( $post->ID, '_jodyn_fee', true ),
+		'url'         => $url ? $url : get_permalink( $post ),
+		'slug'        => $post->post_name,
+		'image'       => get_post_thumbnail_id( $post ),
 	);
 }

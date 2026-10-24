@@ -58,25 +58,46 @@ flush_rewrite_rules();
 
 
 // Training programmes: the catalogue comes from the theme setup above (training.md, section 3).
-// Three carry a sample upcoming run (dates always in the future) for the home page and calendar.
+// Fourteen carry a sample upcoming run (dates always in the future) for the home page and calendar.
+// title => summary, start (days from today), length in days, format, venue, fee, seats, photo.
+// Dates are relative so the calendar always has upcoming runs; set on every seed.
 $runs = array(
-	'Leadership Essentials for New Managers'          => array( 'Make a confident transition into management. Learn how to lead former peers, delegate effectively, give feedback and motivate your team to deliver.', '+23 days', 'in-person', '₦250,000', 'leadership-essentials.jpg' ),
-	'Strategic Thinking and Planning'                 => array( 'Move from ideas to results. Learn practical tools for setting priorities, making sound decisions and turning strategy into action across your team.', '+37 days', 'online', '₦180,000', 'strategic-thinking.jpg' ),
-	'Effective Communication and Presentation Skills' => array( 'Communicate with clarity and influence. Build the skills to present ideas, manage difficult conversations and strengthen relationships with stakeholders.', '+48 days', 'hybrid', '₦220,000', 'effective-communication.jpg' ),
+	'Leadership Essentials for New Managers'          => array( 'Make a confident transition into management. Learn how to lead former peers, delegate effectively, give feedback and motivate your team to deliver.', 23, 2, 'in-person', 'Lagos', '₦250,000', 'open', 'leadership-essentials.jpg' ),
+	'Problem Solving and Decision Making'             => array( '', 31, 1, 'online', 'Live via Zoom', '₦95,000', 'few', '' ),
+	'Strategic Thinking and Planning'                 => array( 'Move from ideas to results. Learn practical tools for setting priorities, making sound decisions and turning strategy into action across your team.', 37, 2, 'online', 'Live via Zoom', '₦180,000', 'open', 'strategic-thinking.jpg' ),
+	'Customer Service Excellence'                     => array( '', 40, 2, 'in-person', 'Ibadan', '₦150,000', 'full', '' ),
+	'Effective Communication and Presentation Skills' => array( 'Communicate with clarity and influence. Build the skills to present ideas, manage difficult conversations and strengthen relationships with stakeholders.', 48, 1, 'hybrid', 'Lagos', '₦220,000', 'few', 'effective-communication.jpg' ),
+	'Performance Management That Works'               => array( '', 88, 2, 'in-person', 'Abuja', '₦230,000', 'open', '' ),
+	'Time Management and Personal Productivity'       => array( '', 95, 1, 'online', 'Live via Zoom', '₦85,000', 'open', '' ),
+	'Project Management Fundamentals'                 => array( '', 109, 2, 'hybrid', 'Lagos', '₦240,000', 'open', '' ),
+	'Emotional Intelligence for Leaders'              => array( '', 116, 2, 'in-person', 'Ibadan', '₦210,000', 'open', '' ),
+	'HR for Non-HR Managers'                          => array( '', 130, 1, 'online', 'Live via Zoom', '₦120,000', 'open', '' ),
+	'Sales and Negotiation Skills'                    => array( '', 137, 3, 'in-person', 'Lagos', '₦260,000', 'open', '' ),
+	'Risk Management Essentials'                      => array( '', 151, 2, 'online', 'Live via Zoom', '₦160,000', 'open', '' ),
+	'Coaching and Mentoring Skills for Managers'      => array( '', 165, 2, 'hybrid', 'Abuja', '₦230,000', 'open', '' ),
+	'Business Writing and Report Writing'             => array( '', 179, 1, 'online', 'Live via Zoom', '₦90,000', 'open', '' ),
 );
 foreach ( $runs as $title => $run ) {
 	$found = get_posts( array( 'post_type' => 'jodyn_programme', 'title' => $title, 'fields' => 'ids', 'numberposts' => 1 ) );
-	if ( ! $found || get_post_meta( $found[0], '_jodyn_start', true ) ) {
+	if ( ! $found ) {
 		continue;
 	}
-	$id = $found[0];
-	wp_update_post( array( 'ID' => $id, 'post_excerpt' => $run[0], 'post_content' => '<p>' . $run[0] . '</p>' ) );
-	update_post_meta( $id, '_jodyn_start', gmdate( 'Y-m-d', strtotime( $run[1] ) ) );
-	update_post_meta( $id, '_jodyn_format', $run[2] );
-	update_post_meta( $id, '_jodyn_fee', $run[3] );
-	$photo = $import( '/wordpress/dev-media/programmes/' . $run[4] );
-	if ( $photo ) {
-		set_post_thumbnail( $id, $photo );
+	$id    = $found[0];
+	$start = strtotime( '+' . $run[1] . ' days' );
+	if ( $run[0] ) {
+		wp_update_post( array( 'ID' => $id, 'post_excerpt' => $run[0], 'post_content' => '<p>' . $run[0] . '</p>' ) );
+	}
+	update_post_meta( $id, '_jodyn_start', gmdate( 'Y-m-d', $start ) );
+	update_post_meta( $id, '_jodyn_end', $run[2] > 1 ? gmdate( 'Y-m-d', $start + ( $run[2] - 1 ) * DAY_IN_SECONDS ) : '' );
+	update_post_meta( $id, '_jodyn_format', $run[3] );
+	update_post_meta( $id, '_jodyn_venue', $run[4] );
+	update_post_meta( $id, '_jodyn_fee', $run[5] );
+	update_post_meta( $id, '_jodyn_seats', $run[6] );
+	if ( $run[7] && ! has_post_thumbnail( $id ) ) {
+		$photo = $import( '/wordpress/dev-media/programmes/' . $run[7] );
+		if ( $photo ) {
+			set_post_thumbnail( $id, $photo );
+		}
 	}
 }
 $pdf = $import( '/wordpress/dev-media/programmes/jodyn-training-calendar-sample.pdf' );
