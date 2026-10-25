@@ -60,7 +60,7 @@ if (! $jodyn_poster) {
                                       ?></span>
         </a>
       </div>
-    </div>a
+    </div>
 
     <button class="jd-hero__pause" type="button" aria-pressed="false" data-jd-hero-pause>
       <span class="screen-reader-text" data-label-pause="<?php esc_attr_e('Pause background video', 'jodyn'); ?>" data-label-play="<?php esc_attr_e('Play background video', 'jodyn'); ?>"><?php esc_html_e('Pause background video', 'jodyn'); ?></span>
