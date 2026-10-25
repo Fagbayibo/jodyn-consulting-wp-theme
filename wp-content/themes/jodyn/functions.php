@@ -104,6 +104,11 @@ function jodyn_enqueue_assets() {
 		jodyn_enqueue_script( 'jodyn-systems-audit', 'systems-audit.js', array( 'jodyn-motion' ) );
 	}
 
+	if ( is_page( 'tax-consultancy' ) ) {
+		wp_enqueue_style( 'jodyn-tax-consultancy', "$uri/assets/css/tax-consultancy.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/tax-consultancy.css' ) );
+		jodyn_enqueue_script( 'jodyn-tax-consultancy', 'tax-consultancy.js', array( 'jodyn-motion' ) );
+	}
+
 	if ( is_page( 'programmes' ) ) {
 		wp_enqueue_style( 'jodyn-training', "$uri/assets/css/training.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/training.css' ) );
 		jodyn_enqueue_script( 'jodyn-training', 'training.js', array( 'jodyn-motion' ) );

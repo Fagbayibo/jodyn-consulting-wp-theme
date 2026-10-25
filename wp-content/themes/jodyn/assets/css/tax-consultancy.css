@@ -1,0 +1,187 @@
+/* =========================================================================
+   Tax Consultancy (/services/tax-consultancy/)
+   ========================================================================= */
+
+/* ---- 1. Hero: full-bleed photo under the see-through header, the four services along the bottom ---- */
+.jd-tx-hero { position: relative; display: grid; align-items: end; min-height: min(100svh, 940px); overflow: clip; background: var(--forest); color: var(--on-forest); }
+.jd-tx-hero p { margin: 0; }
+.jd-tx-hero__media { position: absolute; inset: 0; }
+.jd-tx-hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 30%; }
+.jd-tx-hero__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(35, 56, 49, .97) 0%, rgba(35, 56, 49, .86) 40%, rgba(35, 56, 49, .15) 78%), linear-gradient(0deg, rgba(35, 56, 49, .8), transparent 45%); }
+.jd-tx-hero__inner { position: relative; z-index: 1; padding-top: 160px; padding-bottom: clamp(40px, 5vw, 72px); }
+.jd-tx-hero__copy { display: grid; gap: var(--space-5); justify-items: start; max-width: 720px; }
+.jd-tx-hero__title { margin: 0; font-size: var(--fs-h1); font-weight: 500; line-height: 1.06; letter-spacing: -.025em; }
+.jd-tx-hero__title em { font-style: normal; color: var(--lime); }
+.jd-tx-hero__text { max-width: 54ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--on-forest-muted); }
+.jd-tx-hero__btns { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+.jd-tx-hero__jump { gap: var(--space-3); }
+.jd-tx-hero__jump svg { width: 18px; height: 18px; }
+.jd-tx-hero__areas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); margin: var(--space-8) 0 0; padding: var(--space-5) 0 0; list-style: none; border-top: 1px solid rgba(255, 255, 255, .18); }
+.jd-tx-hero__areas li { display: grid; gap: 6px; font-size: var(--fs-body); font-weight: 500; }
+.jd-tx-hero__areas span { font-size: var(--fs-small); color: var(--lime); }
+
+@media (max-width: 1023px) {
+  .jd-tx-hero__areas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  /* the photo sits above the copy on phones */
+  .jd-tx-hero__media img { height: 400px; object-position: 70% 25%; }
+  .jd-tx-hero__media::after { background: linear-gradient(180deg, rgba(35, 56, 49, .35) 0, rgba(35, 56, 49, .1) 150px, var(--forest) 400px); }
+  .jd-tx-hero__inner { padding-top: 330px; }
+}
+
+/* ---- 2. When to talk to a tax adviser: white, six soft green sign cards (lime on hover) ---- */
+.jd-tx-signs { position: relative; overflow: clip; background: var(--surface); color: var(--ink); padding-block: clamp(72px, 8vw, 120px); }
+.jd-tx-signs > .jd-container { position: relative; z-index: 1; }
+.jd-tx-signs p, .jd-tx-signs h3 { margin: 0; }
+.jd-tx-signs__head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-8); align-items: end; }
+.jd-tx-signs__title { margin: var(--space-4) 0 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-tx-signs__title em { padding: 0 .06em; font-style: normal; color: var(--forest); background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); }
+.jd-tx-signs__intro { font-size: var(--fs-lead); line-height: 1.55; color: var(--ink-muted); }
+.jd-tx-signs__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: clamp(48px, 5vw, 72px) 0 0; padding: 0; list-style: none; }
+.jd-tx-signs__card { position: relative; display: grid; align-content: start; gap: var(--space-3); padding: var(--space-6); border-radius: var(--radius-lg); background: var(--forest-tint); transition: background .4s var(--ease-out), translate .4s var(--ease-out); }
+/* the lift uses translate, not transform: the reveal animates transform and a transition on it would fight it */
+.jd-tx-signs__card:hover { background: var(--lime); translate: 0 -4px; }
+.jd-tx-signs__ico { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: var(--space-3); border-radius: 14px; background: var(--forest); color: var(--lime); }
+.jd-tx-signs__ico svg { width: 26px; height: 26px; }
+.jd-tx-signs__n { position: absolute; right: var(--space-6); top: var(--space-6); font-size: var(--fs-small); color: var(--ink-subtle); transition: color .4s; }
+.jd-tx-signs__card:hover .jd-tx-signs__n { color: var(--forest); }
+.jd-tx-signs__card h3 { font-size: var(--fs-h4); font-weight: 600; line-height: 1.25; }
+.jd-tx-signs__card p { font-size: var(--fs-body); line-height: 1.55; color: var(--ink-muted); transition: color .4s; }
+.jd-tx-signs__card:hover p { color: var(--forest); }
+.jd-tx-signs__close { margin-top: var(--space-7) !important; font-size: var(--fs-lead); line-height: 1.5; }
+
+@media (max-width: 1023px) {
+  .jd-tx-signs__head { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .jd-tx-signs__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .jd-tx-signs__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- 3. Our tax services: forest, four photo panels; the open one widens to show its detail ---- */
+.jd-tx-svc { position: relative; background: var(--forest); color: var(--on-forest); padding-block: clamp(72px, 8vw, 120px); }
+.jd-tx-svc p, .jd-tx-svc h3, .jd-tx-svc ul { margin: 0; }
+.jd-tx-svc__head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-8); align-items: end; }
+.jd-tx-svc__title { margin: var(--space-4) 0 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-tx-svc__title em { font-style: normal; color: var(--lime); }
+.jd-tx-svc__intro { font-size: var(--fs-lead); line-height: 1.55; color: var(--on-forest-muted); }
+
+.jd-tx-svc__row { display: flex; gap: var(--space-3); height: 680px; margin-top: clamp(48px, 5vw, 72px); }
+.jd-tx-svc__panel { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: var(--radius-lg); cursor: pointer; transition: flex-grow .8s var(--ease-out); outline: none; scroll-margin-top: 120px; }
+.jd-tx-svc__panel.is-open { flex-grow: 4.2; cursor: default; }
+.jd-tx-svc__panel:focus-visible { box-shadow: 0 0 0 3px var(--lime); }
+.jd-tx-svc__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.jd-tx-svc__panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(35, 56, 49, .96) 30%, rgba(35, 56, 49, .55)); transition: background .6s; }
+.jd-tx-svc__panel.is-open::after { background: linear-gradient(90deg, rgba(35, 56, 49, .97) 52%, rgba(35, 56, 49, .35)); }
+.jd-tx-svc__shut, .jd-tx-svc__open { position: absolute; z-index: 1; inset: 0; padding: var(--space-6); transition: opacity .4s; }
+.jd-tx-svc__shut { display: grid; align-content: space-between; justify-items: start; }
+.jd-tx-svc__vert { writing-mode: vertical-rl; transform: rotate(180deg); font-size: var(--fs-h4); font-weight: 500; }
+.jd-tx-svc__n { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--lime); color: var(--forest); font-size: var(--fs-small); font-weight: 600; }
+.jd-tx-svc__open { display: grid; align-content: center; gap: var(--space-4); justify-items: start; max-width: 600px; opacity: 0; pointer-events: none; }
+.jd-tx-svc__panel.is-open .jd-tx-svc__shut { opacity: 0; }
+.jd-tx-svc__panel.is-open .jd-tx-svc__open { opacity: 1; pointer-events: auto; transition-delay: .3s; }
+.jd-tx-svc__open h3 { font-size: var(--fs-h3); font-weight: 500; line-height: 1.2; }
+.jd-tx-svc__text { font-size: var(--fs-body); line-height: 1.6; color: var(--on-forest-muted); }
+.jd-tx-svc__list { display: grid; gap: 10px; padding: 0; list-style: none; }
+.jd-tx-svc__list li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--space-3); align-items: start; font-size: var(--fs-small); line-height: 1.45; }
+.jd-tx-svc__tick { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--lime); color: var(--forest); }
+.jd-tx-svc__tick svg { width: 14px; height: 14px; }
+.jd-tx-svc__ideal { font-size: var(--fs-small); line-height: 1.5; color: var(--on-forest-muted); }
+.jd-tx-svc__ideal b { font-weight: 600; color: var(--lime); }
+
+@media (max-width: 1023px) {
+  .jd-tx-svc__head { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  /* stacked: a closed panel is a bar with its number and name; the open one shows its detail */
+  .jd-tx-svc__row { flex-direction: column; height: auto; }
+  .jd-tx-svc__panel { flex: none; }
+  .jd-tx-svc__shut { position: relative; display: flex; align-items: center; gap: var(--space-4); padding: var(--space-5); }
+  .jd-tx-svc__vert { writing-mode: horizontal-tb; transform: none; }
+  .jd-tx-svc__open { position: relative; display: none; padding: var(--space-6) var(--space-5); }
+  .jd-tx-svc__panel.is-open .jd-tx-svc__open { display: grid; }
+  .jd-tx-svc__panel.is-open .jd-tx-svc__shut { display: none; }
+  .jd-tx-svc__panel.is-open::after { background: rgba(35, 56, 49, .92); }
+}
+
+/* ---- 4. How we work with you: soft green, four step cards joined by lime dots ---- */
+.jd-tx-how { position: relative; overflow: clip; background: var(--forest-tint); color: var(--ink); padding-block: clamp(72px, 8vw, 120px); }
+.jd-tx-how > .jd-container { position: relative; z-index: 1; }
+.jd-tx-how p, .jd-tx-how h3 { margin: 0; }
+.jd-tx-how__head { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-8); align-items: end; }
+.jd-tx-how__title { margin: var(--space-4) 0 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-tx-how__title em { padding: 0 .06em; font-style: normal; color: var(--forest); background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); }
+.jd-tx-how__intro { font-size: var(--fs-lead); line-height: 1.55; color: var(--ink-muted); }
+.jd-tx-how__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); margin: clamp(48px, 5vw, 72px) 0 0; padding: 0; list-style: none; }
+.jd-tx-how__card { position: relative; display: grid; grid-template-rows: auto auto 1fr auto; gap: var(--space-4); padding: var(--space-6); border-radius: var(--radius-lg); background: var(--surface); }
+/* the lime dot that joins each card to the next */
+.jd-tx-how__card:not(:last-child)::after { content: ""; position: absolute; z-index: 1; right: -18px; top: 52px; width: 20px; height: 20px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 5px var(--forest-tint); }
+.jd-tx-how__top { display: flex; justify-content: space-between; align-items: center; }
+.jd-tx-how__n { font-size: var(--fs-h2); font-weight: 500; line-height: 1; color: var(--forest); }
+.jd-tx-how__ico { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--forest-tint); color: var(--forest); }
+.jd-tx-how__ico svg { width: 24px; height: 24px; }
+.jd-tx-how__card h3 { font-size: var(--fs-h3); font-weight: 500; line-height: 1.2; }
+.jd-tx-how__text { font-size: var(--fs-body); line-height: 1.6; color: var(--ink-muted); }
+.jd-tx-how__recv { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: var(--space-3); align-items: start; padding: var(--space-4); border-radius: var(--radius-md); background: var(--forest); color: var(--on-forest); }
+.jd-tx-how__doc { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--lime); color: var(--forest); }
+.jd-tx-how__doc svg { width: 20px; height: 20px; }
+.jd-tx-how__label { font-size: var(--fs-caption); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
+.jd-tx-how__recv p:last-child { margin-top: 2px; font-size: var(--fs-small); line-height: 1.45; }
+
+@media (max-width: 1279px) {
+  .jd-tx-how__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jd-tx-how__card::after { display: none; }
+}
+@media (max-width: 1023px) {
+  .jd-tx-how__head { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+}
+@media (max-width: 639px) {
+  .jd-tx-how__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---- 5. Why JoDyn for tax: forest, the heading stays while five large numbered points pass ---- */
+.jd-tx-why { position: relative; overflow: clip; background: var(--forest); color: var(--on-forest); padding-block: clamp(72px, 8vw, 120px); }
+.jd-tx-why > .jd-container { position: relative; z-index: 1; }
+.jd-tx-why p, .jd-tx-why h3 { margin: 0; }
+.jd-tx-why__grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-9); align-items: start; }
+.jd-tx-why__head { position: sticky; top: 120px; display: grid; gap: var(--space-4); }
+.jd-tx-why__title { margin: 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-tx-why__title em { font-style: normal; color: var(--lime); }
+.jd-tx-why__list { margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(255, 255, 255, .14); }
+.jd-tx-why__row { display: grid; grid-template-columns: 64px minmax(0, 5fr) minmax(0, 6fr); gap: var(--space-5); align-items: baseline; padding: var(--space-6) 0; border-bottom: 1px solid rgba(255, 255, 255, .14); transition: padding .4s var(--ease-out); }
+.jd-tx-why__n { font-size: var(--fs-small); color: var(--lime); }
+.jd-tx-why__row h3 { font-size: var(--fs-h3); font-weight: 500; line-height: 1.15; transition: color .3s; }
+.jd-tx-why__row p { font-size: var(--fs-body); line-height: 1.55; color: var(--on-forest-muted); }
+.jd-tx-why__row:hover { padding-left: var(--space-4); }
+.jd-tx-why__row:hover h3 { color: var(--lime); }
+
+@media (max-width: 1023px) {
+  .jd-tx-why__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-7); }
+  .jd-tx-why__head { position: static; }
+  .jd-tx-why__row { grid-template-columns: 48px minmax(0, 1fr); }
+  .jd-tx-why__row p { grid-column: 2; }
+}
+
+/* ---- 6. Tax, audit and advisory together: white, the example as a chain on soft green ---- */
+.jd-tx-fix { position: relative; overflow: clip; background: var(--surface); color: var(--ink); padding-block: clamp(72px, 8vw, 120px); }
+.jd-tx-fix > .jd-container { position: relative; z-index: 1; }
+.jd-tx-fix p { margin: 0; }
+.jd-tx-fix__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: var(--space-9); align-items: center; }
+.jd-tx-fix__copy { display: grid; gap: var(--space-5); justify-items: start; }
+.jd-tx-fix__title { margin: 0; font-size: var(--fs-h2); font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.jd-tx-fix__title em { padding: 0 .06em; font-style: normal; color: var(--forest); background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); }
+.jd-tx-fix__text { max-width: 58ch; font-size: var(--fs-lead); line-height: 1.55; color: var(--ink-muted); }
+.jd-tx-fix__chain { padding: var(--space-6); border-radius: var(--radius-lg); background: var(--forest-tint); }
+.jd-tx-fix__eg { margin-bottom: var(--space-5) !important; font-size: var(--fs-caption); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--forest); }
+.jd-tx-fix__chain ol { position: relative; display: grid; gap: var(--space-6); margin: 0; padding: 0; list-style: none; }
+/* the line that joins the three steps */
+.jd-tx-fix__chain ol::before { content: ""; position: absolute; left: 27px; top: 28px; bottom: 28px; width: 2px; background: linear-gradient(var(--forest), rgba(35, 56, 49, .2)); }
+.jd-tx-fix__link { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: var(--space-4); align-items: center; }
+.jd-tx-fix__ico { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--surface); border: 2px solid var(--forest); color: var(--forest); }
+.jd-tx-fix__link:last-child .jd-tx-fix__ico { background: var(--forest); color: var(--lime); }
+.jd-tx-fix__ico svg { width: 26px; height: 26px; }
+.jd-tx-fix__k { font-size: var(--fs-small); font-weight: 600; color: var(--forest); }
+.jd-tx-fix__v { margin-top: 2px !important; font-size: var(--fs-h4); font-weight: 500; line-height: 1.3; }
+
+@media (max-width: 1023px) {
+  .jd-tx-fix__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+}
