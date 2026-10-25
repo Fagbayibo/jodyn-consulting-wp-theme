@@ -53,7 +53,7 @@ if ( ! $jodyn_poster ) {
 			<h1 class="jd-hero__title"><span class="jd-hero__line">Advisory that turns</span> <span class="jd-hero__line">strategy into <mark class="jd-hl">measurable</mark></span> <span class="jd-hero__line">growth</span></h1>
 			<div class="jd-hero__aside">
 				<p class="jd-hero__lead">We work alongside leadership teams to design strategy, build capability and deliver change that lasts.</p>
-				<a class="jd-btn jd-btn--accent jd-btn--lg jd-btn--arrow" href="<?php echo esc_url( home_url( '/services/' ) ); ?>">
+				<a class="jd-btn jd-btn--accent jd-btn--lg jd-btn--arrow" href="#how-we-help">
 					Explore our services
 					<span class="jd-btn__disc"><?php echo jodyn_arrow_swap(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				</a>

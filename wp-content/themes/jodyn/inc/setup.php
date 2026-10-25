@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 2;
+const JODYN_SETUP_VERSION = 4;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -83,6 +83,30 @@ function jodyn_site_map() {
 }
 
 /**
+ * /services/ and /training/ only group their sub-pages (the menu opens them as dropdowns), so a
+ * visit goes on to the overview that already exists: How We Help on the home page (all four
+ * service lines) and Training Programmes. Only while the page is empty: if the client writes
+ * content for it later, it shows.
+ */
+add_action(
+	'template_redirect',
+	static function () {
+		$page = is_page() ? get_queried_object() : null;
+		if ( ! $page || $page->post_parent || '' !== trim( $page->post_content ) ) {
+			return;
+		}
+		$to = array(
+			'services' => home_url( '/#how-we-help' ),
+			'training' => home_url( '/training/programmes/' ),
+		);
+		if ( isset( $to[ $page->post_name ] ) ) {
+			wp_safe_redirect( $to[ $page->post_name ], 301 );
+			exit;
+		}
+	}
+);
+
+/**
  * Every page the theme links to, by path (parents before their children). The two policy
  * pages start empty for the client's wording; WordPress's own Privacy Policy draft is kept if it
  * already exists.
@@ -133,8 +157,20 @@ function jodyn_programme_catalogue() {
 function jodyn_site_setup() {
 	global $wp_rewrite;
 
-	if ( ! get_option( 'permalink_structure' ) ) {
-		$wp_rewrite->set_permalink_structure( '/%postname%/' );
+	// Articles live under /insights/ (insights.md: /insights/[article-title]/), and so do the
+	// category pages (/insights/category/tax/). Programmes keep /programme/ (with_front false).
+	// Before version 4 the theme set /%postname%/, so that (or WordPress's date format) moves over.
+	$structure = (string) get_option( 'permalink_structure' );
+	if ( ! $structure || ( (int) get_option( 'jodyn_setup_version' ) < 4 && in_array( $structure, array( '/%postname%/', '/%year%/%monthnum%/%day%/%postname%/' ), true ) ) ) {
+		$wp_rewrite->set_permalink_structure( '/insights/%postname%/' );
+		// Categories and post types built their address patterns at init with the old structure:
+		// rebuild them with the new one before the rules are regenerated below.
+		foreach ( get_taxonomies( array(), 'objects' ) as $jodyn_tax ) {
+			$jodyn_tax->add_rewrite_rules();
+		}
+		foreach ( get_post_types( array(), 'objects' ) as $jodyn_type ) {
+			$jodyn_type->add_rewrite_rules();
+		}
 	}
 
 	$ids = array();
@@ -194,6 +230,16 @@ function jodyn_site_setup() {
 				}
 			}
 		}
+	}
+
+	// Insights: the approved categories (tab order in inc/insights.php) and nine articles a page.
+	foreach ( jodyn_insight_categories() as $slug => $name ) {
+		if ( ! get_term_by( 'slug', $slug, 'category' ) ) {
+			wp_insert_term( $name, 'category', array( 'slug' => $slug ) );
+		}
+	}
+	if ( (int) get_option( 'jodyn_setup_version' ) < 3 && 10 === (int) get_option( 'posts_per_page' ) ) {
+		update_option( 'posts_per_page', 9 );
 	}
 
 	flush_rewrite_rules();

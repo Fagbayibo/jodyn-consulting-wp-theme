@@ -26,7 +26,7 @@ Status: approved
 Eyebrow: JoDyn Advisory & Consulting
 Heading: Advisory that turns / strategy into [measurable] / growth
 Text: We work alongside leadership teams to design strategy, build capability and deliver change that lasts.
-Button: Explore our services → /services/
+Button: Explore our services → #how-we-help (the How We Help section below; /services/ itself redirects there)
 
 > Kept as approved on the site. The document's hero ("Advisory and Training That Drives Lasting Growth", with "Talk to an Advisor" and "View Training Calendar" buttons) was not used. Its alternative headlines remain in the original file if the client wants to revisit.
 

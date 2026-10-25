@@ -16,6 +16,7 @@ require_once get_template_directory() . '/inc/programmes.php';
 require_once get_template_directory() . '/inc/calendar-download.php';
 require_once get_template_directory() . '/inc/registration.php';
 require_once get_template_directory() . '/inc/enquiries.php';
+require_once get_template_directory() . '/inc/insights.php';
 require_once get_template_directory() . '/inc/contact.php';
 require_once get_template_directory() . '/inc/updater.php';
 require_once get_template_directory() . '/inc/setup.php';
@@ -123,6 +124,23 @@ function jodyn_enqueue_assets() {
 					'sending' => __( 'Sending your message…', 'jodyn' ),
 					'error'   => __( 'Something went wrong. Please try again.', 'jodyn' ),
 				),
+			)
+		);
+	}
+
+	if ( is_home() || is_category() ) {
+		wp_enqueue_style( 'jodyn-insights', "$uri/assets/css/insights.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/insights.css' ) );
+	}
+
+	if ( is_singular( 'post' ) ) {
+		wp_enqueue_style( 'jodyn-insights', "$uri/assets/css/insights.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/insights.css' ) );
+		jodyn_enqueue_script( 'jodyn-article', 'article.js', array( 'jodyn-motion' ) );
+		wp_localize_script(
+			'jodyn-article',
+			'jodynArticle',
+			array(
+				'copied' => __( 'Link copied', 'jodyn' ),
+				'failed' => __( 'Could not copy the link', 'jodyn' ),
 			)
 		);
 	}
