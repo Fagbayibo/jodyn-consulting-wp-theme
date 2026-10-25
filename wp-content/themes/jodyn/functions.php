@@ -99,6 +99,11 @@ function jodyn_enqueue_assets() {
 		jodyn_enqueue_script( 'jodyn-advisory', 'advisory.js', array( 'jodyn-motion' ) );
 	}
 
+	if ( is_page( 'systems-audit' ) ) {
+		wp_enqueue_style( 'jodyn-systems-audit', "$uri/assets/css/systems-audit.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/systems-audit.css' ) );
+		jodyn_enqueue_script( 'jodyn-systems-audit', 'systems-audit.js', array( 'jodyn-motion' ) );
+	}
+
 	if ( is_page( 'programmes' ) ) {
 		wp_enqueue_style( 'jodyn-training', "$uri/assets/css/training.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/training.css' ) );
 		jodyn_enqueue_script( 'jodyn-training', 'training.js', array( 'jodyn-motion' ) );

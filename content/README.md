@@ -31,6 +31,7 @@ Use only the fields a section needs. Leave a section out entirely if the page do
 - [training-calendar.md](pages/training-calendar.md) — Training calendar (/training/calendar/), 5 sections; client copy for Registration, Insights, Contact and the legal pages is in [source/](source/)
 - [registration.md](pages/registration.md) — Registration (/register/), hero, how it works, form, on-screen confirmation and confirmation email
 - [contact.md](pages/contact.md) — Contact (/contact-us/), hero, ways to reach us, form, office details, follow us, quick answers
+- [systems-audit.md](pages/systems-audit.md) — Systems Audit service page (/services/systems-audit/), 6 sections; no client original, written from the confirmed home page scope (FAQs go to the FAQs page)
 - [insights.md](pages/insights.md) — Insights (/insights/), the blog: hero, featured article, categories, article grid, launch articles and the single article template
 
 Other pages are added here as the client sends their copy.
