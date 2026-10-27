@@ -203,8 +203,160 @@ function jodyn_programme_save( $post_id ) {
 	update_post_meta( $post_id, '_jodyn_fee', isset( $_POST['jodyn_fee'] ) ? sanitize_text_field( wp_unslash( $_POST['jodyn_fee'] ) ) : '' );
 	update_post_meta( $post_id, '_jodyn_time', isset( $_POST['jodyn_time'] ) ? sanitize_text_field( wp_unslash( $_POST['jodyn_time'] ) ) : '' );
 	update_post_meta( $post_id, '_jodyn_register_url', isset( $_POST['jodyn_register_url'] ) ? esc_url_raw( wp_unslash( $_POST['jodyn_register_url'] ) ) : '' );
+
+	foreach ( jodyn_programme_page_fields() as $key => $field ) {
+		$value = isset( $_POST[ "jodyn_$key" ] ) ? wp_unslash( $_POST[ "jodyn_$key" ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized below by type.
+		if ( 'url' === $field[1] ) {
+			$value = esc_url_raw( $value );
+		} elseif ( 'text' === $field[1] ) {
+			$value = sanitize_text_field( $value );
+		} else {
+			$value = sanitize_textarea_field( $value );
+		}
+		update_post_meta( $post_id, "_jodyn_$key", $value );
+	}
 }
 add_action( 'save_post_jodyn_programme', 'jodyn_programme_save' );
+
+/**
+ * The programme page's own fields (content/pages/programme.md, "Fields in the admin"):
+ * key => array( label, type, help ). Lists are one item per line.
+ *
+ * @return array
+ */
+function jodyn_programme_page_fields() {
+	return array(
+		'duration'          => array( __( 'Duration', 'jodyn' ), 'text', __( 'e.g. 2 days. Leave empty to count the days from the start and end dates.', 'jodyn' ) ),
+		'who'               => array( __( 'Who should attend', 'jodyn' ), 'list', __( 'One role per line.', 'jodyn' ) ),
+		'outcomes'          => array( __( 'Learning outcomes', 'jodyn' ), 'list', __( 'One outcome per line. "By the end of this programme, you will be able to:" is added for you.', 'jodyn' ) ),
+		'modules'           => array( __( 'Programme modules', 'jodyn' ), 'list', __( 'One module per line, as Title: short description. For example: The Manager’s Mindset: Understanding your new role…', 'jodyn' ) ),
+		'includes'          => array( __( 'What’s included', 'jodyn' ), 'list', __( 'One item per line, e.g. Course materials.', 'jodyn' ) ),
+		'facilitator_name'  => array( __( 'Facilitator: name (optional)', 'jodyn' ), 'text', __( 'Leave empty to leave the facilitator section out.', 'jodyn' ) ),
+		'facilitator_role'  => array( __( 'Facilitator: title', 'jodyn' ), 'text', '' ),
+		'facilitator_photo' => array( __( 'Facilitator: photo link', 'jodyn' ), 'url', __( 'Upload the photo to the Media Library and paste its file URL here.', 'jodyn' ) ),
+		'facilitator_bio'   => array( __( 'Facilitator: short bio', 'jodyn' ), 'list', '' ),
+		'brochure'          => array( __( 'Brochure PDF link (optional)', 'jodyn' ), 'url', __( 'Upload the PDF to the Media Library and paste its file URL here. Shows Download Brochure.', 'jodyn' ) ),
+	);
+}
+
+/**
+ * "Programme page" box under the editor.
+ */
+function jodyn_programme_page_meta_box() {
+	add_meta_box( 'jodyn-programme-page', __( 'Programme page', 'jodyn' ), 'jodyn_programme_page_meta_box_html', 'jodyn_programme', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes', 'jodyn_programme_page_meta_box' );
+
+/**
+ * @param WP_Post $post Programme.
+ */
+function jodyn_programme_page_meta_box_html( $post ) {
+	echo '<p class="description">' . esc_html__( 'Everything on the programme’s own page. Write the overview in the editor above and the short summary in the Excerpt. Any section left empty is left off the page.', 'jodyn' ) . '</p>';
+	foreach ( jodyn_programme_page_fields() as $key => $field ) {
+		$value = get_post_meta( $post->ID, "_jodyn_$key", true );
+		echo '<p><label for="jodyn-' . esc_attr( $key ) . '"><strong>' . esc_html( $field[0] ) . '</strong></label><br>';
+		if ( 'list' === $field[1] ) {
+			echo '<textarea id="jodyn-' . esc_attr( $key ) . '" name="jodyn_' . esc_attr( $key ) . '" rows="5" style="width:100%">' . esc_textarea( $value ) . '</textarea>';
+		} else {
+			echo '<input type="' . ( 'url' === $field[1] ? 'url' : 'text' ) . '" id="jodyn-' . esc_attr( $key ) . '" name="jodyn_' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" style="width:100%">';
+		}
+		if ( $field[2] ) {
+			echo '<br><span class="description">' . esc_html( $field[2] ) . '</span>';
+		}
+		echo '</p>';
+	}
+}
+
+/**
+ * A list field as its non-empty lines.
+ *
+ * @param int    $post_id Programme ID.
+ * @param string $key     Field key from jodyn_programme_page_fields().
+ * @return string[]
+ */
+function jodyn_programme_lines( $post_id, $key ) {
+	$lines = preg_split( '/\r\n|\r|\n/', (string) get_post_meta( $post_id, "_jodyn_$key", true ) );
+	return array_values( array_filter( array_map( 'trim', $lines ), 'strlen' ) );
+}
+
+/**
+ * The modules as array( title, description ). "Module 3: Title: description" and
+ * "Title: description" both work; a line without a colon is a title on its own.
+ *
+ * @param int $post_id Programme ID.
+ * @return array<int, string[]>
+ */
+function jodyn_programme_modules( $post_id ) {
+	$modules = array();
+	foreach ( jodyn_programme_lines( $post_id, 'modules' ) as $line ) {
+		$line      = preg_replace( '/^module\s*\d+\s*[:.\-–]\s*/iu', '', $line );
+		$parts     = array_map( 'trim', explode( ':', $line, 2 ) );
+		$modules[] = array( $parts[0], isset( $parts[1] ) ? $parts[1] : '' );
+	}
+	return $modules;
+}
+
+/**
+ * The client's fully written example programme (content/pages/programme.md, "Example"). Site
+ * setup (version 6) writes it into Leadership Essentials for New Managers while that programme's
+ * page fields are still empty, so there is one complete page to show.
+ *
+ * @return array
+ */
+function jodyn_programme_example() {
+	return array(
+		'title'    => 'Leadership Essentials for New Managers',
+		'summary'  => 'Make a confident transition from team member to team leader. Learn how to lead former peers, delegate effectively, give feedback and motivate your team to deliver results.',
+		'overview' => array(
+			'Stepping into management for the first time is one of the biggest transitions in any career. The skills that made you excellent at your job are not the same skills you need to lead others. New managers are often expected to deliver results through people from day one, with little preparation for what that really involves.',
+			'This practical two-day programme equips new and aspiring managers with the essential skills to lead with confidence. Through real workplace scenarios, practical tools and guided practice, participants learn how to set clear expectations, delegate well, hold productive conversations and build a motivated, accountable team.',
+			'Participants leave with a personal leadership action plan and a toolkit they can apply immediately with their teams.',
+		),
+		'meta'     => array(
+			'duration' => '2 days',
+			'time'     => '[9:00 am to 4:00 pm]',
+			'who'      => "Newly promoted supervisors, team leads and managers\nHigh-potential employees preparing for a leadership role\nManagers with less than two years of people-management experience\nTechnical experts who now lead teams",
+			'outcomes' => "Understand the shift from individual contributor to manager and what is now expected of you;\nLead former peers with confidence and credibility;\nSet clear goals and expectations for your team;\nDelegate tasks effectively and follow up without micromanaging;\nGive constructive feedback and handle difficult conversations;\nMotivate team members and build a culture of accountability; and\nCreate a personal 90-day leadership action plan.",
+			'modules'  => "The Manager's Mindset: Understanding your new role, responsibilities and the expectations of your team and leaders.\nLeading Former Peers: Building credibility, setting boundaries and earning respect in your new role.\nSetting Goals and Expectations: Translating organisational goals into clear team and individual objectives.\nDelegation That Works: What to delegate, to whom and how, plus how to follow up without micromanaging.\nFeedback and Difficult Conversations: Practical frameworks for giving feedback and addressing underperformance.\nMotivating and Developing Your Team: Understanding what drives people and building an engaged, accountable team.\nYour Leadership Action Plan: Bringing it all together into a practical 90-day plan.",
+			'includes' => "Course materials\nPractical toolkit\nCertificate of participation\n[Lunch and refreshments for in-person sessions]",
+		),
+	);
+}
+
+/**
+ * Writes the example into its programme while that programme's page is still empty.
+ */
+function jodyn_programme_apply_example() {
+	$example = jodyn_programme_example();
+	$found   = get_posts(
+		array(
+			'post_type'   => 'jodyn_programme',
+			'post_status' => 'any',
+			'title'       => $example['title'],
+			'numberposts' => 1,
+		)
+	);
+	if ( ! $found || '' !== (string) get_post_meta( $found[0]->ID, '_jodyn_who', true ) ) {
+		return;
+	}
+	$post    = $found[0];
+	$content = trim( wp_strip_all_tags( $post->post_content ) );
+	$update  = array( 'ID' => $post->ID );
+	if ( '' === $content || trim( $post->post_excerpt ) === $content ) {
+		$update['post_content'] = '<p>' . implode( "</p>\n\n<p>", $example['overview'] ) . '</p>';
+	}
+	if ( '' === trim( $post->post_excerpt ) ) {
+		$update['post_excerpt'] = $example['summary'];
+	}
+	if ( count( $update ) > 1 ) {
+		wp_update_post( $update );
+	}
+	foreach ( $example['meta'] as $key => $value ) {
+		if ( '' === (string) get_post_meta( $post->ID, "_jodyn_$key", true ) ) {
+			update_post_meta( $post->ID, "_jodyn_$key", $value );
+		}
+	}
+}
 
 /**
  * Admin list: show date, format and fee; sort by date.

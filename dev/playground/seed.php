@@ -62,7 +62,7 @@ flush_rewrite_rules();
 // title => summary, start (days from today), length in days, format, venue, fee, seats, photo.
 // Dates are relative so the calendar always has upcoming runs; set on every seed.
 $runs = array(
-	'Leadership Essentials for New Managers'          => array( 'Make a confident transition into management. Learn how to lead former peers, delegate effectively, give feedback and motivate your team to deliver.', 23, 2, 'in-person', 'Lagos', '₦250,000', 'open', 'leadership-essentials.jpg' ),
+	'Leadership Essentials for New Managers'          => array( 'Make a confident transition from team member to team leader. Learn how to lead former peers, delegate effectively, give feedback and motivate your team to deliver results.', 23, 2, 'in-person', 'Lagos', '₦250,000', 'open', 'leadership-essentials.jpg' ),
 	'Problem Solving and Decision Making'             => array( '', 31, 1, 'online', 'Live via Zoom', '₦95,000', 'few', '' ),
 	'Strategic Thinking and Planning'                 => array( 'Move from ideas to results. Learn practical tools for setting priorities, making sound decisions and turning strategy into action across your team.', 37, 2, 'online', 'Live via Zoom', '₦180,000', 'open', 'strategic-thinking.jpg' ),
 	'Customer Service Excellence'                     => array( '', 40, 2, 'in-person', 'Ibadan', '₦150,000', 'full', '' ),
@@ -85,7 +85,8 @@ foreach ( $runs as $title => $run ) {
 	$id    = $found[0];
 	$start = strtotime( '+' . $run[1] . ' days' );
 	if ( $run[0] ) {
-		wp_update_post( array( 'ID' => $id, 'post_excerpt' => $run[0], 'post_content' => '<p>' . $run[0] . '</p>' ) );
+		// Only an empty description gets the summary, so the example programme page keeps its overview.
+		wp_update_post( '' === trim( get_post_field( 'post_content', $id ) ) ? array( 'ID' => $id, 'post_excerpt' => $run[0], 'post_content' => '<p>' . $run[0] . '</p>' ) : array( 'ID' => $id, 'post_excerpt' => $run[0] ) );
 	}
 	update_post_meta( $id, '_jodyn_start', gmdate( 'Y-m-d', $start ) );
 	update_post_meta( $id, '_jodyn_end', $run[2] > 1 ? gmdate( 'Y-m-d', $start + ( $run[2] - 1 ) * DAY_IN_SECONDS ) : '' );

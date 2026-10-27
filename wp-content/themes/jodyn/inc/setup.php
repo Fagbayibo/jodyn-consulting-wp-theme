@@ -14,6 +14,7 @@
  * - A "Primary" menu built from jodyn_site_map(), if no menu is assigned to the header.
  * - The training programme catalogue (titles and areas, no dates) if there are no programmes.
  * - The home hero film, fetched once from GitHub if no video is set (jodyn_maybe_import_hero_film).
+ * - The client's example programme page, written into its programme while that one is empty.
  *
  * @package JoDyn
  */
@@ -22,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 5;
+const JODYN_SETUP_VERSION = 6;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -260,6 +261,12 @@ function jodyn_site_setup() {
 				}
 			}
 		}
+	}
+
+	// 6: the client's example programme page (content/pages/programme.md) fills Leadership
+	// Essentials for New Managers while its page fields are empty.
+	if ( (int) get_option( 'jodyn_setup_version' ) < 6 ) {
+		jodyn_programme_apply_example();
 	}
 
 	// Insights: the approved categories (tab order in inc/insights.php) and nine articles a page.
