@@ -1,0 +1,64 @@
+/**
+ * FAQs page (template-parts/faqs/page.php): lime hero with search, then each topic as a white
+ * card on soft green, two columns on desktop. The lime footer card follows.
+ */
+
+/* ---- Hero: lime, heading beside the intro and search ---- */
+.jd-fq-hero { padding: calc(72px + 16px + clamp(40px, 5vw, 80px)) 0 clamp(56px, 7vw, 96px); background: var(--lime); color: var(--forest); }
+.jd-fq-hero__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 5fr); gap: var(--space-9); align-items: end; }
+.jd-fq-hero .jd-eyebrow { color: var(--forest); }
+.jd-fq-title { margin: var(--space-4) 0 0; font-size: var(--fs-h1); font-weight: 500; line-height: 1.02; letter-spacing: -.03em; }
+.jd-fq-hero__side { display: grid; gap: var(--space-5); }
+.jd-fq-intro { margin: 0; font-size: var(--fs-body); line-height: 1.65; }
+
+.jd-fq-search { position: relative; display: flex; align-items: center; margin: 0; }
+.jd-fq-search svg { position: absolute; left: 20px; width: 20px; height: 20px; color: var(--forest); pointer-events: none; }
+.jd-fq-search input { width: 100%; height: 60px; padding: 0 24px 0 54px; border: 0; border-radius: var(--radius-pill); background: var(--surface); color: var(--ink); font: 400 var(--fs-body)/1 var(--font-sans); box-shadow: 0 16px 32px -24px rgba(35, 56, 49, .6); }
+.jd-fq-search input::placeholder { color: var(--ink-subtle); }
+.jd-fq-search input:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+
+/* ---- Topics: white cards on soft green ---- */
+.jd-fq-body { padding-block: clamp(56px, 7vw, 104px); background: var(--forest-tint); }
+.jd-fq-grid { columns: 2; column-gap: var(--space-5); }
+.jd-fq-card { break-inside: avoid; margin: 0 0 var(--space-5); padding: var(--space-6); border-radius: var(--radius-lg); background: var(--surface); scroll-margin-top: 110px; }
+.jd-fq-card[hidden], .jd-fq-item[hidden], .jd-fq-empty[hidden] { display: none; }
+.jd-fq-card__title { display: flex; align-items: center; gap: var(--space-3); margin: 0 0 var(--space-2); font-size: var(--fs-h3); font-weight: 500; letter-spacing: -.01em; }
+.jd-fq-card__title small { display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: var(--radius-pill); background: var(--forest-tint); color: var(--forest); font-size: var(--fs-caption); font-weight: 700; }
+.jd-fq-card__icon { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--forest); color: var(--lime); }
+.jd-fq-card__icon svg { width: 22px; height: 22px; }
+
+.jd-fq-list { display: grid; }
+.jd-fq-item + .jd-fq-item { border-top: 1px solid var(--line-strong); }
+.jd-fq-q { margin: 0; }
+.jd-fq-q button { display: flex; align-items: center; gap: var(--space-4); width: 100%; padding: var(--space-4) 0; border: 0; background: none; color: var(--ink); font: 600 var(--fs-body)/1.4 var(--font-sans); text-align: left; cursor: pointer; }
+.jd-fq-q button > span { flex: 1; }
+.jd-fq-q button:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; border-radius: 8px; }
+.jd-fq-ic { position: relative; flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--forest-tint); transition: background-color var(--dur-base); }
+.jd-fq-ic::before, .jd-fq-ic::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 2px; margin: -1px 0 0 -6px; border-radius: 2px; background: var(--forest); transition: transform .4s var(--ease-out), background-color var(--dur-base); }
+.jd-fq-ic::after { transform: rotate(90deg); }
+.jd-fq-q button:hover .jd-fq-ic { background: var(--lime); }
+.jd-fq-item.is-open .jd-fq-ic { background: var(--forest); }
+.jd-fq-item.is-open .jd-fq-ic::before, .jd-fq-item.is-open .jd-fq-ic::after { background: var(--lime); }
+.jd-fq-item.is-open .jd-fq-ic::after { transform: rotate(0); }
+
+/* answers open by animating the row from 0fr to 1fr, so any length animates smoothly */
+.jd-fq-a { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows .45s var(--ease-out), visibility 0s .45s; }
+.jd-fq-a > div { overflow: hidden; }
+.jd-fq-item.is-open .jd-fq-a { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows .45s var(--ease-out); }
+.jd-fq-a p { margin: 0; padding-bottom: var(--space-5); font-size: var(--fs-small); line-height: 1.7; color: var(--ink-muted); }
+.jd-fq-a a, .jd-fq-empty a { color: var(--forest); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.jd-fq-a a:hover, .jd-fq-empty a:hover { text-decoration-color: var(--lime); text-decoration-thickness: 3px; }
+
+.jd-fq-empty { margin: 0; padding: var(--space-6); border-radius: var(--radius-lg); background: var(--surface); font-size: var(--fs-lead); color: var(--ink-muted); }
+
+@media (max-width: 1023px) {
+  .jd-fq-hero__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .jd-fq-grid { columns: 1; }
+}
+@media (max-width: 767px) {
+  .jd-fq-card { padding: var(--space-5); }
+  .jd-fq-card__title { font-size: var(--fs-h4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jd-fq-a, .jd-fq-item.is-open .jd-fq-a { transition: none; }
+}

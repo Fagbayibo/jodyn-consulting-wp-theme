@@ -4,7 +4,8 @@
  *
  * Runs when the theme is activated, and once more after an update that raises
  * JODYN_SETUP_VERSION (on the next admin page load). It only adds what is missing; it never
- * edits or deletes existing content.
+ * edits or deletes existing content, with one exception: version 5 swaps the untouched Careers
+ * menu item and empty page it created earlier for FAQs.
  * - Pretty permalinks (/%postname%/) if the site still uses plain ?p=123 links: every link in
  *   the theme (/about-us/, /training/programmes/) depends on them.
  * - The pages in jodyn_site_pages() that don't exist yet. The theme's page-<slug>.php templates
@@ -21,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 4;
+const JODYN_SETUP_VERSION = 5;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -76,8 +77,8 @@ function jodyn_site_map() {
 			'page'  => 'insights',
 		),
 		array(
-			'title' => __( 'Careers', 'jodyn' ),
-			'page'  => 'careers',
+			'title' => __( 'FAQs', 'jodyn' ),
+			'page'  => 'faqs',
 		),
 	);
 }
@@ -126,7 +127,7 @@ function jodyn_site_pages() {
 		'training/calendar'        => __( 'Training calendar', 'jodyn' ),
 		'register'                 => __( 'Register', 'jodyn' ),
 		'insights'                 => __( 'Insights', 'jodyn' ),
-		'careers'                  => __( 'Careers', 'jodyn' ),
+		'faqs'                     => __( 'FAQs', 'jodyn' ),
 		'contact-us'               => __( 'Contact us', 'jodyn' ),
 		'privacy-policy'           => __( 'Privacy Policy', 'jodyn' ),
 		'terms'                    => __( 'Terms of Use', 'jodyn' ),
@@ -210,6 +211,35 @@ function jodyn_site_setup() {
 			}
 			$locations['primary'] = $menu_id;
 			set_theme_mod( 'nav_menu_locations', $locations );
+		}
+	}
+
+	// 5: Careers was dropped (user, 2026-10-27). On sites set up earlier, the menu item setup added
+	// for it becomes FAQs and the empty Careers page goes to the trash. If the client has written
+	// a Careers page or renamed the item, both are left alone.
+	if ( (int) get_option( 'jodyn_setup_version' ) < 5 ) {
+		$careers = get_page_by_path( 'careers' );
+		if ( $careers && '' === trim( $careers->post_content ) ) {
+			$locations = get_theme_mod( 'nav_menu_locations', array() );
+			$menu_id   = (int) ( $locations['primary'] ?? 0 );
+			foreach ( $menu_id ? (array) wp_get_nav_menu_items( $menu_id ) : array() as $item ) {
+				if ( 'page' === $item->object && (int) $item->object_id === $careers->ID && 'Careers' === $item->title ) {
+					wp_update_nav_menu_item(
+						$menu_id,
+						$item->ID,
+						array(
+							'menu-item-title'     => __( 'FAQs', 'jodyn' ),
+							'menu-item-type'      => 'post_type',
+							'menu-item-object'    => 'page',
+							'menu-item-object-id' => $ids['faqs'],
+							'menu-item-parent-id' => (int) $item->menu_item_parent,
+							'menu-item-position'  => (int) $item->menu_order,
+							'menu-item-status'    => 'publish',
+						)
+					);
+				}
+			}
+			wp_trash_post( $careers->ID );
 		}
 	}
 
