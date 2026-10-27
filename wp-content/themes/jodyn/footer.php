@@ -15,8 +15,9 @@
 $jodyn_contact = jodyn_contact();
 $jodyn_social  = jodyn_social_links();
 $jodyn_privacy = get_privacy_policy_url();
-// The call to action points at the contact page, so it isn't repeated there.
-$jodyn_has_cta = ! is_page( array( 'contact-us', 'register' ) );
+// The call to action points at the contact page, so it isn't repeated there; the policies end
+// with "Our other policies" instead.
+$jodyn_has_cta = ! is_page( array( 'contact-us', 'register' ) ) && ! jodyn_legal_current();
 /**
  * Filter the footer card's heading (may contain <em> for the boxed word), text and buttons,
  * so a page can end with its own closing call to action. Each button is
@@ -136,6 +137,9 @@ $jodyn_cta = apply_filters(
 			<ul>
 				<li><a href="<?php echo esc_url( $jodyn_privacy ? $jodyn_privacy : home_url( '/privacy-policy/' ) ); ?>">Privacy Policy</a></li>
 				<li><a href="<?php echo esc_url( home_url( '/cookie-policy/' ) ); ?>">Cookie Policy</a></li>
+				<?php if ( jodyn_ga4_id() ) : ?>
+					<li><a href="<?php echo esc_url( home_url( '/cookie-policy/#how-to-control-cookies' ) ); ?>" data-jd-cookie-settings>Cookie settings</a></li>
+				<?php endif; ?>
 			</ul>
 			<a class="jd-footer__top" href="#top" aria-label="<?php esc_attr_e( 'Back to top', 'jodyn' ); ?>"><?php echo jodyn_icon( 'arrow-up' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
 		</div>

@@ -33,6 +33,7 @@ Use only the fields a section needs. Leave a section out entirely if the page do
 - [contact.md](pages/contact.md) — Contact (/contact-us/), hero, ways to reach us, form, office details, follow us, quick answers
 - [systems-audit.md](pages/systems-audit.md) — Systems Audit service page (/services/systems-audit/), 6 sections; no client original, written from the confirmed home page scope (FAQs go to the FAQs page)
 - [tax-consultancy.md](pages/tax-consultancy.md) — Tax Consultancy service page (/services/tax-consultancy/), 6 sections; no client original, written from the confirmed home page scope (FAQs go to the FAQs page)
+- [legal.md](pages/legal.md) — Privacy Policy (/privacy-policy/), Terms of Use (/terms/) and Cookie Policy (/cookie-policy/), one shared template; the Cookie Policy is new
 - [insights.md](pages/insights.md) — Insights (/insights/), the blog: hero, featured article, categories, article grid, launch articles and the single article template
 
 Other pages are added here as the client sends their copy.

@@ -18,6 +18,8 @@ require_once get_template_directory() . '/inc/registration.php';
 require_once get_template_directory() . '/inc/enquiries.php';
 require_once get_template_directory() . '/inc/insights.php';
 require_once get_template_directory() . '/inc/contact.php';
+require_once get_template_directory() . '/inc/legal.php';
+require_once get_template_directory() . '/inc/consent.php';
 require_once get_template_directory() . '/inc/updater.php';
 require_once get_template_directory() . '/inc/setup.php';
 
@@ -107,6 +109,11 @@ function jodyn_enqueue_assets() {
 	if ( is_page( 'tax-consultancy' ) ) {
 		wp_enqueue_style( 'jodyn-tax-consultancy', "$uri/assets/css/tax-consultancy.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/tax-consultancy.css' ) );
 		jodyn_enqueue_script( 'jodyn-tax-consultancy', 'tax-consultancy.js', array( 'jodyn-motion' ) );
+	}
+
+	if ( jodyn_legal_current() ) {
+		wp_enqueue_style( 'jodyn-legal', "$uri/assets/css/legal.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/legal.css' ) );
+		jodyn_enqueue_script( 'jodyn-legal', 'legal.js', array( 'jodyn-motion' ) );
 	}
 
 	if ( is_page( 'programmes' ) ) {
