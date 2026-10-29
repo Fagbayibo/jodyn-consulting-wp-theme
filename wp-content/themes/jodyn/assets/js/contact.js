@@ -49,6 +49,7 @@
 
     var f = form.elements, submit = form.querySelector('[type="submit"]'), body = {};
     ['first_name', 'last_name', 'email', 'phone', 'organisation', 'job_title', 'enquiry', 'message', 'website'].forEach(function (k) { body[k] = f[k].value.trim(); });
+    if (f.programme) body.programme = f.programme.value;
     body.privacy = f.privacy.checked;
     submit.disabled = true;
     say(t.sending);

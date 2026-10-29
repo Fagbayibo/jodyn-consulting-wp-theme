@@ -482,6 +482,28 @@ function jodyn_get_all_programmes() {
 }
 
 /**
+ * The fee in whole naira, for totals: "₦250,000", "250000", "₦250,000.00", "N250k" and
+ * "₦1.5m" all work. 0 when the fee is not one clear amount (empty, "Free", a range such as
+ * "₦150,000 – ₦200,000", or a number followed by more numbers), so the fee shows as typed and
+ * nothing is multiplied.
+ *
+ * @param string $fee The Fee field as typed.
+ * @return int
+ */
+function jodyn_fee_amount( $fee ) {
+	$fee = str_replace( ',', '', (string) $fee );
+	if ( 1 !== preg_match_all( '/\d+(?:\.\d+)?/', $fee ) || ! preg_match( '/(\d+(?:\.\d+)?)\s*([km])?\b/i', $fee, $m ) ) {
+		return 0;
+	}
+	$scale = array(
+		''  => 1,
+		'k' => 1000,
+		'm' => 1000000,
+	);
+	return (int) round( (float) $m[1] * $scale[ strtolower( $m[2] ?? '' ) ] );
+}
+
+/**
  * Everything a template needs about one programme.
  *
  * @param int|WP_Post $post Programme.
@@ -551,7 +573,7 @@ function jodyn_programme_data( $post ) {
 		'venue'       => $venue,
 		'time'        => get_post_meta( $post->ID, '_jodyn_time', true ),
 		'fee'         => $fee,
-		'fee_amount'  => (int) preg_replace( '/\D/', '', (string) $fee ),
+		'fee_amount'  => jodyn_fee_amount( $fee ),
 		'open'        => $open,
 		// Register Now: the programme's own link if set, else the Register page with this run selected
 		'url'         => $url ? $url : ( $open ? add_query_arg( 'programme', $post->ID, home_url( '/register/' ) ) : get_permalink( $post ) ),

@@ -8,7 +8,8 @@
  *   registration is saved either way.
  * - Customize → Training registration: the training email, bank details and how many days before
  *   the programme the joining instructions go out. Empty fields show as placeholders.
- * - Spam guard: a hidden honeypot field and a limit of 5 registrations per visitor per 10 minutes.
+ * - Spam guard: a hidden honeypot field and a limit of 5 registrations per visitor per 10 minutes
+ *   (inc/forms.php).
  *
  * @package JoDyn
  */
@@ -72,25 +73,17 @@ function jodyn_registration_programmes() {
  * Registrations list in the admin (read only: created by the form, never by hand).
  */
 function jodyn_register_registrations() {
-	register_post_type(
+	jodyn_form_post_type(
 		'jodyn_registration',
 		array(
-			'labels'       => array(
-				'name'          => __( 'Registrations', 'jodyn' ),
-				'singular_name' => __( 'Registration', 'jodyn' ),
-				'all_items'     => __( 'Registrations', 'jodyn' ),
-				'edit_item'     => __( 'Registration', 'jodyn' ),
-				'search_items'  => __( 'Search registrations', 'jodyn' ),
-				'not_found'     => __( 'No registrations yet', 'jodyn' ),
-			),
-			'public'       => false,
-			'show_ui'      => true,
-			'show_in_menu' => true,
-			'menu_icon'    => 'dashicons-id-alt',
-			'supports'     => array( 'title' ),
-			'map_meta_cap' => true,
-			'capabilities' => array( 'create_posts' => 'do_not_allow' ),
-		)
+			'name'          => __( 'Registrations', 'jodyn' ),
+			'singular_name' => __( 'Registration', 'jodyn' ),
+			'all_items'     => __( 'Registrations', 'jodyn' ),
+			'edit_item'     => __( 'Registration', 'jodyn' ),
+			'search_items'  => __( 'Search registrations', 'jodyn' ),
+			'not_found'     => __( 'No registrations yet', 'jodyn' ),
+		),
+		'dashicons-id-alt'
 	);
 }
 add_action( 'init', 'jodyn_register_registrations' );
@@ -167,13 +160,7 @@ add_action(
 				$rows[ __( 'Special requirements', 'jodyn' ) ]    = $meta['requirements'];
 				$rows[ __( 'Wants updates', 'jodyn' ) ]           = $meta['updates'] ? __( 'Yes', 'jodyn' ) : __( 'No', 'jodyn' );
 				$rows[ __( 'Confirmation email sent', 'jodyn' ) ] = $meta['emailed'] ? __( 'Yes', 'jodyn' ) : __( 'No (check the site’s email setup)', 'jodyn' );
-				echo '<table class="widefat striped"><tbody>';
-				foreach ( $rows as $label => $value ) {
-					if ( '' !== (string) $value ) {
-						printf( '<tr><th style="width:220px">%1$s</th><td>%2$s</td></tr>', esc_html( $label ), nl2br( esc_html( $value ) ) );
-					}
-				}
-				echo '</tbody></table>';
+				jodyn_form_table( $rows, 220 );
 			},
 			'jodyn_registration',
 			'normal',
@@ -249,22 +236,15 @@ add_action( 'rest_api_init', 'jodyn_registration_route' );
 function jodyn_registration_submit( $request ) {
 	$in   = (array) $request->get_json_params();
 	$text = static function ( $key, $max = 160 ) use ( $in ) {
-		return isset( $in[ $key ] ) && is_scalar( $in[ $key ] ) ? mb_substr( sanitize_text_field( (string) $in[ $key ] ), 0, $max ) : '';
+		return jodyn_form_text( $in, $key, $max );
 	};
 	$fail = static function ( $message ) {
 		return new WP_Error( 'jodyn_registration_invalid', $message, array( 'status' => 400 ) );
 	};
 
 	// Bots fill every field; people never see this one. Pretend it worked.
-	if ( '' !== $text( 'website' ) ) {
+	if ( jodyn_form_is_bot( $in ) ) {
 		return rest_ensure_response( array( 'ok' => true ) );
-	}
-
-	$ip    = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-	$limit = 'jodyn_reg_' . md5( $ip );
-	$count = (int) get_transient( $limit );
-	if ( $count >= 5 ) {
-		return new WP_Error( 'jodyn_rate_limited', __( 'Too many registrations. Please try again in a few minutes.', 'jodyn' ), array( 'status' => 429 ) );
 	}
 
 	// The programme must still be open for registration
@@ -307,7 +287,10 @@ function jodyn_registration_submit( $request ) {
 			);
 		}
 	}
-	set_transient( $limit, $count + 1, 10 * MINUTE_IN_SECONDS );
+	$limited = jodyn_form_rate_limit( 'reg', __( 'Too many registrations. Please try again in a few minutes.', 'jodyn' ) );
+	if ( $limited ) {
+		return $limited;
+	}
 
 	$formats     = jodyn_programme_formats();
 	$format_line = $programme['format_name'];
@@ -344,7 +327,7 @@ function jodyn_registration_submit( $request ) {
 			'phone' => $text( 'invoice_phone', 40 ),
 		),
 		'source'          => array_key_exists( $source, jodyn_registration_sources() ) ? $source : '',
-		'requirements'    => isset( $in['requirements'] ) && is_scalar( $in['requirements'] ) ? mb_substr( sanitize_textarea_field( (string) $in['requirements'] ), 0, 1000 ) : '',
+		'requirements'    => jodyn_form_text( $in, 'requirements', 1000, true ),
 		'updates'         => ! empty( $in['updates'] ),
 		'emailed'         => false,
 	);

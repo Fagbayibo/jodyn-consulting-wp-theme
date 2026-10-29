@@ -7,7 +7,10 @@
  *   and tax go to the advisory line, training to the training line, the rest to general; each
  *   falls back to the main email), with Reply-To set to the sender. Sending needs the live site's
  *   email set up (an SMTP plugin); the enquiry is saved either way.
- * - Spam guard: a hidden honeypot field and a limit of 5 messages per visitor per 10 minutes.
+ * - A link from a programme page (?programme=<slug>) names that programme in the form, the
+ *   email and the admin.
+ * - Spam guard: a hidden honeypot field and a limit of 5 messages per visitor per 10 minutes
+ *   (inc/forms.php).
  *
  * @package JoDyn
  */
@@ -50,26 +53,30 @@ function jodyn_response_time() {
  * Enquiries list in the admin (read only: created by the form, never by hand).
  */
 function jodyn_register_enquiries() {
-	register_post_type(
+	jodyn_form_post_type(
 		'jodyn_enquiry',
 		array(
-			'labels'       => array(
-				'name'          => __( 'Enquiries', 'jodyn' ),
-				'singular_name' => __( 'Enquiry', 'jodyn' ),
-				'all_items'     => __( 'Enquiries', 'jodyn' ),
-				'edit_item'     => __( 'Enquiry', 'jodyn' ),
-				'search_items'  => __( 'Search enquiries', 'jodyn' ),
-				'not_found'     => __( 'No enquiries yet', 'jodyn' ),
-			),
-			'public'       => false,
-			'show_ui'      => true,
-			'show_in_menu' => true,
-			'menu_icon'    => 'dashicons-email-alt',
-			'supports'     => array( 'title' ),
-			'map_meta_cap' => true,
-			'capabilities' => array( 'create_posts' => 'do_not_allow' ),
-		)
+			'name'          => __( 'Enquiries', 'jodyn' ),
+			'singular_name' => __( 'Enquiry', 'jodyn' ),
+			'all_items'     => __( 'Enquiries', 'jodyn' ),
+			'edit_item'     => __( 'Enquiry', 'jodyn' ),
+			'search_items'  => __( 'Search enquiries', 'jodyn' ),
+			'not_found'     => __( 'No enquiries yet', 'jodyn' ),
+		),
+		'dashicons-email-alt'
 	);
+}
+
+/**
+ * The programme a contact form link names (?programme=<slug>, from a programme page's Enquire
+ * and Request In-House Delivery buttons), or null.
+ *
+ * @param string $slug Programme slug.
+ * @return WP_Post|null
+ */
+function jodyn_enquiry_programme( $slug ) {
+	$post = $slug ? get_page_by_path( sanitize_title( $slug ), OBJECT, 'jodyn_programme' ) : null;
+	return $post && 'publish' === $post->post_status ? $post : null;
 }
 add_action( 'init', 'jodyn_register_enquiries' );
 
@@ -123,6 +130,7 @@ add_action(
 				$types = jodyn_enquiry_types();
 				$rows  = array(
 					__( 'Enquiry type', 'jodyn' )  => isset( $types[ $meta['enquiry'] ] ) ? $types[ $meta['enquiry'] ][0] : $meta['enquiry'],
+					__( 'Programme', 'jodyn' )     => $meta['programme'] ?? '',
 					__( 'Name', 'jodyn' )          => $meta['first_name'] . ' ' . $meta['last_name'],
 					__( 'Email address', 'jodyn' ) => $meta['email'],
 					__( 'Phone number', 'jodyn' )  => $meta['phone'],
@@ -131,13 +139,7 @@ add_action(
 					__( 'Message', 'jodyn' )       => $meta['message'],
 					__( 'Emailed to', 'jodyn' )    => $meta['emailed'] ? $meta['to'] : __( 'Not sent (check the site’s email setup)', 'jodyn' ),
 				);
-				echo '<table class="widefat striped"><tbody>';
-				foreach ( $rows as $label => $value ) {
-					if ( '' !== trim( (string) $value ) ) {
-						printf( '<tr><th style="width:180px">%1$s</th><td>%2$s</td></tr>', esc_html( $label ), nl2br( esc_html( $value ) ) );
-					}
-				}
-				echo '</tbody></table>';
+				jodyn_form_table( $rows );
 				if ( is_email( $meta['email'] ) ) {
 					printf( '<p><a class="button button-primary" href="mailto:%1$s">%2$s</a></p>', esc_attr( $meta['email'] ), esc_html__( 'Reply by email', 'jodyn' ) );
 				}
@@ -172,34 +174,26 @@ add_action( 'rest_api_init', 'jodyn_enquiry_route' );
  * @return WP_REST_Response|WP_Error
  */
 function jodyn_enquiry_submit( $request ) {
-	$in   = (array) $request->get_json_params();
-	$text = static function ( $key, $max = 160 ) use ( $in ) {
-		return isset( $in[ $key ] ) && is_scalar( $in[ $key ] ) ? mb_substr( sanitize_text_field( (string) $in[ $key ] ), 0, $max ) : '';
-	};
+	$in = (array) $request->get_json_params();
 
 	// Bots fill every field; people never see this one. Pretend it worked.
-	if ( '' !== $text( 'website' ) ) {
+	if ( jodyn_form_is_bot( $in ) ) {
 		return rest_ensure_response( array( 'ok' => true ) );
 	}
 
-	$ip    = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-	$limit = 'jodyn_msg_' . md5( $ip );
-	$count = (int) get_transient( $limit );
-	if ( $count >= 5 ) {
-		return new WP_Error( 'jodyn_rate_limited', __( 'Too many messages. Please try again in a few minutes.', 'jodyn' ), array( 'status' => 429 ) );
-	}
-
-	$types   = jodyn_enquiry_types();
-	$enquiry = $text( 'enquiry' );
-	$message = isset( $in['message'] ) && is_scalar( $in['message'] ) ? mb_substr( sanitize_textarea_field( (string) $in['message'] ), 0, 5000 ) : '';
-	$meta    = array(
-		'first_name'   => $text( 'first_name', 80 ),
-		'last_name'    => $text( 'last_name', 80 ),
-		'email'        => sanitize_email( $text( 'email' ) ),
-		'phone'        => $text( 'phone', 40 ),
-		'organisation' => $text( 'organisation' ),
-		'job_title'    => $text( 'job_title' ),
+	$types     = jodyn_enquiry_types();
+	$enquiry   = jodyn_form_text( $in, 'enquiry' );
+	$message   = jodyn_form_text( $in, 'message', 5000, true );
+	$programme = jodyn_enquiry_programme( jodyn_form_text( $in, 'programme' ) );
+	$meta      = array(
+		'first_name'   => jodyn_form_text( $in, 'first_name', 80 ),
+		'last_name'    => jodyn_form_text( $in, 'last_name', 80 ),
+		'email'        => sanitize_email( jodyn_form_text( $in, 'email' ) ),
+		'phone'        => jodyn_form_text( $in, 'phone', 40 ),
+		'organisation' => jodyn_form_text( $in, 'organisation' ),
+		'job_title'    => jodyn_form_text( $in, 'job_title' ),
 		'enquiry'      => $enquiry,
+		'programme'    => $programme ? get_the_title( $programme ) : '',
 		'message'      => $message,
 		'emailed'      => false,
 		'to'           => '',
@@ -207,7 +201,10 @@ function jodyn_enquiry_submit( $request ) {
 	if ( '' === $meta['first_name'] || '' === $meta['last_name'] || ! is_email( $meta['email'] ) || ! isset( $types[ $enquiry ] ) || '' === trim( $message ) || empty( $in['privacy'] ) ) {
 		return new WP_Error( 'jodyn_enquiry_invalid', __( 'Please complete the fields marked *.', 'jodyn' ), array( 'status' => 400 ) );
 	}
-	set_transient( $limit, $count + 1, 10 * MINUTE_IN_SECONDS );
+	$limited = jodyn_form_rate_limit( 'msg', __( 'Too many messages. Please try again in a few minutes.', 'jodyn' ) );
+	if ( $limited ) {
+		return $limited;
+	}
 
 	$name = $meta['first_name'] . ' ' . $meta['last_name'];
 	$id   = wp_insert_post(
@@ -229,6 +226,7 @@ function jodyn_enquiry_submit( $request ) {
 		/* translators: %s: enquiry type. */
 		sprintf( __( 'New enquiry from the website: %s', 'jodyn' ), $types[ $enquiry ][0] ),
 		'',
+		$meta['programme'] ? 'Programme: ' . $meta['programme'] : null, // Left out below when empty.
 		'Name: ' . $name,
 		'Email: ' . $meta['email'],
 		'Phone: ' . ( $meta['phone'] ? $meta['phone'] : '—' ),
@@ -241,9 +239,9 @@ function jodyn_enquiry_submit( $request ) {
 		'Reply to this email to answer ' . $meta['first_name'] . ' directly. Every enquiry is also listed under Enquiries in the WordPress admin.',
 	);
 	/* translators: 1: enquiry type, 2: name. */
-	$subject         = sprintf( __( '%1$s from %2$s', 'jodyn' ), $types[ $enquiry ][0], $name );
+	$subject         = sprintf( __( '%1$s from %2$s', 'jodyn' ), $types[ $enquiry ][0] . ( $meta['programme'] ? ': ' . $meta['programme'] : '' ), $name );
 	$meta['to']      = $to;
-	$meta['emailed'] = (bool) wp_mail( $to, $subject, implode( "\n", $body ), array( 'Reply-To: ' . $name . ' <' . $meta['email'] . '>' ) );
+	$meta['emailed'] = (bool) wp_mail( $to, $subject, implode( "\n", array_filter( $body, 'is_string' ) ), array( 'Reply-To: ' . $name . ' <' . $meta['email'] . '>' ) );
 	update_post_meta( $id, '_jodyn_enquiry', $meta );
 
 	return rest_ensure_response( array( 'ok' => true ) );

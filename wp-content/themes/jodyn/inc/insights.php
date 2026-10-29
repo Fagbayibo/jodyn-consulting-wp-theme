@@ -8,6 +8,10 @@
  * @package JoDyn
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * The post shown as the featured article at the top of /insights/, or null when there are none.
  *

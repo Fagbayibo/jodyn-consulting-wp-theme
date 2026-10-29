@@ -7,6 +7,10 @@
  * @package JoDyn
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Everything the programme page shows, built from the programme's fields. Empty sections come
  * back empty, and the template leaves them out.
@@ -80,12 +84,12 @@ function jodyn_programme_page( $post ) {
 		3
 	);
 
-	// Standard questions from the FAQs page (content/pages/programme.md, section 10).
-	$wanted   = array( 'How do I register for a programme?', 'How do I pay for a programme?', 'Will I receive a certificate?', 'What is your cancellation and refund policy?' );
+	// Standard questions from the FAQs page (content/pages/programme.md, section 10): the ones
+	// tagged 'programme' in inc/faqs-content.php, so rewording a question keeps it here.
 	$p['faq'] = array();
 	foreach ( jodyn_faqs_content()['groups'] as $group ) {
 		foreach ( $group['items'] as $item ) {
-			if ( in_array( $item[0], $wanted, true ) ) {
+			if ( 'programme' === ( $item[2] ?? '' ) ) {
 				$p['faq'][] = $item;
 			}
 		}

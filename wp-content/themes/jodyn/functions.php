@@ -13,6 +13,7 @@ require_once get_template_directory() . '/inc/template-tags.php';
 require_once get_template_directory() . '/inc/class-jodyn-nav-walker.php';
 require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/programmes.php';
+require_once get_template_directory() . '/inc/forms.php';
 require_once get_template_directory() . '/inc/calendar-download.php';
 require_once get_template_directory() . '/inc/registration.php';
 require_once get_template_directory() . '/inc/enquiries.php';
@@ -61,9 +62,6 @@ function jodyn_asset_version( $relative ) {
 function jodyn_enqueue_assets() {
 	$uri = get_template_directory_uri();
 
-	// Google Sans Flex (SIL OFL). Swap for self-hosted files in assets/fonts before launch.
-	wp_enqueue_style( 'jodyn-font', 'https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&display=swap', array(), null );
-
 	foreach ( array( 'tokens', 'base', 'header', 'footer' ) as $sheet ) {
 		$deps = 'tokens' === $sheet ? array() : array( 'jodyn-tokens' );
 		wp_enqueue_style( "jodyn-$sheet", "$uri/assets/css/$sheet.css", $deps, jodyn_asset_version( "assets/css/$sheet.css" ) );
@@ -93,56 +91,67 @@ function jodyn_enqueue_assets() {
 	jodyn_enqueue_script( 'jodyn-particles', 'particles.js' );
 	wp_enqueue_script( 'jodyn-motion' );
 
-	if ( is_page( 'about-us' ) ) {
-		wp_enqueue_style( 'jodyn-about', "$uri/assets/css/about.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/about.css' ) );
-		jodyn_enqueue_script( 'jodyn-about', 'about.js', array( 'jodyn-motion' ) );
+	// Each page's own styles (assets/css) and scripts (assets/js, run after the motion stack):
+	// array( shown?, handle => css file, handle => js file ).
+	$pages = array(
+		array( is_page( 'about-us' ), array( 'jodyn-about' => 'about' ), array( 'jodyn-about' => 'about' ) ),
+		array( is_page( 'advisory' ), array( 'jodyn-advisory' => 'advisory' ), array( 'jodyn-advisory' => 'advisory' ) ),
+		array( is_page( 'systems-audit' ), array( 'jodyn-systems-audit' => 'systems-audit' ), array( 'jodyn-systems-audit' => 'systems-audit' ) ),
+		array( is_page( 'tax-consultancy' ), array( 'jodyn-tax-consultancy' => 'tax-consultancy' ), array( 'jodyn-tax-consultancy' => 'tax-consultancy' ) ),
+		array( is_singular( 'jodyn_programme' ), array( 'jodyn-programme' => 'programme' ), array( 'jodyn-programme' => 'programme' ) ),
+		array( is_page( 'faqs' ), array( 'jodyn-faqs' => 'faqs' ), array( 'jodyn-faqs' => 'faqs' ) ),
+		array( (bool) jodyn_legal_current(), array( 'jodyn-legal' => 'legal' ), array( 'jodyn-legal' => 'legal' ) ),
+		array( is_page( 'programmes' ), array( 'jodyn-training' => 'training' ), array( 'jodyn-training' => 'training' ) ),
+		array( is_page( 'calendar' ), array( 'jodyn-calendar' => 'calendar' ), array( 'jodyn-calendar' => 'calendar' ) ),
+		array( is_page( 'contact-us' ), array( 'jodyn-contact' => 'contact' ), array( 'jodyn-contact' => 'contact' ) ),
+		array( is_home() || is_category() || is_singular( 'post' ), array( 'jodyn-insights' => 'insights' ), array() ),
+		array( is_singular( 'post' ), array(), array( 'jodyn-article' => 'article' ) ),
+		array( is_page( 'register' ), array( 'jodyn-register' => 'register' ), array( 'jodyn-register' => 'register' ) ),
+		array(
+			is_front_page(),
+			array(
+				'jodyn-front'           => 'front-page',
+				'jodyn-home-who'        => 'home-who',
+				'jodyn-home-help'       => 'home-help',
+				'jodyn-home-programmes' => 'home-programmes',
+				'jodyn-home-work'       => 'home-work',
+				'jodyn-home-why'        => 'home-why',
+				'jodyn-home-serve'      => 'home-serve',
+				'jodyn-home-outcomes'   => 'home-outcomes',
+				'jodyn-home-insights'   => 'home-insights',
+			),
+			array(
+				'jodyn-who'      => 'who-we-are',
+				'jodyn-help'     => 'how-we-help',
+				'jodyn-work'     => 'how-we-work',
+				'jodyn-why'      => 'why-jodyn',
+				'jodyn-outcomes' => 'outcomes',
+			),
+		),
+	);
+	foreach ( $pages as list( $shown, $styles, $scripts ) ) {
+		if ( ! $shown ) {
+			continue;
+		}
+		foreach ( $styles as $handle => $file ) {
+			wp_enqueue_style( $handle, "$uri/assets/css/$file.css", array( 'jodyn-base' ), jodyn_asset_version( "assets/css/$file.css" ) );
+		}
+		foreach ( $scripts as $handle => $file ) {
+			jodyn_enqueue_script( $handle, "$file.js", array( 'jodyn-motion' ) );
+		}
 	}
 
-	if ( is_page( 'advisory' ) ) {
-		wp_enqueue_style( 'jodyn-advisory', "$uri/assets/css/advisory.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/advisory.css' ) );
-		jodyn_enqueue_script( 'jodyn-advisory', 'advisory.js', array( 'jodyn-motion' ) );
+	// The home hero plays its film without the motion stack.
+	if ( is_front_page() ) {
+		jodyn_enqueue_script( 'jodyn-hero', 'hero.js' );
 	}
 
-	if ( is_page( 'systems-audit' ) ) {
-		wp_enqueue_style( 'jodyn-systems-audit', "$uri/assets/css/systems-audit.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/systems-audit.css' ) );
-		jodyn_enqueue_script( 'jodyn-systems-audit', 'systems-audit.js', array( 'jodyn-motion' ) );
-	}
-
-	if ( is_page( 'tax-consultancy' ) ) {
-		wp_enqueue_style( 'jodyn-tax-consultancy', "$uri/assets/css/tax-consultancy.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/tax-consultancy.css' ) );
-		jodyn_enqueue_script( 'jodyn-tax-consultancy', 'tax-consultancy.js', array( 'jodyn-motion' ) );
-	}
-
-	if ( is_singular( 'jodyn_programme' ) ) {
-		wp_enqueue_style( 'jodyn-programme', "$uri/assets/css/programme.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/programme.css' ) );
-		jodyn_enqueue_script( 'jodyn-programme', 'programme.js', array( 'jodyn-motion' ) );
-	}
-
-	if ( is_page( 'faqs' ) ) {
-		wp_enqueue_style( 'jodyn-faqs', "$uri/assets/css/faqs.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/faqs.css' ) );
-		jodyn_enqueue_script( 'jodyn-faqs', 'faqs.js', array( 'jodyn-motion' ) );
-	}
-
-	if ( jodyn_legal_current() ) {
-		wp_enqueue_style( 'jodyn-legal', "$uri/assets/css/legal.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/legal.css' ) );
-		jodyn_enqueue_script( 'jodyn-legal', 'legal.js', array( 'jodyn-motion' ) );
-	}
-
-	if ( is_page( 'programmes' ) ) {
-		wp_enqueue_style( 'jodyn-training', "$uri/assets/css/training.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/training.css' ) );
-		jodyn_enqueue_script( 'jodyn-training', 'training.js', array( 'jodyn-motion' ) );
-		jodyn_enqueue_calendar_download();
-	}
-
-	if ( is_page( 'calendar' ) ) {
-		wp_enqueue_style( 'jodyn-calendar', "$uri/assets/css/calendar.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/calendar.css' ) );
-		jodyn_enqueue_script( 'jodyn-calendar', 'calendar.js', array( 'jodyn-motion' ) );
+	// Pages with the "Download Training Calendar" button.
+	if ( is_front_page() || is_page( 'programmes' ) || is_page( 'calendar' ) ) {
 		jodyn_enqueue_calendar_download();
 	}
 
 	if ( is_page( 'contact-us' ) ) {
-		wp_enqueue_style( 'jodyn-contact', "$uri/assets/css/contact.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/contact.css' ) );
-		jodyn_enqueue_script( 'jodyn-contact', 'contact.js', array( 'jodyn-motion' ) );
 		wp_localize_script(
 			'jodyn-contact',
 			'jodynContact',
@@ -157,13 +166,7 @@ function jodyn_enqueue_assets() {
 		);
 	}
 
-	if ( is_home() || is_category() ) {
-		wp_enqueue_style( 'jodyn-insights', "$uri/assets/css/insights.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/insights.css' ) );
-	}
-
 	if ( is_singular( 'post' ) ) {
-		wp_enqueue_style( 'jodyn-insights', "$uri/assets/css/insights.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/insights.css' ) );
-		jodyn_enqueue_script( 'jodyn-article', 'article.js', array( 'jodyn-motion' ) );
 		wp_localize_script(
 			'jodyn-article',
 			'jodynArticle',
@@ -175,8 +178,6 @@ function jodyn_enqueue_assets() {
 	}
 
 	if ( is_page( 'register' ) ) {
-		wp_enqueue_style( 'jodyn-register', "$uri/assets/css/register.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/register.css' ) );
-		jodyn_enqueue_script( 'jodyn-register', 'register.js', array( 'jodyn-motion' ) );
 		wp_localize_script(
 			'jodyn-register',
 			'jodynRegister',
@@ -189,25 +190,6 @@ function jodyn_enqueue_assets() {
 				),
 			)
 		);
-	}
-
-	if ( is_front_page() ) {
-		wp_enqueue_style( 'jodyn-front', "$uri/assets/css/front-page.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/front-page.css' ) );
-		wp_enqueue_style( 'jodyn-home-who', "$uri/assets/css/home-who.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-who.css' ) );
-		wp_enqueue_style( 'jodyn-home-help', "$uri/assets/css/home-help.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-help.css' ) );
-		wp_enqueue_style( 'jodyn-home-programmes', "$uri/assets/css/home-programmes.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-programmes.css' ) );
-		wp_enqueue_style( 'jodyn-home-work', "$uri/assets/css/home-work.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-work.css' ) );
-		wp_enqueue_style( 'jodyn-home-why', "$uri/assets/css/home-why.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-why.css' ) );
-		wp_enqueue_style( 'jodyn-home-serve', "$uri/assets/css/home-serve.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-serve.css' ) );
-		wp_enqueue_style( 'jodyn-home-outcomes', "$uri/assets/css/home-outcomes.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-outcomes.css' ) );
-		wp_enqueue_style( 'jodyn-home-insights', "$uri/assets/css/home-insights.css", array( 'jodyn-base' ), jodyn_asset_version( 'assets/css/home-insights.css' ) );
-		jodyn_enqueue_script( 'jodyn-hero', 'hero.js' );
-		jodyn_enqueue_script( 'jodyn-who', 'who-we-are.js', array( 'jodyn-motion' ) );
-		jodyn_enqueue_script( 'jodyn-help', 'how-we-help.js', array( 'jodyn-motion' ) );
-		jodyn_enqueue_script( 'jodyn-work', 'how-we-work.js', array( 'jodyn-motion' ) );
-		jodyn_enqueue_script( 'jodyn-why', 'why-jodyn.js', array( 'jodyn-motion' ) );
-		jodyn_enqueue_script( 'jodyn-outcomes', 'outcomes.js', array( 'jodyn-motion' ) );
-		jodyn_enqueue_calendar_download();
 	}
 }
 
@@ -281,22 +263,18 @@ function jodyn_register_motion() {
 add_action( 'wp_enqueue_scripts', 'jodyn_enqueue_assets' );
 
 /**
- * Connect early to Google Fonts.
- *
- * @param array  $urls          URLs to print for resource hints.
- * @param string $relation_type The relation type.
+ * Google Sans Flex (SIL OFL, assets/fonts/OFL.txt) is served from the theme, so no visitor's
+ * address goes to Google before they have chosen in the cookie banner. theme.json declares the
+ * two files (Latin, and Latin Extended for ₦); the Latin one is on every page, so the browser
+ * starts fetching it straight away.
  */
-function jodyn_resource_hints( $urls, $relation_type ) {
-	if ( 'preconnect' === $relation_type ) {
-		$urls[] = 'https://fonts.googleapis.com';
-		$urls[] = array(
-			'href'        => 'https://fonts.gstatic.com',
-			'crossorigin' => 'anonymous',
-		);
-	}
-	return $urls;
+function jodyn_preload_font() {
+	printf(
+		'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
+		esc_url( get_template_directory_uri() . '/assets/fonts/google-sans-flex-latin.woff2' )
+	);
 }
-add_filter( 'wp_resource_hints', 'jodyn_resource_hints', 10, 2 );
+add_action( 'wp_head', 'jodyn_preload_font', 1 );
 
 /**
  * Mark pages whose header floats over a full-screen hero.

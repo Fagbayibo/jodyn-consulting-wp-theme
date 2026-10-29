@@ -12,6 +12,10 @@
  * @package JoDyn
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Customize → Analytics: the GA4 Measurement ID.
  *

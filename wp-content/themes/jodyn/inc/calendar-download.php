@@ -9,7 +9,8 @@
  * - Two forms post here with the same fields: the pop-up on the Home and Training pages
  *   (template-parts/calendar-download.php) and the form on the calendar page
  *   (template-parts/calendar/download.php).
- * - Spam guard: a hidden honeypot field and a limit of 5 requests per visitor per 10 minutes.
+ * - Spam guard: a hidden honeypot field and a limit of 5 requests per visitor per 10 minutes
+ *   (inc/forms.php).
  *
  * @package JoDyn
  */
@@ -22,24 +23,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Leads list in the admin (read only: created by the form, never by hand).
  */
 function jodyn_register_leads() {
-	register_post_type(
+	jodyn_form_post_type(
 		'jodyn_lead',
 		array(
-			'labels'       => array(
-				'name'          => __( 'Calendar downloads', 'jodyn' ),
-				'singular_name' => __( 'Calendar download', 'jodyn' ),
-				'all_items'     => __( 'Calendar downloads', 'jodyn' ),
-				'search_items'  => __( 'Search downloads', 'jodyn' ),
-				'not_found'     => __( 'No downloads yet', 'jodyn' ),
-			),
-			'public'       => false,
-			'show_ui'      => true,
-			'show_in_menu' => true,
-			'menu_icon'    => 'dashicons-download',
-			'supports'     => array( 'title' ),
-			'map_meta_cap' => true,
-			'capabilities' => array( 'create_posts' => 'do_not_allow' ),
-		)
+			'name'          => __( 'Calendar downloads', 'jodyn' ),
+			'singular_name' => __( 'Calendar download', 'jodyn' ),
+			'all_items'     => __( 'Calendar downloads', 'jodyn' ),
+			'search_items'  => __( 'Search downloads', 'jodyn' ),
+			'not_found'     => __( 'No downloads yet', 'jodyn' ),
+		),
+		'dashicons-download'
 	);
 }
 add_action( 'init', 'jodyn_register_leads' );
@@ -225,13 +218,10 @@ function jodyn_calendar_download( $request ) {
 		return rest_ensure_response( array( 'url' => $url ) );
 	}
 
-	$ip    = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-	$key   = 'jodyn_dl_' . md5( $ip );
-	$count = (int) get_transient( $key );
-	if ( $count >= 5 ) {
-		return new WP_Error( 'jodyn_rate_limited', __( 'Too many requests. Please try again in a few minutes.', 'jodyn' ), array( 'status' => 429 ) );
+	$limited = jodyn_form_rate_limit( 'dl', __( 'Too many requests. Please try again in a few minutes.', 'jodyn' ) );
+	if ( $limited ) {
+		return $limited;
 	}
-	set_transient( $key, $count + 1, 10 * MINUTE_IN_SECONDS );
 
 	$lead = wp_insert_post(
 		array(

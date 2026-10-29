@@ -8,6 +8,8 @@
  * Chat on WhatsApp shows once the WhatsApp number is set) and "Stay Connected" (only the networks
  * filled in, hidden when there are none).
  * - ?enquiry=<key> and the hero's Send a message links select the enquiry type (assets/js/contact.js).
+ * - ?programme=<slug> (a programme page's Enquire and Request In-House Delivery buttons) adds a
+ *   read-only Programme field, so the team knows which one the message is about.
  * - Sent to /wp-json/jodyn/v1/contact (inc/enquiries.php); the thank-you message replaces the form.
  * Copy: content/pages/contact.md, sections 3 to 5 (approved).
  *
@@ -19,6 +21,7 @@ $jodyn_reply = jodyn_response_time();
 $jodyn_pick  = isset( $_GET['enquiry'] ) ? sanitize_key( $_GET['enquiry'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only preselects a dropdown option.
 $jodyn_types = jodyn_enquiry_types();
 $jodyn_pick  = isset( $jodyn_types[ $jodyn_pick ] ) ? $jodyn_pick : 'general';
+$jodyn_prog  = jodyn_enquiry_programme( isset( $_GET['programme'] ) ? sanitize_title( wp_unslash( $_GET['programme'] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only names the programme in the form.
 $jodyn_rows  = array(
 	array( 'pin', __( 'Office address', 'jodyn' ), $jodyn_c['address'] ? nl2br( esc_html( $jodyn_c['address'] ) ) : esc_html( '[Street address, City, State, Nigeria]' ) ),
 	array( 'phone', __( 'Phone', 'jodyn' ), $jodyn_c['tel'] ? '<a href="tel:' . esc_attr( $jodyn_c['tel'] ) . '">' . esc_html( $jodyn_c['phone'] ) . '</a>' : esc_html( '[phone number]' ) ),
@@ -58,6 +61,9 @@ $jodyn_social = jodyn_social_links();
 							<?php echo jodyn_icon( 'chevron' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</span>
 					</label>
+					<?php if ( $jodyn_prog ) : ?>
+						<label class="jd-ct-form__field is-full"><span>Programme</span><input type="text" value="<?php echo esc_attr( get_the_title( $jodyn_prog ) ); ?>" readonly><input type="hidden" name="programme" value="<?php echo esc_attr( $jodyn_prog->post_name ); ?>"></label>
+					<?php endif; ?>
 					<label class="jd-ct-form__field is-full"><span>Message <i aria-hidden="true">*</i></span><textarea name="message" rows="5" maxlength="5000" required></textarea></label>
 				</div>
 				<label class="jd-ct-form__check">

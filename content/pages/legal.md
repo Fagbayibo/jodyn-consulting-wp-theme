@@ -83,7 +83,7 @@ We only process your personal data where we have a lawful basis to do so under t
 
 ### 5. Who We Share Your Data With
 We do not sell or rent your personal data. We share it only where necessary, with:
-- Service providers: who help us operate our business, such as our website hosting provider, email provider (Zoho), newsletter platform, website analytics provider (Google Analytics) and website font provider (Google Fonts). They may only use your data to provide services to us.
+- Service providers: who help us operate our business, such as our website hosting provider, email provider (Zoho), newsletter platform and website analytics provider (Google Analytics). They may only use your data to provide services to us.
 - Facilitators and partners: who deliver programmes on our behalf, limited to the participant information they need to deliver the programme.
 - Your organisation: where your organisation registered you for a programme, we may share attendance, completion and evaluation information with them.
 - Tax authorities: where you have engaged us to file returns or respond to them on your behalf.
@@ -91,7 +91,7 @@ We do not sell or rent your personal data. We share it only where necessary, wit
 
 Some of these providers store data outside Nigeria. Where they do, we make sure your data is protected in line with the NDPA's rules on transfers outside Nigeria.
 
-> Changed: the analytics provider is named (Google Analytics), and "website font provider (Google Fonts)" is added: the site loads its font from Google, which receives visitors' IP addresses. [PLACEHOLDER] confirm Google Analytics is the tool.
+> Changed: the analytics provider is named (Google Analytics). [PLACEHOLDER] confirm Google Analytics is the tool. (Google Fonts was listed too until 2026-10-29, when the font moved onto the website itself.)
 > NEW, confirm with client: "Tax authorities", for filings and correspondence the client asks us to handle.
 > NEW, confirm with client: the paragraph on transfers outside Nigeria. Zoho and Google store data abroad, and the NDPA expects the policy to say so.
 
@@ -285,7 +285,9 @@ These cookies are only set if you choose Accept in our cookie banner. If you cho
 > [PLACEHOLDER] confirm Google Analytics (GA4) is the tool. If the client picks another, this list changes.
 
 ### 3. Third-Party Services
-Our website loads its font from Google Fonts. To deliver the font, Google receives your IP address and browser details. Google Fonts does not set cookies. You can read how Google handles this information in Google's privacy policy.
+Our website's font is stored on our own website, so loading it does not send your details to anyone else.
+
+> Changed (2026-10-29): the font is now served from the website itself, so Google Fonts no longer receives visitors' details; the earlier paragraph about Google Fonts is replaced.
 
 Links to our social media pages take you to those platforms, which have their own cookie policies.
 

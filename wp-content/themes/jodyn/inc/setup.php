@@ -15,6 +15,8 @@
  * - The training programme catalogue (titles and areas, no dates) if there are no programmes.
  * - The home hero film, fetched once from GitHub if no video is set (jodyn_maybe_import_hero_film).
  * - The client's example programme page, written into its programme while that one is empty.
+ * - The client's phone and WhatsApp number and office address, where Customize → Contact &
+ *   social has none yet, and Lagos time if the site is still on UTC.
  *
  * @package JoDyn
  */
@@ -23,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 6;
+const JODYN_SETUP_VERSION = 7;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -216,8 +218,9 @@ function jodyn_site_setup() {
 	}
 
 	// 5: Careers was dropped (user, 2026-10-27). On sites set up earlier, the menu item setup added
-	// for it becomes FAQs and the empty Careers page goes to the trash. If the client has written
-	// a Careers page or renamed the item, both are left alone.
+	// for it becomes FAQs and the empty Careers page goes to the trash. A Careers page the client
+	// has written is left alone, and so is a menu item they renamed (it stops showing once its
+	// page is in the trash).
 	if ( (int) get_option( 'jodyn_setup_version' ) < 5 ) {
 		$careers = get_page_by_path( 'careers' );
 		if ( $careers && '' === trim( $careers->post_content ) ) {
@@ -267,6 +270,27 @@ function jodyn_site_setup() {
 	// Essentials for New Managers while its page fields are empty.
 	if ( (int) get_option( 'jodyn_setup_version' ) < 6 ) {
 		jodyn_programme_apply_example();
+	}
+
+	// 7: the client's phone and WhatsApp number and office address, each only while its
+	// Customize → Contact & social field is empty.
+	if ( (int) get_option( 'jodyn_setup_version' ) < 7 ) {
+		$details = array(
+			'jodyn_contact_phone'    => '+234 803 726 6806',
+			'jodyn_contact_whatsapp' => '+234 803 726 6806',
+			'jodyn_contact_address'  => "2C Crocxley Drive\nCardogan Place\nLagos",
+		);
+		foreach ( $details as $mod => $value ) {
+			if ( '' === trim( (string) get_theme_mod( $mod, '' ) ) ) {
+				set_theme_mod( $mod, $value );
+			}
+		}
+
+		// Lagos time, while the site is still on WordPress's default UTC: "upcoming" and "open for
+		// registration" turn over at midnight in Lagos, not at 1 am.
+		if ( in_array( (string) get_option( 'timezone_string' ), array( '', 'UTC' ), true ) && 0.0 === (float) get_option( 'gmt_offset' ) ) {
+			update_option( 'timezone_string', 'Africa/Lagos' );
+		}
 	}
 
 	// Insights: the approved categories (tab order in inc/insights.php) and nine articles a page.
@@ -345,13 +369,12 @@ function jodyn_maybe_import_hero_film() {
 	require_once ABSPATH . 'wp-admin/includes/media.php';
 	require_once ABSPATH . 'wp-admin/includes/image.php';
 
+	// Both films or neither: if the second fails, the first is removed again, so the retry an
+	// hour later doesn't leave a copy behind in the Media Library.
 	$ids = array();
 	foreach ( array( 'jodyn_hero_video' => 'jodyn-hero-film-1080.mp4', 'jodyn_hero_video_mobile' => 'jodyn-hero-film-720.mp4' ) as $mod => $file ) {
 		$tmp = download_url( JODYN_HERO_FILM_BASE . $file, 120 );
-		if ( is_wp_error( $tmp ) ) {
-			return;
-		}
-		$id = media_handle_sideload(
+		$id  = is_wp_error( $tmp ) ? $tmp : media_handle_sideload(
 			array(
 				'name'     => $file,
 				'tmp_name' => $tmp,
@@ -360,7 +383,12 @@ function jodyn_maybe_import_hero_film() {
 			__( 'JoDyn home hero film', 'jodyn' )
 		);
 		if ( is_wp_error( $id ) ) {
-			wp_delete_file( $tmp );
+			if ( ! is_wp_error( $tmp ) ) {
+				wp_delete_file( $tmp );
+			}
+			foreach ( $ids as $done ) {
+				wp_delete_attachment( $done, true );
+			}
 			return;
 		}
 		$ids[ $mod ] = (int) $id;

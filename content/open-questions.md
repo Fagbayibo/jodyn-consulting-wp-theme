@@ -12,6 +12,7 @@ Every gap left while building the site, in one place (2026-10-27, after the last
 - [ ] **Which taxes does JoDyn handle?** The page names company income tax, VAT, PAYE and withholding tax. Add any others (personal income tax, capital gains tax, stamp duties…). *(tax-consultancy.md, faqs.md)*
 
 ### Training: money and rules
+- [ ] **Group discount on the registration total.** The form says "Group discount applies: X% off", but the total on the form, the saved registration and the confirmation email show the full fee for every participant. Should the total take the discount off, or should the email say the discount is applied on the invoice?
 - [ ] **How can people pay?** Bank transfer only, or online payment too? *(training.md FAQs → faqs.md Training)*
 - [ ] **Group discount:** what percentage, and from how many participants (currently [X]% and [three])? → **Customize → Training calendar** (Group discount, Group size). *(training-calendar.md section 5, faqs.md, Terms §4)*
 - [ ] **Cancellations and refunds** (Terms §5, and the Training FAQ must use the same numbers):
@@ -23,6 +24,9 @@ Every gap left while building the site, in one place (2026-10-27, after the last
 - [ ] **Certificates:** minimum attendance, e.g. 80%? *(Terms §8)*
 
 ### Contact and response
+- [x] **Phone number:** +234 803 726 6806 (received 2026-10-28). Setup version 7 enters it in Customize → Contact & social while that field is empty.
+- [ ] **Office address:** received as "2C Crocxley Drive, Cardogan Place, Lagos" (2026-10-28) and entered the same way. Confirm the spelling (Croxley? Cadogan?) and the area (e.g. Ikoyi, Lekki).
+- [x] **WhatsApp:** the same number, +234 803 726 6806 (confirmed 2026-10-28). Setup version 7 enters it too, which shows the Chat on WhatsApp button.
 - [ ] **Response time** for enquiries: [one working day]? → **Customize → Contact & social → Response time**. Used on the Contact page, the FAQs and the FAQs footer card.
 - [ ] **One email and phone for everything, or separate ones** for Advisory/Audit/Tax, Training and General enquiries? → **Customize → Contact & social** (each line's email and phone are optional and fall back to the main ones).
 - [ ] **A separate training email** (e.g. training@jodynconsulting.com)? → **Customize → Training registration → Training team email**.
@@ -31,8 +35,8 @@ Every gap left while building the site, in one place (2026-10-27, after the last
 - [ ] **Effective date** for the Privacy Policy, Terms of Use and Cookie Policy.
 - [ ] **Registered business name and RC/BN number.** *(Privacy §1, Terms §1)*
 - [ ] **Website address:** confirm www.jodynconsulting.com. *(Terms, opening paragraph)*
-- [ ] **How long records are kept:** enquiries [two] years, registrations [six] years, engagement records [six] years. *(Privacy §6)*
-- [ ] **Data requests:** answered within [30] days? *(Privacy §9)*
+- [ ] **How long records are kept:** enquiries [two] years, registrations [six] years, engagement records [six] years. *(Privacy §6)* The site doesn't delete old form entries on its own yet: once these are confirmed, either the team deletes old ones under Enquiries, Registrations and Calendar downloads, or the theme can do it automatically.
+- [ ] **Data requests:** answered within [30] days? *(Privacy §9)* Tools → Export Personal Data and Erase Personal Data now cover the three forms: erasing deletes someone's enquiries and calendar downloads and keeps their registrations for the accounting records (to delete by hand if wanted).
 - [ ] **Analytics:** confirm Google Analytics (GA4), then enter the Measurement ID (G-…) → **Customize → Analytics**. The cookie banner and the footer "Cookie settings" link appear once it is set.
 - [ ] **A Nigerian lawyer reviews all three policies** before launch (the client's drafts say they are not legal advice).
 
@@ -44,7 +48,7 @@ Appearance → Customize. Empty fields are hidden or show their [placeholder] un
 
 | Section | Fields |
 |---|---|
-| Contact & social | Office address · Phone · Email · WhatsApp · Office hours · Response time · Privacy email (optional) · each enquiry line's email and phone (optional) · LinkedIn, Instagram, Facebook, X, YouTube links |
+| Contact & social | Office address (filled, see above) · Phone (filled) · Email · WhatsApp (filled) · Office hours · Response time · Privacy email (optional) · each enquiry line's email and phone (optional) · LinkedIn, Instagram, Facebook, X, YouTube links |
 | Training registration | Training team email · Bank name · Account name · Account number · Days before the programme that joining instructions are sent |
 | Training calendar | Calendar PDF · Group discount (%) · Group size for the discount |
 | Analytics | Google Analytics Measurement ID |
@@ -66,7 +70,7 @@ Also in the admin: **Programmes**, the dates, fees, format and venue for each ru
   - sharing with tax authorities
   - the paragraph on transfers outside Nigeria
   - how long engagement records are kept
-  - Google Fonts and Google Analytics named as providers
+  - Google Analytics named as a provider (Google Fonts no longer is: the font is served from the website)
 - [ ] **Cookie Policy:** the whole page.
 - [ ] **Cookie banner:** the text, and the "Cookies" label.
 - [ ] **Legal pages:**
@@ -90,7 +94,10 @@ Also in the admin: **Programmes**, the dates, fees, format and venue for each ru
 
 ## 5. Before launch (technical)
 
-- [ ] **Email sending (SMTP plugin).** Without it, registration confirmations, enquiry notifications and the emailed calendar copy may not arrive. A plugin such as WP Mail SMTP with the domain's mailbox (Zoho) fixes this.
+- [ ] **Email sending (SMTP plugin).** Without it, registration confirmations and contact form notifications may not arrive (both are still saved in the admin). A plugin such as WP Mail SMTP with the domain's mailbox (Zoho) fixes this, plus the domain's SPF and DKIM records so the emails don't land in spam.
+- [ ] **Calendar download by email?** The download starts on the page; no copy is emailed and the team isn't notified (each download is listed under Calendar downloads). Decide whether either is wanted.
 - [ ] **SEO titles and descriptions.** Each copy file has an SEO block, but the theme does not print them yet. Decide: an SEO plugin (Yoast or Rank Math, then paste them in), or have the theme print them.
-- [ ] **Release 0.1.7.** The legal pages, cookie banner and FAQs are pushed but not released yet.
-- [ ] **After updating a site, open any admin page once.** Setup version 5 then creates the FAQs page and swaps the old Careers menu item for FAQs.
+- [ ] **After updating a site, open any admin page once.** The setup then catches up: version 5 creates the FAQs page and swaps the old Careers menu item for FAQs, version 6 writes the example programme, version 7 fills in the phone, WhatsApp and address and sets the site to Lagos time (if it was still on UTC).
+- [ ] **Hosting:** PHP 8.0 or newer (8.2+ recommended), WordPress 6.4 or newer, and outgoing email through SMTP. Cloudflare or a host's proxy in front of the site is fine: the forms' spam limit counts each visitor's real address.
+- [ ] **GitHub account:** turn on two-factor sign-in. Sites update themselves from its releases, so whoever controls the account controls the theme.
+- [ ] **Editable wording (later).** The FAQs, the three policies and the footer cards are written into the theme, so changing them needs a developer and a release. Decide with the client whether they should become editable in WordPress.

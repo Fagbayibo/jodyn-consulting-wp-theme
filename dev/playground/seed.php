@@ -157,9 +157,11 @@ wp_update_user( array( 'ID' => 1, 'display_name' => '[Author name]', 'descriptio
 update_user_meta( 1, 'jodyn_job_title', '[Job title], JoDyn Advisory and Consulting' );
 echo "Seeded insights\n";
 
-// Footer contact details and social links (placeholders until the client sends the real ones).
-set_theme_mod( 'jodyn_contact_address', '[Office address]' );
-set_theme_mod( 'jodyn_contact_phone', '[Phone number]' );
+// Footer contact details (the client's phone, WhatsApp and address, as setup 7 enters them) and
+// social links (placeholders until the client sends the real ones).
+set_theme_mod( 'jodyn_contact_address', "2C Crocxley Drive\nCardogan Place\nLagos" );
+set_theme_mod( 'jodyn_contact_phone', '+234 803 726 6806' );
+set_theme_mod( 'jodyn_contact_whatsapp', '+234 803 726 6806' );
 set_theme_mod( 'jodyn_contact_email', 'info@jodynconsulting.com' );
 foreach ( array( 'linkedin' => 'https://www.linkedin.com/', 'instagram' => 'https://www.instagram.com/', 'facebook' => 'https://www.facebook.com/', 'x' => 'https://x.com/', 'youtube' => 'https://www.youtube.com/' ) as $network => $url ) {
 	set_theme_mod( "jodyn_social_$network", $url );

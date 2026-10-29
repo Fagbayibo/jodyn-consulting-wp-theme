@@ -11,6 +11,10 @@
  * @package JoDyn
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * One policy's wording.
  *
@@ -50,7 +54,7 @@ function jodyn_legal_content( $slug ) {
 				array(
 					'id' => 'who-we-share-your-data-with',
 					'title' => 'Who We Share Your Data With',
-					'html' => '<p>We do not sell or rent your personal data. We share it only where necessary, with:</p><ul><li><b>Service providers:</b> who help us operate our business, such as our website hosting provider, email provider (Zoho), newsletter platform, website analytics provider (Google Analytics) and website font provider (Google Fonts). They may only use your data to provide services to us.</li><li><b>Facilitators and partners:</b> who deliver programmes on our behalf, limited to the participant information they need to deliver the programme.</li><li><b>Your organisation:</b> where your organisation registered you for a programme, we may share attendance, completion and evaluation information with them.</li><li><b>Tax authorities:</b> where you have engaged us to file returns or respond to them on your behalf.</li><li><b>Authorities:</b> where we are required to by law, regulation or a valid legal request.</li></ul><p>Some of these providers store data outside Nigeria. Where they do, we make sure your data is protected in line with the NDPA\'s rules on transfers outside Nigeria.</p>',
+					'html' => '<p>We do not sell or rent your personal data. We share it only where necessary, with:</p><ul><li><b>Service providers:</b> who help us operate our business, such as our website hosting provider, email provider (Zoho), newsletter platform and website analytics provider (Google Analytics). They may only use your data to provide services to us.</li><li><b>Facilitators and partners:</b> who deliver programmes on our behalf, limited to the participant information they need to deliver the programme.</li><li><b>Your organisation:</b> where your organisation registered you for a programme, we may share attendance, completion and evaluation information with them.</li><li><b>Tax authorities:</b> where you have engaged us to file returns or respond to them on your behalf.</li><li><b>Authorities:</b> where we are required to by law, regulation or a valid legal request.</li></ul><p>Some of these providers store data outside Nigeria. Where they do, we make sure your data is protected in line with the NDPA\'s rules on transfers outside Nigeria.</p>',
 				),
 				array(
 					'id' => 'how-long-we-keep-your-data',
@@ -198,7 +202,7 @@ function jodyn_legal_content( $slug ) {
 				array(
 					'id' => 'third-party-services',
 					'title' => 'Third-Party Services',
-					'html' => '<p>Our website loads its font from Google Fonts. To deliver the font, Google receives your IP address and browser details. Google Fonts does not set cookies. You can read how Google handles this information in <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google\'s privacy policy</a>.</p><p>Links to our social media pages take you to those platforms, which have their own cookie policies.</p>',
+					'html' => '<p>Our website\'s font is stored on our own website, so loading it does not send your details to anyone else.</p><p>Links to our social media pages take you to those platforms, which have their own cookie policies.</p>',
 				),
 				array(
 					'id' => 'how-to-control-cookies',

@@ -3,12 +3,17 @@
  * The FAQs page's wording: the hero and the questions in five topics.
  *
  * Copy: content/pages/faqs.md (approved). Each topic has an id (its anchor), a name, a
- * jodyn_icon() name and its questions as array( question, answer ). In the answers,
+ * jodyn_icon() name and its questions as array( question, answer ), with a third 'programme' on
+ * the four that every programme page repeats (inc/programme-page.php). In the answers,
  * {url:/path/} becomes a link on this site and {response} the response time from Customize
  * (inc/faqs.php). Square-bracketed text is a placeholder the client still has to confirm.
  *
  * @package JoDyn
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * The FAQs page's wording.
@@ -71,13 +76,13 @@ function jodyn_faqs_content() {
 				'name' => 'Training',
 				'icon' => 'cap',
 				'items' => array(
-					array( 'How do I register for a programme?', 'Choose a programme from <a href="{url:/training/calendar/}">our training calendar</a> and click Register Now. Complete the short registration form, and you will receive a confirmation email with payment details and programme information.' ),
-					array( 'How do I pay for a programme?', 'Payment can be made by bank transfer [or online payment]. Payment details are included in your registration confirmation. Your seat is secured once payment is received.' ),
+					array( 'How do I register for a programme?', 'Choose a programme from <a href="{url:/training/calendar/}">our training calendar</a> and click Register Now. Complete the short registration form, and you will receive a confirmation email with payment details and programme information.', 'programme' ),
+					array( 'How do I pay for a programme?', 'Payment can be made by bank transfer [or online payment]. Payment details are included in your registration confirmation. Your seat is secured once payment is received.', 'programme' ),
 					array( 'Do you offer discounts for groups?', 'Yes. Organisations registering [three] or more participants for the same open programme qualify for a group discount. For larger groups, an in-house programme is often more cost-effective. <a href="{url:/contact-us/?enquiry=training}">Contact us</a> for details.' ),
 					array( 'Can a programme be customised for my organisation?', 'Yes. Any of our programmes can be adapted to your industry, goals and team, and we can design fully bespoke programmes from scratch. <a href="{url:/contact-us/?enquiry=custom-training}">Tell us about your team</a> to get started.' ),
 					array( 'What do I need to join an online programme?', 'A laptop or desktop computer with a stable internet connection, a webcam and a microphone. Joining details are sent before the programme, and our team is available to help with any technical questions.' ),
-					array( 'Will I receive a certificate?', 'Yes. Every participant who completes a programme receives a certificate of participation from JoDyn Advisory and Consulting.' ),
-					array( 'What is your cancellation and refund policy?', '[Cancellations made at least X working days before the programme start date qualify for a full refund or transfer to a future programme. Substitute participants are welcome at no extra cost.] The full policy is in our <a href="{url:/terms/#cancellations}">Terms of Use</a>.' ),
+					array( 'Will I receive a certificate?', 'Yes. Every participant who completes a programme receives a certificate of participation from JoDyn Advisory and Consulting.', 'programme' ),
+					array( 'What is your cancellation and refund policy?', '[Cancellations made at least X working days before the programme start date qualify for a full refund or transfer to a future programme. Substitute participants are welcome at no extra cost.] The full policy is in our <a href="{url:/terms/#cancellations}">Terms of Use</a>.', 'programme' ),
 				),
 			),
 		),
