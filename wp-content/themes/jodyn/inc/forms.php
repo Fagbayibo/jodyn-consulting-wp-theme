@@ -67,9 +67,24 @@ function jodyn_form_is_bot( $in ) {
 }
 
 /**
+ * Whether an address is a proxy in front of the site: on the host's own network (a private or
+ * reserved address) or Cloudflare's.
+ *
+ * @param string $ip Address.
+ * @return bool
+ */
+function jodyn_ip_is_proxy( $ip ) {
+	return ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) || jodyn_ip_is_cloudflare( $ip );
+}
+
+/**
  * The visitor's IP address. Behind Cloudflare or a host's proxy every request seems to come from
- * the proxy, so its forwarded address is used instead, but only when the request really comes
- * from one: anyone else could send that header to dodge the limit.
+ * the proxy, so the address it passes on is used instead. Forwarded headers can be typed by
+ * anyone, so only the parts a proxy itself writes are believed:
+ * - straight from Cloudflare: CF-Connecting-IP, which Cloudflare always overwrites;
+ * - from the host's own proxy: X-Forwarded-For read from the right, where each proxy adds the
+ *   address that connected to it, skipping proxies. Whatever a visitor typed sits further left.
+ * A connection from anywhere else is the visitor, whatever its headers say.
  *
  * @return string
  */
@@ -78,26 +93,30 @@ function jodyn_client_ip() {
 	if ( ! filter_var( $remote, FILTER_VALIDATE_IP ) ) {
 		return '';
 	}
-
-	// A proxy on the host's own network (a private or reserved address), or Cloudflare.
-	$proxied = ! filter_var( $remote, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) || jodyn_ip_is_cloudflare( $remote );
 	/**
-	 * Whether to trust the forwarded address of this request.
+	 * Whether to read the address a proxy passes on (true when the connection comes from one).
+	 * Return false to always count by the connecting address.
 	 *
 	 * @param bool   $proxied Whether the request comes from a known proxy.
 	 * @param string $remote  The connecting address.
 	 */
-	if ( ! apply_filters( 'jodyn_trusted_proxy', $proxied, $remote ) ) {
+	if ( ! apply_filters( 'jodyn_trusted_proxy', jodyn_ip_is_proxy( $remote ), $remote ) ) {
 		return $remote;
 	}
 
-	foreach ( array( 'HTTP_CF_CONNECTING_IP', 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR' ) as $header ) {
-		if ( ! empty( $_SERVER[ $header ] ) ) {
-			// X-Forwarded-For is "client, proxy1, proxy2": the first one is the visitor.
-			$ip = trim( explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) )[0] );
-			if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
-				return $ip;
-			}
+	if ( jodyn_ip_is_cloudflare( $remote ) && ! empty( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) {
+		$ip = trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) );
+		return filter_var( $ip, FILTER_VALIDATE_IP ) ? $ip : $remote;
+	}
+
+	$chain = empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? array() : explode( ',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
+	foreach ( array_reverse( $chain ) as $ip ) {
+		$ip = trim( $ip );
+		if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+			break; // A garbled entry: nothing to its left can be trusted.
+		}
+		if ( ! jodyn_ip_is_proxy( $ip ) ) {
+			return $ip;
 		}
 	}
 	return $remote;
