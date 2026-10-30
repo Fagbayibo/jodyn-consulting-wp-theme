@@ -22,6 +22,7 @@ require_once get_template_directory() . '/inc/insights.php';
 require_once get_template_directory() . '/inc/contact.php';
 require_once get_template_directory() . '/inc/legal.php';
 require_once get_template_directory() . '/inc/consent.php';
+require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/faqs.php';
 require_once get_template_directory() . '/inc/programme-page.php';
 require_once get_template_directory() . '/inc/updater.php';

@@ -4,8 +4,9 @@
  *
  * Runs when the theme is activated, and once more after an update that raises
  * JODYN_SETUP_VERSION (on the next admin page load). It only adds what is missing; it never
- * edits or deletes existing content, with one exception: version 5 swaps the untouched Careers
- * menu item and empty page it created earlier for FAQs.
+ * edits or deletes existing content, with two exceptions: version 5 swaps the untouched Careers
+ * menu item and empty page it created earlier for FAQs, and version 11 moves WordPress's untouched
+ * sample page and post to the Trash.
  * - Pretty permalinks (/%postname%/) if the site still uses plain ?p=123 links: every link in
  *   the theme (/about-us/, /training/programmes/) depends on them.
  * - The pages in jodyn_site_pages() that don't exist yet. The theme's page-<slug>.php templates
@@ -20,6 +21,7 @@
  * - WordPress's own Privacy Policy draft, published so /privacy-policy/ works.
  * - The client's Google Analytics ID, if Customize → Analytics has none yet.
  * - The client's response time (48 to 72 hours), if Customize has none yet.
+ * - WordPress's untouched "Sample Page" and "Hello world!" post, moved to the Trash.
  *
  * @package JoDyn
  */
@@ -28,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 10;
+const JODYN_SETUP_VERSION = 11;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -312,6 +314,17 @@ function jodyn_site_setup() {
 	// form all use it.
 	if ( (int) get_option( 'jodyn_setup_version' ) < 10 && '' === trim( (string) get_theme_mod( 'jodyn_contact_response', '' ) ) ) {
 		set_theme_mod( 'jodyn_contact_response', '48 to 72 hours' );
+	}
+
+	// 11: WordPress's own "Sample Page" and "Hello world!" post, to the Trash while nobody has
+	// edited them, so search engines don't list them. The Trash keeps them for 30 days.
+	if ( (int) get_option( 'jodyn_setup_version' ) < 11 ) {
+		foreach ( array( 'page' => 'sample-page', 'post' => 'hello-world' ) as $type => $slug ) {
+			$sample = get_page_by_path( $slug, OBJECT, $type );
+			if ( $sample && 'publish' === $sample->post_status && $sample->post_modified_gmt === $sample->post_date_gmt ) {
+				wp_trash_post( $sample->ID );
+			}
+		}
 	}
 
 	// Insights: the approved categories (tab order in inc/insights.php) and nine articles a page.
