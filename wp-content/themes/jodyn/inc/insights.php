@@ -280,12 +280,100 @@ add_action(
 );
 
 /**
- * Articles with a featured image open with the photo under the see-through header.
+ * The photo across the top of the article: its "Article banner", or none (a plain forest header).
+ * The featured image is for the Insights cards and link previews only: it is often a designed
+ * graphic with the title already in it, which would repeat under the page's own title.
+ *
+ * @param int|WP_Post|null $post Post (default: the current one).
+ * @return int Attachment ID, or 0 for none.
+ */
+function jodyn_article_banner_id( $post = null ) {
+	$post   = get_post( $post );
+	$banner = $post ? (int) get_post_meta( $post->ID, '_jodyn_banner', true ) : 0;
+	return $banner && wp_attachment_is_image( $banner ) ? $banner : 0;
+}
+
+/**
+ * "Article banner" box beside the featured image box when editing an article.
+ */
+add_action(
+	'add_meta_boxes_post',
+	static function () {
+		add_meta_box( 'jodyn-banner', __( 'Article banner', 'jodyn' ), 'jodyn_banner_meta_box_html', 'post', 'side', 'low' );
+	}
+);
+
+/**
+ * @param WP_Post $post Article.
+ */
+function jodyn_banner_meta_box_html( $post ) {
+	$banner = (int) get_post_meta( $post->ID, '_jodyn_banner', true );
+	wp_nonce_field( 'jodyn_banner_save', 'jodyn_banner_nonce' );
+	?>
+	<div class="jodyn-banner" data-jodyn-banner>
+		<input type="hidden" name="jodyn_banner" value="<?php echo $banner ? (int) $banner : ''; ?>" data-jodyn-banner-id>
+		<div data-jodyn-banner-preview><?php echo $banner ? wp_get_attachment_image( $banner, 'medium', false, array( 'style' => 'display:block;width:100%;height:auto;margin-bottom:8px' ) ) : ''; ?></div>
+		<p class="description" style="margin-top:0"><?php esc_html_e( 'A photo for the top of the article page, behind the title (no text in it: the page writes the title over it). Leave empty for a plain green top. The featured image is for the Insights cards and shared links, best 2000 × 900 pixels.', 'jodyn' ); ?></p>
+		<p>
+			<button type="button" class="button" data-jodyn-banner-choose><?php echo $banner ? esc_html__( 'Change banner', 'jodyn' ) : esc_html__( 'Choose banner', 'jodyn' ); ?></button>
+			<button type="button" class="button-link button-link-delete" data-jodyn-banner-remove<?php echo $banner ? '' : ' hidden'; ?>><?php esc_html_e( 'Remove', 'jodyn' ); ?></button>
+		</p>
+	</div>
+	<?php
+}
+
+/**
+ * Saves the banner choice.
+ *
+ * @param int $post_id Article.
+ */
+function jodyn_banner_save( $post_id ) {
+	if ( ! isset( $_POST['jodyn_banner_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['jodyn_banner_nonce'] ), 'jodyn_banner_save' ) ) {
+		return;
+	}
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	$banner = isset( $_POST['jodyn_banner'] ) ? absint( $_POST['jodyn_banner'] ) : 0;
+	if ( $banner && wp_attachment_is_image( $banner ) ) {
+		update_post_meta( $post_id, '_jodyn_banner', $banner );
+	} else {
+		delete_post_meta( $post_id, '_jodyn_banner' );
+	}
+}
+add_action( 'save_post_post', 'jodyn_banner_save' );
+
+/**
+ * The Media Library picker for the banner box.
+ *
+ * @param string $hook Admin screen.
+ */
+function jodyn_banner_admin_assets( $hook ) {
+	if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) || 'post' !== get_current_screen()->post_type ) {
+		return;
+	}
+	wp_enqueue_media();
+	wp_enqueue_script( 'jodyn-admin-banner', get_template_directory_uri() . '/assets/js/admin-banner.js', array( 'jquery' ), jodyn_asset_version( 'assets/js/admin-banner.js' ), true );
+	wp_localize_script(
+		'jodyn-admin-banner',
+		'jodynBanner',
+		array(
+			'title'  => __( 'Choose the article banner', 'jodyn' ),
+			'button' => __( 'Use as banner', 'jodyn' ),
+			'change' => __( 'Change banner', 'jodyn' ),
+			'choose' => __( 'Choose banner', 'jodyn' ),
+		)
+	);
+}
+add_action( 'admin_enqueue_scripts', 'jodyn_banner_admin_assets' );
+
+/**
+ * Articles with a banner open with the photo under the see-through header.
  */
 add_filter(
 	'jodyn_header_is_overlay',
 	static function ( $overlay ) {
-		return $overlay || ( is_singular( 'post' ) && has_post_thumbnail() );
+		return $overlay || ( is_singular( 'post' ) && jodyn_article_banner_id() );
 	}
 );
 

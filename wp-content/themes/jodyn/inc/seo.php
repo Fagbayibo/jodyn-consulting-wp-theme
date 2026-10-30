@@ -163,7 +163,7 @@ function jodyn_seo_current() {
 	} elseif ( is_singular( 'post' ) ) {
 		$post               = get_queried_object();
 		$seo['description'] = jodyn_seo_trim( has_excerpt( $post ) ? $post->post_excerpt : $post->post_content );
-		$seo['image']       = get_post_thumbnail_id( $post );
+		$seo['image']       = has_post_thumbnail( $post ) ? get_post_thumbnail_id( $post ) : jodyn_article_banner_id( $post ); // the card graphic, title included
 		$seo['type']        = 'article';
 	} elseif ( is_category() ) {
 		$seo['description'] = jodyn_seo_trim( term_description() );

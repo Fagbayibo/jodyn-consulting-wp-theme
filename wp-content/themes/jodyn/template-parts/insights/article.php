@@ -2,9 +2,10 @@
 /**
  * Insights article · Photo header, side column, the article and the author box.
  *
- * The featured photo fills the top under the see-through header (forest when there is none),
- * with the breadcrumb, category, title, author, date and reading time over a forest fade. Below,
- * a left column that stays in view: On this page (the article's H2s, the one being read
+ * The article banner (jodyn_article_banner_id(); not the featured image, which is for the cards)
+ * fills the top under the see-through header (forest when there is none), with the breadcrumb,
+ * category, title, author, date and reading time over a forest fade. Below, a left column that
+ * stays in view: On this page (the article's H2s, the one being read
  * highlighted; hidden under two headings) and the share buttons (LinkedIn, WhatsApp, X, email,
  * copy link). Then the article (the related programme box and Key takeaways are Group block
  * styles the writer adds: inc/insights.php) and the author box from the author's profile.
@@ -22,6 +23,7 @@ $jodyn_bio    = get_the_author_meta( 'description' );
 preg_match_all( '/(?<!\p{L})\p{L}/u', $jodyn_name, $jodyn_m ); // first letter of each word: initials for the avatar
 $jodyn_init   = mb_strtoupper( implode( '', array_slice( $jodyn_m[0], 0, 2 ) ) );
 $jodyn_share  = jodyn_share_links();
+$jodyn_photo  = jodyn_article_banner_id();
 $jodyn_icons  = array(
 	'linkedin' => '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.6 8.65 21 11.2 21 14.4V21h-4v-5.8c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.5-2.25 3.1V21H9z"/></svg>',
 	'whatsapp' => jodyn_icon( 'whatsapp' ),
@@ -31,12 +33,14 @@ $jodyn_icons  = array(
 $jodyn_chev   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 ?>
 <article <?php post_class( 'jd-art' ); ?> aria-labelledby="jd-art-title">
-	<header class="jd-art__hero<?php echo has_post_thumbnail() ? '' : ' is-plain'; ?>">
-		<?php if ( has_post_thumbnail() ) : ?>
+	<header class="jd-art__hero<?php echo $jodyn_photo ? '' : ' is-plain'; ?>">
+		<?php if ( $jodyn_photo ) : ?>
 			<figure class="jd-art__photo">
 				<?php
-				the_post_thumbnail(
+				echo wp_get_attachment_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					$jodyn_photo,
 					'full',
+					false,
 					array(
 						'sizes'         => '100vw',
 						'fetchpriority' => 'high',

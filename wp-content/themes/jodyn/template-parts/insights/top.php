@@ -3,8 +3,8 @@
  * Insights · Hero and featured article (copy sections 1 and 2).
  *
  * White with light particles, under the solid header: the heading and intro on the left; the
- * featured article's photo on the right with its card (lime top edge) hanging off the photo's
- * bottom-left corner: Featured and category tags, title, excerpt, date and reading time, and
+ * featured article's image on the right, whole (20:9), with its card (lime top edge) under it,
+ * overlapping only the image's bottom edge: Featured and category tags, title, excerpt, date and reading time, and
  * Read Article. The featured article is the pinned post, or the newest (inc/insights.php).
  * Only on the first page of /insights/; without any posts the heading stands alone. On a category
  * page: "[Category] Insights", the category's description (or the intro) and no featured card.

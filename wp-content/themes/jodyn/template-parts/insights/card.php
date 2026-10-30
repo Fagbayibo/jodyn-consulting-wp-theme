@@ -1,8 +1,8 @@
 <?php
 /**
- * Insights · One article card (the Latest Insights grid and Related Articles): a tall photo card
- * with the text over a forest fade: lime category tag, title, short excerpt, date and reading
- * time, Read More. The whole card is the link (the title's ::after). Styles: insights.css.
+ * Insights · One article card (the Latest Insights grid and Related Articles): the featured image
+ * whole on top (20:9; often a designed graphic with the title in it), then on forest: lime
+ * category tag, title, short excerpt, date and reading time, Read More. The whole card is the link (the title's ::after). Styles: insights.css.
  * Uses the current post in the loop.
  *
  * @package JoDyn

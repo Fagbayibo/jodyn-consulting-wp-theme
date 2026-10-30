@@ -16,11 +16,12 @@
 .jd-ins-top__title em { padding: 0 .06em; font-style: normal; color: var(--forest); background: linear-gradient(transparent 62%, var(--lime) 62% 92%, transparent 92%); }
 .jd-ins-top__text { max-width: 58ch; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-muted); }
 
-.jd-ins-top__feat { position: relative; padding-bottom: clamp(120px, 12vw, 180px); }
-.jd-ins-top__img { display: block; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius-lg); background: var(--forest-tint); }
+.jd-ins-top__feat { position: relative; }
+.jd-ins-top__img { display: block; aspect-ratio: 20 / 9; overflow: hidden; border-radius: var(--radius-lg); background: var(--forest-tint); }
 .jd-ins-top__img img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale .8s var(--ease-out); }
 .jd-ins-top__feat:hover .jd-ins-top__img img { scale: 1.04; }
-.jd-ins-top__card { position: absolute; left: clamp(-80px, -5vw, -24px); right: clamp(24px, 6vw, 96px); bottom: 0; display: grid; justify-items: start; gap: var(--space-4); padding: clamp(24px, 3vw, 36px); border-top: 6px solid var(--lime); border-radius: var(--radius-lg); background: var(--surface); box-shadow: 0 40px 80px -44px rgba(23, 38, 31, .6); }
+/* The card sits under the photo, overlapping only its bottom edge, so a graphic's own title stays clear. */
+.jd-ins-top__card { position: relative; margin: -40px clamp(16px, 3vw, 40px) 0; display: grid; justify-items: start; gap: var(--space-4); padding: clamp(24px, 3vw, 36px); border-top: 6px solid var(--lime); border-radius: var(--radius-lg); background: var(--surface); box-shadow: 0 40px 80px -44px rgba(23, 38, 31, .6); }
 .jd-ins-top__tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .jd-ins-top__flag, .jd-ins-top__cat { padding: 5px 12px; border-radius: var(--radius-pill); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
 .jd-ins-top__flag { background: var(--forest); color: var(--lime); }
@@ -37,16 +38,15 @@
 @media (max-width: 1023px) {
   .jd-ins-top__grid { grid-template-columns: minmax(0, 1fr); }
   .jd-ins-top__copy { padding-top: 0; }
-  .jd-ins-top__feat { padding-bottom: 0; }
-  .jd-ins-top__card { position: relative; left: auto; right: auto; margin: -64px 16px 0; }
+  .jd-ins-top__card { margin: -32px 16px 0; }
 }
 @media (max-width: 600px) {
-  .jd-ins-top__card { margin: -48px 8px 0; }
+  .jd-ins-top__card { margin: -24px 8px 0; }
 }
 
 /* ---- Categories and Latest Insights (template-parts/insights/grid.php) ----
-   Soft green: heading beside the category pills (with counts); tall photo cards with the text
-   over a forest fade; round page numbers. The whole card is the link (the title's ::after). */
+   Soft green: heading beside the category pills (with counts); cards with the featured image whole
+   on top and the text below on forest; round page numbers. The whole card is the link (the title's ::after). */
 .jd-ins-grid { padding-block: clamp(64px, 7vw, 112px); background: var(--forest-tint); color: var(--ink); scroll-margin-top: 0; }
 .jd-ins-grid p, .jd-ins-grid h3 { margin: 0; }
 .jd-ins-grid__head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-5) clamp(24px, 4vw, 64px); align-items: end; margin-bottom: clamp(32px, 4vw, 48px); }
@@ -64,13 +64,14 @@
 .jd-ins-grid__tabs a[aria-current] span { background: var(--lime); }
 
 .jd-ins-grid__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); margin: 0; padding: 0; list-style: none; }
-.jd-ins-card article { position: relative; display: grid; height: 100%; overflow: hidden; border-radius: var(--radius-lg); background: var(--forest); isolation: isolate; }
+.jd-ins-card article { position: relative; display: grid; grid-template-rows: auto 1fr; height: 100%; overflow: hidden; border-radius: var(--radius-lg); background: var(--forest); isolation: isolate; }
 .jd-ins-card:has(h3 a:focus-visible) article { outline: 3px solid var(--forest); outline-offset: 4px; }
-.jd-ins-card__img { position: absolute; inset: 0; z-index: -1; }
+/* The featured image is often a designed graphic with the title in it, so it shows whole, in the
+   banner shape (20:9, e.g. 2000 × 900), with nothing over it. */
+.jd-ins-card__img { aspect-ratio: 20 / 9; overflow: hidden; background: var(--forest-deep); }
 .jd-ins-card__img img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale .8s var(--ease-out); }
-.jd-ins-card:hover .jd-ins-card__img img { scale: 1.05; }
-.jd-ins-card__img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(23, 38, 31, .96) 0%, rgba(23, 38, 31, .6) 48%, rgba(23, 38, 31, 0) 78%); }
-.jd-ins-card__body { display: grid; align-content: end; justify-items: start; gap: 10px; min-height: 460px; padding: clamp(20px, 2.5vw, 28px); color: var(--on-forest); }
+.jd-ins-card:hover .jd-ins-card__img img { scale: 1.04; }
+.jd-ins-card__body { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: clamp(20px, 2.5vw, 28px); color: var(--on-forest); }
 .jd-ins-card__cat { padding: 4px 12px; border-radius: var(--radius-pill); background: var(--lime); color: var(--forest); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
 .jd-ins-card h3 { font-size: var(--fs-h4); font-weight: 600; line-height: 1.3; }
 .jd-ins-card h3 a { color: inherit; text-decoration: none; }
@@ -80,7 +81,7 @@
 .jd-ins-card__exc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: var(--fs-small); line-height: 1.55; color: var(--on-forest-muted); }
 .jd-ins-card__date { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: var(--fs-caption); color: var(--on-forest-muted); }
 .jd-ins-card__date svg { width: 14px; height: 14px; }
-.jd-ins-card__more { display: inline-flex; align-items: center; gap: 6px; margin-top: 2px; font-size: var(--fs-small); font-weight: 600; color: var(--lime); }
+.jd-ins-card__more { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 2px; font-size: var(--fs-small); font-weight: 600; color: var(--lime); }
 .jd-ins-card__more svg { width: 16px; height: 16px; transition: translate .25s var(--ease-out); }
 .jd-ins-card:hover .jd-ins-card__more svg { translate: 4px 0; }
 
@@ -102,7 +103,6 @@
 }
 @media (max-width: 600px) {
   .jd-ins-grid__list { grid-template-columns: minmax(0, 1fr); }
-  .jd-ins-card__body { min-height: 380px; }
 }
 
 /* ---- Single article (single-post.php, template-parts/insights/article.php) ----
