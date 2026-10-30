@@ -40,5 +40,5 @@ const fail = (msg) => { console.error(`\nRelease stopped: ${msg}\n`); process.ex
   run('git', 'fetch', '--tags', '--quiet');
 
   console.log(`\nReleased ${tag}: ${url}`);
-  console.log('Sites offer it at their next update check (up to 12 hours), or straight away from Dashboard > Updates > Check again.');
+  console.log('Sites offer it within about 10 minutes (Dashboard > Updates or Appearance > Themes); GitHub can take a minute to mark it Latest.');
 })().catch((err) => fail((err.stderr || err.message || String(err)).trim()));
