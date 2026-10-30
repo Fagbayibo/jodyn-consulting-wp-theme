@@ -19,6 +19,7 @@
  *   social has none yet, and Lagos time if the site is still on UTC.
  * - WordPress's own Privacy Policy draft, published so /privacy-policy/ works.
  * - The client's Google Analytics ID, if Customize → Analytics has none yet.
+ * - The client's response time (48 to 72 hours), if Customize has none yet.
  *
  * @package JoDyn
  */
@@ -27,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 9;
+const JODYN_SETUP_VERSION = 10;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -304,6 +305,13 @@ function jodyn_site_setup() {
 	// turns on the cookie banner; Analytics itself only loads after a visitor chooses Accept.
 	if ( (int) get_option( 'jodyn_setup_version' ) < 9 && '' === jodyn_ga4_id() ) {
 		set_theme_mod( 'jodyn_ga4_id', 'G-TKHX1VKV4J' );
+	}
+
+	// 10: the client's response time (2026-10-30: "48 to 72 hours"), while Customize → Contact &
+	// social → Response time is empty. The Contact page, the FAQs and the reply to the contact
+	// form all use it.
+	if ( (int) get_option( 'jodyn_setup_version' ) < 10 && '' === trim( (string) get_theme_mod( 'jodyn_contact_response', '' ) ) ) {
+		set_theme_mod( 'jodyn_contact_response', '48 to 72 hours' );
 	}
 
 	// Insights: the approved categories (tab order in inc/insights.php) and nine articles a page.

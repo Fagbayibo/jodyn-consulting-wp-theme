@@ -400,5 +400,72 @@ function jodyn_registration_send( $meta, $programme ) {
 	}
 	/* translators: %s: programme title. */
 	$subject = sprintf( __( 'Your registration for %s is received.', 'jodyn' ), $meta['programme_title'] );
-	return (bool) wp_mail( $meta['email'], $subject, implode( "\n", $lines ), $headers );
+
+	// The same approved wording in the email design (inc/emails.php).
+	$proof = $team ? $team : '[training@jodynconsulting.com]';
+	$html  = jodyn_email_html(
+		array(
+			/* translators: %s: programme title. */
+			'preheader' => sprintf( __( 'Thank you for registering for %s. Your programme and payment details are inside.', 'jodyn' ), $meta['programme_title'] ),
+			'eyebrow'   => __( 'Registration received', 'jodyn' ),
+			/* translators: %s: first name. */
+			'heading'   => sprintf( __( 'Dear %s,', 'jodyn' ), $first ),
+			'intro'     => sprintf(
+				/* translators: %s: programme title. */
+				esc_html__( 'Thank you for registering for %s with JoDyn Advisory and Consulting. We are delighted to have you.', 'jodyn' ),
+				'<b>' . esc_html( $meta['programme_title'] ) . '</b>'
+			),
+			'blocks'    => array(
+				array(
+					'box',
+					__( 'Programme details', 'jodyn' ),
+					array(
+						__( 'Programme', 'jodyn' ) => $meta['programme_title'],
+						__( 'Date', 'jodyn' )      => $date,
+						__( 'Format', 'jodyn' )    => $meta['format_line'],
+						__( 'Fee', 'jodyn' )       => $meta['fee_line'],
+					),
+				),
+				array(
+					'box',
+					__( 'Payment details', 'jodyn' ),
+					array(
+						__( 'Bank', 'jodyn' )           => jodyn_registration_setting( 'bank', '[Bank name]' ),
+						__( 'Account name', 'jodyn' )   => jodyn_registration_setting( 'account_name', '[Account name]' ),
+						__( 'Account number', 'jodyn' ) => jodyn_registration_setting( 'account', '[Account number]' ),
+					),
+					'',
+					sprintf(
+						/* translators: %s: email address for proof of payment. */
+						esc_html__( 'Please use your full name or organisation name as the payment reference, and send proof of payment to %s. Your seat is confirmed once payment is received.', 'jodyn' ),
+						'<b>' . esc_html( $proof ) . '</b>'
+					),
+				),
+				array( 'title', __( 'What happens next?', 'jodyn' ) ),
+				array(
+					'text',
+					sprintf(
+						/* translators: %s: number of days. */
+						esc_html__( 'Once payment is confirmed, we will send your joining instructions %s days before the programme.', 'jodyn' ),
+						esc_html( jodyn_registration_setting( 'days', '[X]' ) )
+					),
+				),
+				array(
+					'text',
+					sprintf(
+						/* translators: %s: phone number. */
+						esc_html__( 'If you have any questions, simply reply to this email or call %s.', 'jodyn' ),
+						'<b>' . esc_html( $phone ? $phone : '[phone number]' ) . '</b>'
+					),
+				),
+			),
+			'signoff'   => array( __( 'Warm regards,', 'jodyn' ), __( 'The JoDyn Training Team', 'jodyn' ), 'JoDyn Advisory and Consulting' ),
+			'why'       => sprintf(
+				/* translators: %s: website address. */
+				__( 'You are receiving this email because you registered for a programme on %s.', 'jodyn' ),
+				wp_parse_url( home_url(), PHP_URL_HOST )
+			),
+		)
+	);
+	return jodyn_email_send( $meta['email'], $subject, $html, implode( "\n", $lines ), $headers );
 }

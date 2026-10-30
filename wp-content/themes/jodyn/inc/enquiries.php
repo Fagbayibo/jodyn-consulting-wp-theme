@@ -138,6 +138,7 @@ add_action(
 					__( 'Job title', 'jodyn' )     => $meta['job_title'],
 					__( 'Message', 'jodyn' )       => $meta['message'],
 					__( 'Emailed to', 'jodyn' )    => $meta['emailed'] ? $meta['to'] : __( 'Not sent (check the site’s email setup)', 'jodyn' ),
+					__( 'Reply sent to them', 'jodyn' ) => isset( $meta['replied'] ) ? ( $meta['replied'] ? __( 'Yes', 'jodyn' ) : __( 'No (check the site’s email setup)', 'jodyn' ) ) : '',
 				);
 				jodyn_form_table( $rows );
 				if ( is_email( $meta['email'] ) ) {
@@ -243,8 +244,117 @@ function jodyn_enquiry_submit( $request ) {
 	$meta['to'] = $to;
 	update_post_meta( $id, '_jodyn_enquiry', $meta ); // Saved before sending: kept even if the email fails.
 
-	$meta['emailed'] = (bool) wp_mail( $to, $subject, implode( "\n", array_filter( $body, 'is_string' ) ), array( 'Reply-To: ' . $name . ' <' . $meta['email'] . '>' ) );
+	// To the team: the details and the message, with Reply going straight to the sender.
+	$html = jodyn_email_html(
+		array(
+			'preheader' => $types[ $enquiry ][0] . ' from ' . $name . ': ' . mb_substr( $message, 0, 90 ),
+			'eyebrow'   => __( 'New enquiry', 'jodyn' ),
+			'heading'   => $types[ $enquiry ][0] . ' from ' . $name,
+			'intro'     => esc_html__( 'A new message has come in through the contact form on the website.', 'jodyn' ),
+			'blocks'    => array(
+				array(
+					'box',
+					__( 'Their details', 'jodyn' ),
+					array(
+						__( 'Name', 'jodyn' )         => $name,
+						__( 'Email', 'jodyn' )        => array( $meta['email'], 'mailto:' . $meta['email'] ),
+						__( 'Phone', 'jodyn' )        => $meta['phone'] ? array( $meta['phone'], 'tel:' . preg_replace( '/[^\d+]/', '', $meta['phone'] ) ) : '',
+						__( 'Organisation', 'jodyn' ) => $meta['organisation'],
+						__( 'Job title', 'jodyn' )    => $meta['job_title'],
+						__( 'Enquiry type', 'jodyn' ) => $types[ $enquiry ][0],
+						__( 'Programme', 'jodyn' )    => $meta['programme'],
+					),
+					$message,
+				),
+			),
+			/* translators: %s: first name. */
+			'button'    => array( sprintf( __( 'Reply to %s', 'jodyn' ), $meta['first_name'] ), 'mailto:' . $meta['email'] . '?subject=' . rawurlencode( 'Re: ' . $subject ) ),
+			'why'       => __( 'Sent by the contact form on the website. Every enquiry is also listed under Enquiries in the WordPress admin.', 'jodyn' ),
+		)
+	);
+	$meta['emailed'] = jodyn_email_send( $to, $subject, $html, implode( "\n", array_filter( $body, 'is_string' ) ), array( 'Reply-To: ' . $name . ' <' . $meta['email'] . '>' ) );
+	update_post_meta( $id, '_jodyn_enquiry', $meta );
+
+	// To the sender: we have it, and when to expect an answer.
+	$meta['replied'] = jodyn_enquiry_reply( $meta, $types[ $enquiry ][0], $to );
 	update_post_meta( $id, '_jodyn_enquiry', $meta );
 
 	return rest_ensure_response( array( 'ok' => true ) );
+}
+
+/**
+ * The reply to the person who sent the contact form: thank you, the response time from Customize
+ * (48 to 72 hours) and their message. Replies to it go to the team. Copy approved 2026-10-30.
+ *
+ * Links in their message are left out of this copy, so nobody can use the form to send links to
+ * someone else's inbox from JoDyn's address.
+ *
+ * @param array  $meta  The saved enquiry.
+ * @param string $type  The enquiry type's label.
+ * @param string $team  The team address replies should go to.
+ * @return bool Whether the email was handed to the mail server.
+ */
+function jodyn_enquiry_reply( $meta, $type, $team ) {
+	$c       = jodyn_contact();
+	$time    = jodyn_response_time();
+	$message = trim( preg_replace( '~(https?://|www\.)\S+~i', '[link]', $meta['message'] ) );
+	$message = mb_strlen( $message ) > 600 ? mb_substr( $message, 0, 600 ) . '…' : $message;
+	$sooner  = '';
+	if ( $c['phone'] ) {
+		/* translators: %s: phone number. */
+		$sooner = sprintf( esc_html__( 'Need to talk sooner? Call or WhatsApp us on %s.', 'jodyn' ), '<b>' . esc_html( $c['phone'] ) . '</b>' );
+	}
+
+	$html = jodyn_email_html(
+		array(
+			/* translators: %s: response time, e.g. 48 to 72 hours. */
+			'preheader' => sprintf( __( 'Thank you for contacting JoDyn. We will get back to you within %s.', 'jodyn' ), $time ),
+			'eyebrow'   => __( 'Message received', 'jodyn' ),
+			/* translators: %s: first name. */
+			'heading'   => sprintf( __( 'Thank you, %s', 'jodyn' ), $meta['first_name'] ),
+			/* translators: %s: response time, e.g. 48 to 72 hours. */
+			'intro'     => sprintf( esc_html__( 'Thank you for contacting JoDyn Advisory and Consulting. We have received your enquiry, and a member of our team will get back to you within %s.', 'jodyn' ), '<b>' . esc_html( $time ) . '</b>' ),
+			'blocks'    => array_filter(
+				array(
+					array(
+						'box',
+						__( 'Your message', 'jodyn' ),
+						array(
+							__( 'Enquiry type', 'jodyn' ) => $type,
+							__( 'Programme', 'jodyn' )    => $meta['programme'],
+						),
+						$message,
+					),
+					$sooner ? array( 'text', $sooner ) : null,
+				)
+			),
+			'button'    => $c['wa'] ? array( __( 'Chat on WhatsApp', 'jodyn' ), 'https://wa.me/' . $c['wa'] ) : array(),
+			'signoff'   => array( __( 'Warm regards,', 'jodyn' ), __( 'The JoDyn Team', 'jodyn' ), 'JoDyn Advisory and Consulting' ),
+			'why'       => sprintf(
+				/* translators: %s: website address. */
+				__( 'You are receiving this email because you contacted us through %s.', 'jodyn' ),
+				wp_parse_url( home_url(), PHP_URL_HOST )
+			),
+		)
+	);
+	$text = implode(
+		"\n",
+		array(
+			"Thank you, {$meta['first_name']}",
+			'',
+			"Thank you for contacting JoDyn Advisory and Consulting. We have received your enquiry, and a member of our team will get back to you within {$time}.",
+			'',
+			"Your message ({$type}" . ( $meta['programme'] ? ': ' . $meta['programme'] : '' ) . '):',
+			$message,
+			'',
+			$c['phone'] ? "Need to talk sooner? Call or WhatsApp us on {$c['phone']}." : '',
+			'',
+			'Warm regards,',
+			'The JoDyn Team',
+			'JoDyn Advisory and Consulting',
+		)
+	);
+	/* translators: %s: first name. */
+	$subject = sprintf( __( 'We\'ve received your message, %s', 'jodyn' ), $meta['first_name'] );
+	return jodyn_email_send( $meta['email'], $subject, $html, $text, array( 'Reply-To: JoDyn Advisory and Consulting <' . $team . '>' ) );
 }

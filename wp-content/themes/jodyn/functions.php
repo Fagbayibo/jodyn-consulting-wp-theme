@@ -14,6 +14,7 @@ require_once get_template_directory() . '/inc/class-jodyn-nav-walker.php';
 require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/programmes.php';
 require_once get_template_directory() . '/inc/forms.php';
+require_once get_template_directory() . '/inc/emails.php';
 require_once get_template_directory() . '/inc/calendar-download.php';
 require_once get_template_directory() . '/inc/registration.php';
 require_once get_template_directory() . '/inc/enquiries.php';
