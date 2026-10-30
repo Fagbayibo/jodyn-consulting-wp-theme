@@ -283,6 +283,17 @@ function jodyn_enquiry_submit( $request ) {
 }
 
 /**
+ * Text with every web address replaced by "[link]": with or without http:// or www., and bare
+ * domains such as win-now.com. Used on everything the sender typed that the reply repeats.
+ *
+ * @param string $text Text.
+ * @return string
+ */
+function jodyn_strip_links( $text ) {
+	return trim( preg_replace( '~\b(?:https?://|www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}(?:[/?#]\S*)?~i', '[link]', (string) $text ) );
+}
+
+/**
  * The reply to the person who sent the contact form: thank you, the response time from Customize
  * (48 to 72 hours) and their message. Replies to it go to the team. Copy approved 2026-10-30.
  *
@@ -297,8 +308,16 @@ function jodyn_enquiry_submit( $request ) {
 function jodyn_enquiry_reply( $meta, $type, $team ) {
 	$c       = jodyn_contact();
 	$time    = jodyn_response_time();
-	$message = trim( preg_replace( '~(https?://|www\.)\S+~i', '[link]', $meta['message'] ) );
+	$message = jodyn_strip_links( $meta['message'] );
 	$message = mb_strlen( $message ) > 600 ? mb_substr( $message, 0, 600 ) . '…' : $message;
+
+	// The name goes into the subject and heading, so a "name" carrying a web address (or an
+	// unusually long one) is left out rather than repeated to whatever inbox was typed in.
+	$first = trim( $meta['first_name'] );
+	if ( jodyn_strip_links( $first ) !== $first || mb_strlen( $first ) > 40 ) {
+		$first = '';
+	}
+	$meta['first_name'] = $first;
 	$sooner  = '';
 	if ( $c['phone'] ) {
 		/* translators: %s: phone number. */
@@ -311,7 +330,7 @@ function jodyn_enquiry_reply( $meta, $type, $team ) {
 			'preheader' => sprintf( __( 'Thank you for contacting JoDyn. We will get back to you within %s.', 'jodyn' ), $time ),
 			'eyebrow'   => __( 'Message received', 'jodyn' ),
 			/* translators: %s: first name. */
-			'heading'   => sprintf( __( 'Thank you, %s', 'jodyn' ), $meta['first_name'] ),
+			'heading'   => $first ? sprintf( __( 'Thank you, %s', 'jodyn' ), $first ) : __( 'Thank you', 'jodyn' ),
 			/* translators: %s: response time, e.g. 48 to 72 hours. */
 			'intro'     => sprintf( esc_html__( 'Thank you for contacting JoDyn Advisory and Consulting. We have received your enquiry, and a member of our team will get back to you within %s.', 'jodyn' ), '<b>' . esc_html( $time ) . '</b>' ),
 			'blocks'    => array_filter(
@@ -340,7 +359,7 @@ function jodyn_enquiry_reply( $meta, $type, $team ) {
 	$text = implode(
 		"\n",
 		array(
-			"Thank you, {$meta['first_name']}",
+			$first ? "Thank you, {$first}" : 'Thank you',
 			'',
 			"Thank you for contacting JoDyn Advisory and Consulting. We have received your enquiry, and a member of our team will get back to you within {$time}.",
 			'',
@@ -355,6 +374,6 @@ function jodyn_enquiry_reply( $meta, $type, $team ) {
 		)
 	);
 	/* translators: %s: first name. */
-	$subject = sprintf( __( 'We\'ve received your message, %s', 'jodyn' ), $meta['first_name'] );
+	$subject = $first ? sprintf( __( 'We\'ve received your message, %s', 'jodyn' ), $first ) : __( 'We\'ve received your message', 'jodyn' );
 	return jodyn_email_send( $meta['email'], $subject, $html, $text, array( 'Reply-To: JoDyn Advisory and Consulting <' . $team . '>' ) );
 }
