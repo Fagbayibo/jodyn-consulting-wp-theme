@@ -18,6 +18,7 @@
  * - The client's phone and WhatsApp number and office address, where Customize → Contact &
  *   social has none yet, and Lagos time if the site is still on UTC.
  * - WordPress's own Privacy Policy draft, published so /privacy-policy/ works.
+ * - The client's Google Analytics ID, if Customize → Analytics has none yet.
  *
  * @package JoDyn
  */
@@ -26,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 8;
+const JODYN_SETUP_VERSION = 9;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -297,6 +298,12 @@ function jodyn_site_setup() {
 		if ( in_array( (string) get_option( 'timezone_string' ), array( '', 'UTC' ), true ) && 0.0 === (float) get_option( 'gmt_offset' ) ) {
 			update_option( 'timezone_string', 'Africa/Lagos' );
 		}
+	}
+
+	// 9: the client's Google Analytics ID (Customize → Analytics), while that field is empty. It
+	// turns on the cookie banner; Analytics itself only loads after a visitor chooses Accept.
+	if ( (int) get_option( 'jodyn_setup_version' ) < 9 && '' === jodyn_ga4_id() ) {
+		set_theme_mod( 'jodyn_ga4_id', 'G-TKHX1VKV4J' );
 	}
 
 	// Insights: the approved categories (tab order in inc/insights.php) and nine articles a page.
