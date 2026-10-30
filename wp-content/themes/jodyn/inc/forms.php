@@ -175,6 +175,33 @@ function jodyn_form_rate_limit( $form, $message ) {
 }
 
 /**
+ * Run a task after the visitor has their answer: the form says thank you at once, and the
+ * email goes out a moment later, however slow the mail server is. The answer is sent and the
+ * connection closed first where the server allows it (PHP-FPM or LiteSpeed); elsewhere the task
+ * still runs, just before the answer reaches the visitor, as it did before.
+ *
+ * @param callable $task What to do, e.g. send the email and note whether it went.
+ */
+function jodyn_form_after_response( $task ) {
+	add_action(
+		'shutdown',
+		static function () use ( $task ) {
+			ignore_user_abort( true );
+			if ( function_exists( 'fastcgi_finish_request' ) ) {
+				fastcgi_finish_request();
+			} elseif ( function_exists( 'litespeed_finish_request' ) ) {
+				litespeed_finish_request();
+			}
+			if ( function_exists( 'set_time_limit' ) ) {
+				set_time_limit( 120 );
+			}
+			$task();
+		},
+		20 // After WordPress has flushed the answer (wp_ob_end_flush_all, priority 1).
+	);
+}
+
+/**
  * A submission's answers as a table on its admin screen. Empty answers are left out.
  *
  * @param array $rows  label => value.

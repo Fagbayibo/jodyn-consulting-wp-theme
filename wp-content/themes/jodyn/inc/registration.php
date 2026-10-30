@@ -343,8 +343,16 @@ function jodyn_registration_submit( $request ) {
 	if ( is_wp_error( $id ) ) {
 		return new WP_Error( 'jodyn_registration_failed', __( 'Something went wrong. Please try again.', 'jodyn' ), array( 'status' => 500 ) );
 	}
-	$meta['emailed'] = jodyn_registration_send( $meta, $programme );
 	update_post_meta( $id, '_jodyn_registration', $meta );
+
+	// Saved: the visitor sees "registration received" now, and the confirmation email goes out
+	// straight after.
+	jodyn_form_after_response(
+		static function () use ( $id, $meta, $programme ) {
+			$meta['emailed'] = jodyn_registration_send( $meta, $programme );
+			update_post_meta( $id, '_jodyn_registration', $meta );
+		}
+	);
 
 	return rest_ensure_response(
 		array(

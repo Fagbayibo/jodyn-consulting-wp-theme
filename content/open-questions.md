@@ -94,7 +94,9 @@ Also in the admin: **Programmes**, the dates, fees, format and venue for each ru
 
 ## 5. Before launch (technical)
 
-- [ ] **Email sending (SMTP plugin).** Without it, registration confirmations and contact form notifications may not arrive (both are still saved in the admin). A plugin such as WP Mail SMTP with the domain's mailbox (Zoho) fixes this, plus the domain's SPF and DKIM records so the emails don't land in spam.
+- [x] **Email sending (SMTP plugin).** Done 2026-10-30: WP Mail SMTP (free) sends through the cPanel mailbox info@jodynconsulting.com (Other SMTP, mail.jodynconsulting.com, SSL 465, Force From Email and Name). The test email reached the Gmail inbox. SPF, DKIM and DMARC were already set by the host (Truehost).
+- [ ] **Test the real forms on the live site:** one contact form message and one registration. Each should arrive at info@, and the entry under Enquiries or Registrations should say it was emailed.
+- [ ] **info@ in Gmail:** cPanel Forwarder from info@ to the client's Gmail, plus Gmail → Settings → Accounts → "Send mail as" info@ (mail.jodynconsulting.com, 465, SSL).
 - [ ] **Calendar download by email?** The download starts on the page; no copy is emailed and the team isn't notified (each download is listed under Calendar downloads). Decide whether either is wanted.
 - [ ] **SEO titles and descriptions.** Each copy file has an SEO block, but the theme does not print them yet. Decide: an SEO plugin (Yoast or Rank Math, then paste them in), or have the theme print them.
 - [ ] **After updating a site, open any admin page once.** The setup then catches up: version 5 creates the FAQs page and swaps the old Careers menu item for FAQs, version 6 writes the example programme, version 7 fills in the phone, WhatsApp and address and sets the site to Lagos time (if it was still on UTC).
