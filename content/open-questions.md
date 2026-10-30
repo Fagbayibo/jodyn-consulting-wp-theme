@@ -37,7 +37,7 @@ Every gap left while building the site, in one place (2026-10-27, after the last
 - [ ] **Website address:** confirm www.jodynconsulting.com. *(Terms, opening paragraph)*
 - [ ] **How long records are kept:** enquiries [two] years, registrations [six] years, engagement records [six] years. *(Privacy §6)* The site doesn't delete old form entries on its own yet: once these are confirmed, either the team deletes old ones under Enquiries, Registrations and Calendar downloads, or the theme can do it automatically.
 - [ ] **Data requests:** answered within [30] days? *(Privacy §9)* Tools → Export Personal Data and Erase Personal Data now cover the three forms: erasing deletes someone's enquiries and calendar downloads and keeps their registrations for the accounting records (to delete by hand if wanted).
-- [ ] **Analytics:** confirm Google Analytics (GA4), then enter the Measurement ID (G-…) → **Customize → Analytics**. The cookie banner and the footer "Cookie settings" link appear once it is set.
+- [x] **Analytics:** Google Analytics (GA4) G-TKHX1VKV4J, entered by setup version 9 (2026-10-30). The cookie banner shows, and Analytics loads only after Accept (checked live: page views reach Google). Google's "Set up a Google tag" checker says "not detected" because it never clicks Accept; that is expected, so don't paste Google's snippet into the site. Switching to Google's advanced consent mode would clear the warning, but Google would then get cookie-free signals from every visitor and the Cookie Policy would need rewording; kept as is.
 - [ ] **A Nigerian lawyer reviews all three policies** before launch (the client's drafts say they are not legal advice).
 
 ---
@@ -86,7 +86,7 @@ Also in the admin: **Programmes**, the dates, fees, format and venue for each ru
 
 ## 4. Content still to come
 
-- [ ] **Insights articles** (800–1,500 words each). The three sample posts on the dev site are placeholders.
+- [ ] **Insights articles** (800–1,500 words each). The sample posts on the dev site are placeholders. 42 suggested titles, six for each topic category, are in [blog-titles.md](blog-titles.md).
 - [ ] **Training calendar PDF** for the download.
 - [ ] **Leadership photos** for an About page leadership section (low priority; left out until there are real photos).
 
@@ -95,10 +95,17 @@ Also in the admin: **Programmes**, the dates, fees, format and venue for each ru
 ## 5. Before launch (technical)
 
 - [x] **Email sending (SMTP plugin).** Done 2026-10-30: WP Mail SMTP (free) sends through the cPanel mailbox info@jodynconsulting.com (Other SMTP, mail.jodynconsulting.com, SSL 465, Force From Email and Name). The test email reached the Gmail inbox. SPF, DKIM and DMARC were already set by the host (Truehost).
-- [ ] **Test the real forms on the live site:** one contact form message and one registration. Each should arrive at info@, and the entry under Enquiries or Registrations should say it was emailed.
+- [ ] **Bank details for registrations** → **Customize → Training registration** (bank name, account name, account number, days before the programme for joining instructions). The confirmation email shows placeholders until they are filled.
+- [ ] **Test the real forms on the live site:** one contact form message and one registration, sent from a Gmail address. Each should arrive at info@, the sender should get the "Thank you" or registration email, and the entry under Enquiries or Registrations should say it was emailed.
+- [ ] **Social links** → **Customize → Contact & social** once the client sends them; each footer icon shows when its link is filled.
 - [ ] **info@ in Gmail:** cPanel Forwarder from info@ to the client's Gmail, plus Gmail → Settings → Accounts → "Send mail as" info@ (mail.jodynconsulting.com, 465, SSL).
 - [ ] **Calendar download by email?** The download starts on the page; no copy is emailed and the team isn't notified (each download is listed under Calendar downloads). Decide whether either is wanted.
-- [ ] **SEO titles and descriptions.** Each copy file has an SEO block, but the theme does not print them yet. Decide: an SEO plugin (Yoast or Rank Math, then paste them in), or have the theme print them.
+- [ ] **SEO** (plan of 2026-10-30). Already live: the site is open to search engines, the sitemap (/wp-sitemap.xml) is listed in robots.txt, and every page has a title and canonical link. Still to do:
+  - **Theme (one release; recommended over a plugin):** print each page's meta title and description from the SEO blocks in the copy files, link previews for WhatsApp and LinkedIn (Open Graph), and structured data for Google (the business with its Lagos address and phone, articles, programme dates). The theme steps aside if Yoast or Rank Math is installed later. Say "build the SEO".
+  - **Google Search Console:** add jodynconsulting.com, verify with the DNS record in cPanel, submit wp-sitemap.xml.
+  - **Google Business Profile** for the Lagos office (Maps, and searches such as "consulting firm in Lagos"). Needs the confirmed address spelling.
+  - *(Optional)* **Bing Webmaster Tools**, imported from Search Console.
+  - **Ongoing:** two articles a month, each linking to a programme or service, shared on LinkedIn.
 - [ ] **After updating a site, open any admin page once.** The setup then catches up: version 5 creates the FAQs page and swaps the old Careers menu item for FAQs, version 6 writes the example programme, version 7 fills in the phone, WhatsApp and address and sets the site to Lagos time (if it was still on UTC).
 - [ ] **Hosting:** PHP 8.0 or newer (8.2+ recommended), WordPress 6.4 or newer, and outgoing email through SMTP. Cloudflare or a host's proxy in front of the site is fine: the forms' spam limit counts each visitor's real address.
 - [ ] **GitHub account:** turn on two-factor sign-in. Sites update themselves from its releases, so whoever controls the account controls the theme.
