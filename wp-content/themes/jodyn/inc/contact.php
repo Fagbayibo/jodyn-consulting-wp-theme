@@ -177,6 +177,7 @@ function jodyn_footer_nav_fallback( $args ) {
 		__( 'Training Programmes', 'jodyn' ) => home_url( '/training/programmes/' ),
 		__( 'Training Calendar', 'jodyn' )   => home_url( '/training/calendar/' ),
 		__( 'Insights', 'jodyn' )            => $blog ? get_permalink( $blog ) : home_url( '/insights/' ),
+		__( 'FAQs', 'jodyn' )                => home_url( '/faqs/' ),
 		__( 'Contact', 'jodyn' )             => home_url( '/contact-us/' ),
 	);
 

@@ -136,6 +136,7 @@ $jodyn_cta = apply_filters(
 			<p>&copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> JoDyn Advisory and Consulting. All rights reserved.</p>
 			<ul>
 				<li><a href="<?php echo esc_url( $jodyn_privacy ? $jodyn_privacy : home_url( '/privacy-policy/' ) ); ?>">Privacy Policy</a></li>
+				<li><a href="<?php echo esc_url( jodyn_legal_url( 'terms' ) ); ?>">Terms of Use</a></li>
 				<li><a href="<?php echo esc_url( home_url( '/cookie-policy/' ) ); ?>">Cookie Policy</a></li>
 				<?php if ( jodyn_ga4_id() ) : ?>
 					<li><a href="<?php echo esc_url( home_url( '/cookie-policy/#how-to-control-cookies' ) ); ?>" data-jd-cookie-settings>Cookie settings</a></li>
