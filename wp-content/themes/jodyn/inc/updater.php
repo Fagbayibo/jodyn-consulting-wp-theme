@@ -8,11 +8,11 @@
  *   GitHub API (which allows only 60 requests an hour per IP, and shared hosts share IPs, so it
  *   is the fallback, not the first choice).
  * - A newer version shows under Dashboard → Updates (and Appearance → Themes) with the usual
- *   one-click update within about 10 minutes of a release: the answer is cached for 10 minutes,
+ *   one-click update within about 5 minutes of a release: the answer is cached for 5 minutes,
  *   and it is added whenever WordPress reads its list of theme updates in the admin, not only
  *   when WordPress runs its own check twice a day.
  * - "Check again" on Dashboard → Updates skips the cache; an update clears it. If GitHub can't be
- *   reached, Dashboard → Updates says so (and it is retried after 10 minutes).
+ *   reached, Dashboard → Updates says so (and it is retried after 5 minutes).
  *
  * @package JoDyn
  */
@@ -87,7 +87,7 @@ function jodyn_update_latest_release( $force = false ) {
 		}
 	}
 
-	set_site_transient( JODYN_UPDATE_CACHE, $release ? $release : array( 'error' => $error ), 10 * MINUTE_IN_SECONDS );
+	set_site_transient( JODYN_UPDATE_CACHE, $release ? $release : array( 'error' => $error ), 5 * MINUTE_IN_SECONDS );
 	return $release;
 }
 
@@ -152,7 +152,7 @@ add_filter( 'pre_set_site_transient_update_themes', 'jodyn_update_check' );
 
 /**
  * Whenever the admin (or the background updater) reads the list, so a new release shows within
- * 10 minutes instead of waiting for WordPress's next check. Visitors' pages never ask GitHub.
+ * 5 minutes instead of waiting for WordPress's next check. Visitors' pages never ask GitHub.
  *
  * @param object|false $transient The update_themes site transient.
  * @return object|false
@@ -180,7 +180,7 @@ function jodyn_update_notice() {
 		esc_html(
 			sprintf(
 				/* translators: %s: the error. */
-				__( 'JoDyn theme: could not check GitHub for a new version (%s). It tries again in 10 minutes. If this keeps showing, ask your host to allow outgoing connections to github.com and api.github.com, or update by uploading the new jodyn.zip under Appearance → Themes → Add New Theme.', 'jodyn' ),
+				__( 'JoDyn theme: could not check GitHub for a new version (%s). It tries again in 5 minutes. If this keeps showing, ask your host to allow outgoing connections to github.com and api.github.com, or update by uploading the new jodyn.zip under Appearance → Themes → Add New Theme.', 'jodyn' ),
 				$cached['error']
 			)
 		)
