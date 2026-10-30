@@ -17,6 +17,7 @@
  * - The client's example programme page, written into its programme while that one is empty.
  * - The client's phone and WhatsApp number and office address, where Customize → Contact &
  *   social has none yet, and Lagos time if the site is still on UTC.
+ * - WordPress's own Privacy Policy draft, published so /privacy-policy/ works.
  *
  * @package JoDyn
  */
@@ -25,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 7;
+const JODYN_SETUP_VERSION = 8;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -182,6 +183,11 @@ function jodyn_site_setup() {
 		$page = get_page_by_path( $path );
 		if ( $page ) {
 			$ids[ $path ] = $page->ID;
+			// 8: WordPress creates its own Privacy Policy page as a draft, so /privacy-policy/ was
+			// a 404 on new sites. Publish that draft (the theme shows the policy's own wording).
+			if ( 'privacy-policy' === $path && 'draft' === $page->post_status && (int) get_option( 'wp_page_for_privacy_policy' ) === $page->ID && (int) get_option( 'jodyn_setup_version' ) < 8 ) {
+				wp_publish_post( $page->ID );
+			}
 			continue;
 		}
 		$parent       = dirname( $path );
