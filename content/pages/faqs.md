@@ -41,7 +41,7 @@ Status: approved
 - Is the first consultation free? — [Yes. Our initial consultation is free, with no obligation. It helps us understand your needs and recommend the right next step.]
 - Do you work with small and growing businesses? — Yes. We work with organisations of all sizes, from SMEs putting structures in place to larger organisations and public institutions, and scale our support to fit your stage and resources.
 - Will our information be kept confidential? — Absolutely. All information you share with us, including financial records, is treated with strict confidentiality and used only for the work you have asked us to do. We are happy to sign a non-disclosure agreement where required.
-- How quickly will you respond? — We respond to all enquiries within [one working day]. Training registrations are confirmed by email immediately.
+- How quickly will you respond? — We respond to all enquiries within 48 to 72 hours. Training registrations are confirmed by email immediately.
 
 > Changed: "How do we get started?" moves here from Advisory, since it applies to every service.
 > [PLACEHOLDER] "Is the first consultation free?" and "How quickly will you respond?" come from the Contact page's quick answers. The first is still in brackets there: confirm the consultation is free before launch.
@@ -89,7 +89,7 @@ Status: approved
 Status: approved
 
 Heading: Still Have a <em>Question?</em>
-Text: Our team is happy to help. Send us a message and we will get back to you within [one working day].
+Text: Our team is happy to help. Send us a message and we will get back to you within 48 to 72 hours.
 Button: Contact Us → /contact-us/
 
 > NEW, confirm with client. [PLACEHOLDER] the response time, the same as the Contact page's.

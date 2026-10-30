@@ -58,7 +58,7 @@ Status: approved
 
 Eyebrow: Send us a message
 Heading: How Can We Help?
-Text: Fill in the form below, and we will get back to you within [one working day].
+Text: Fill in the form below, and we will get back to you within 48 to 72 hours.
 
 Fields:
 - First name *
@@ -75,12 +75,12 @@ Button: Send Message
 
 Thank-you message (replaces the form after sending):
 Heading: Thank you for reaching out!
-Text: Your message has been received. A member of our team will get back to you within [one working day]. For urgent enquiries, call or WhatsApp us on [phone number].
+Text: Your message has been received. A member of our team will get back to you within 48 to 72 hours. For urgent enquiries, call or WhatsApp us on [phone number].
 
 > Changed: Systems Audit and Tax Consultancy added to the enquiry types.
 > Build note: buttons on other pages open this form with the enquiry type already selected: ?enquiry=advisory, audit, tax, training, custom-training, facilitator, partnership, media.
 > Build note: each message is saved in the admin (a new "Enquiries" list, like Registrations) and emailed to the team. The email needs the live site's email set up (an SMTP plugin). [Confirm with the client]
-> [PLACEHOLDER] the response time [one working day] and the phone number.
+> Response time (48 to 72 hours) and phone number confirmed by the client, 2026-10-30.
 
 ---
 
@@ -118,7 +118,7 @@ Status: approved
 Heading: Before You Reach Out
 
 **How quickly will you respond?**
-We respond to all enquiries within [one working day]. Training registrations are confirmed by email immediately.
+We respond to all enquiries within 48 to 72 hours. Training registrations are confirmed by email immediately.
 
 **Can we meet in person?**
 Yes. We are happy to meet at your office or ours, or online if that is more convenient. Simply mention your preference in your message.

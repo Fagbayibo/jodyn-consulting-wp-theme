@@ -14,7 +14,7 @@
 $jodyn_answers = array(
 	array(
 		__( 'How quickly will you respond?', 'jodyn' ),
-		/* translators: %s: response time, e.g. one working day. */
+		/* translators: %s: response time, e.g. 48 to 72 hours. */
 		sprintf( __( 'We respond to all enquiries within %s. Training registrations are confirmed by email immediately.', 'jodyn' ), jodyn_response_time() ),
 	),
 	array(

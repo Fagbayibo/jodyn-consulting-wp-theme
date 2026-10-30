@@ -43,7 +43,7 @@ add_filter(
 		}
 		return array(
 			'title'   => 'Still Have a <em>Question?</em>',
-			/* translators: %s: response time, e.g. one working day. */
+			/* translators: %s: response time, e.g. 48 to 72 hours. */
 			'text'    => sprintf( __( 'Our team is happy to help. Send us a message and we will get back to you within %s.', 'jodyn' ), jodyn_response_time() ),
 			'buttons' => array(
 				array( __( 'Contact Us', 'jodyn' ), '/contact-us/' ),

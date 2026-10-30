@@ -40,13 +40,13 @@ function jodyn_enquiry_types() {
 }
 
 /**
- * The promised response time (Customize → Contact & social), or its placeholder.
+ * The promised response time (Customize → Contact & social), or the client's 48 to 72 hours.
  *
  * @return string
  */
 function jodyn_response_time() {
 	$value = trim( (string) get_theme_mod( 'jodyn_contact_response', '' ) );
-	return '' === $value ? '[one working day]' : $value;
+	return '' === $value ? '48 to 72 hours' : $value;
 }
 
 /**

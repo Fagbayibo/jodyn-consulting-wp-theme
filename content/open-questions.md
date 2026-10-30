@@ -27,7 +27,7 @@ Every gap left while building the site, in one place (2026-10-27, after the last
 - [x] **Phone number:** +234 803 726 6806 (received 2026-10-28). Setup version 7 enters it in Customize → Contact & social while that field is empty.
 - [ ] **Office address:** received as "2C Crocxley Drive, Cardogan Place, Lagos" (2026-10-28) and entered the same way. Confirm the spelling (Croxley? Cadogan?) and the area (e.g. Ikoyi, Lekki).
 - [x] **WhatsApp:** the same number, +234 803 726 6806 (confirmed 2026-10-28). Setup version 7 enters it too, which shows the Chat on WhatsApp button.
-- [ ] **Response time** for enquiries: [one working day]? → **Customize → Contact & social → Response time**. Used on the Contact page, the FAQs and the FAQs footer card.
+- [x] **Response time** for enquiries: 48 to 72 hours (client, 2026-10-30) → **Customize → Contact & social → Response time**. Used on the Contact page, the FAQs and the FAQs footer card.
 - [ ] **One email and phone for everything, or separate ones** for Advisory/Audit/Tax, Training and General enquiries? → **Customize → Contact & social** (each line's email and phone are optional and fall back to the main ones).
 - [ ] **A separate training email** (e.g. training@jodynconsulting.com)? → **Customize → Training registration → Training team email**.
 

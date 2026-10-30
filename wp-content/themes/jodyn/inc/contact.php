@@ -60,7 +60,7 @@ function jodyn_contact_customize_register( $wp_customize ) {
 		'jodyn_contact_whatsapp' => array( __( 'WhatsApp number', 'jodyn' ), 'text', 'sanitize_text_field', __( 'With the country code, e.g. +234 803 000 0000. Shows the Chat on WhatsApp button on the Contact page.', 'jodyn' ) ),
 		'jodyn_contact_hours'    => array( __( 'Office hours', 'jodyn' ), 'text', 'sanitize_text_field', __( 'e.g. Monday to Friday, 9:00 am to 5:00 pm (WAT)', 'jodyn' ) ),
 		'jodyn_contact_privacy_email' => array( __( 'Privacy email (optional)', 'jodyn' ), 'email', 'sanitize_email', __( 'For data protection questions, shown on the Privacy and Cookie policies. Leave empty to use the main email address.', 'jodyn' ) ),
-		'jodyn_contact_response' => array( __( 'Response time', 'jodyn' ), 'text', 'sanitize_text_field', __( 'How soon you reply, e.g. one working day. Used on the Contact page.', 'jodyn' ) ),
+		'jodyn_contact_response' => array( __( 'Response time', 'jodyn' ), 'text', 'sanitize_text_field', __( 'How soon you reply, e.g. 48 to 72 hours. Used on the Contact page, the FAQs and the reply email.', 'jodyn' ) ),
 	);
 	// Contact page, "Ways to reach us": each line can have its own email and phone
 	foreach ( jodyn_contact_lines() as $key => $line ) {
