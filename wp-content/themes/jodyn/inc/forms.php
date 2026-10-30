@@ -175,31 +175,18 @@ function jodyn_form_rate_limit( $form, $message ) {
 }
 
 /**
- * Run a task after the visitor has their answer: the form says thank you at once, and the
- * email goes out a moment later, however slow the mail server is. The answer is sent and the
- * connection closed first where the server allows it (PHP-FPM or LiteSpeed); elsewhere the task
- * still runs, just before the answer reaches the visitor, as it did before.
+ * A form's email is sent while the visitor waits (the entry is saved first, so nothing is lost
+ * if sending fails). Sending after the answer had gone was tried in 0.1.13, but the live host
+ * stops the script once the visitor's connection closes, so those emails never left.
+ * Instead, a slow mail server gets 20 seconds per step rather than PHPMailer's 5 minutes, so
+ * nobody is left on "Sending…". Runs after WP Mail SMTP's own settings (priority 10).
  *
- * @param callable $task What to do, e.g. send the email and note whether it went.
+ * @param PHPMailer\PHPMailer\PHPMailer $mailer The mailer.
  */
-function jodyn_form_after_response( $task ) {
-	add_action(
-		'shutdown',
-		static function () use ( $task ) {
-			ignore_user_abort( true );
-			if ( function_exists( 'fastcgi_finish_request' ) ) {
-				fastcgi_finish_request();
-			} elseif ( function_exists( 'litespeed_finish_request' ) ) {
-				litespeed_finish_request();
-			}
-			if ( function_exists( 'set_time_limit' ) ) {
-				set_time_limit( 120 );
-			}
-			$task();
-		},
-		20 // After WordPress has flushed the answer (wp_ob_end_flush_all, priority 1).
-	);
+function jodyn_mail_timeout( $mailer ) {
+	$mailer->Timeout = 20; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- PHPMailer's property.
 }
+add_action( 'phpmailer_init', 'jodyn_mail_timeout', 20 );
 
 /**
  * A submission's answers as a table on its admin screen. Empty answers are left out.

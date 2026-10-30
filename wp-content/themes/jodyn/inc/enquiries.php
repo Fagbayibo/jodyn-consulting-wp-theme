@@ -241,15 +241,10 @@ function jodyn_enquiry_submit( $request ) {
 	/* translators: 1: enquiry type, 2: name. */
 	$subject    = sprintf( __( '%1$s from %2$s', 'jodyn' ), $types[ $enquiry ][0] . ( $meta['programme'] ? ': ' . $meta['programme'] : '' ), $name );
 	$meta['to'] = $to;
-	update_post_meta( $id, '_jodyn_enquiry', $meta );
+	update_post_meta( $id, '_jodyn_enquiry', $meta ); // Saved before sending: kept even if the email fails.
 
-	// Saved: the visitor gets their thank-you now, and the email goes out straight after.
-	jodyn_form_after_response(
-		static function () use ( $id, $meta, $to, $subject, $body, $name ) {
-			$meta['emailed'] = (bool) wp_mail( $to, $subject, implode( "\n", array_filter( $body, 'is_string' ) ), array( 'Reply-To: ' . $name . ' <' . $meta['email'] . '>' ) );
-			update_post_meta( $id, '_jodyn_enquiry', $meta );
-		}
-	);
+	$meta['emailed'] = (bool) wp_mail( $to, $subject, implode( "\n", array_filter( $body, 'is_string' ) ), array( 'Reply-To: ' . $name . ' <' . $meta['email'] . '>' ) );
+	update_post_meta( $id, '_jodyn_enquiry', $meta );
 
 	return rest_ensure_response( array( 'ok' => true ) );
 }
