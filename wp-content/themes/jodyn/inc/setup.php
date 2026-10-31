@@ -22,6 +22,7 @@
  * - The client's Google Analytics ID, if Customize → Analytics has none yet.
  * - The client's response time (48 to 72 hours), if Customize has none yet.
  * - WordPress's untouched "Sample Page" and "Hello world!" post, moved to the Trash.
+ * - The JoDyn admin colour scheme, for administrators still on WordPress's default.
  *
  * @package JoDyn
  */
@@ -30,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 11;
+const JODYN_SETUP_VERSION = 12;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -314,6 +315,17 @@ function jodyn_site_setup() {
 	// form all use it.
 	if ( (int) get_option( 'jodyn_setup_version' ) < 10 && '' === trim( (string) get_theme_mod( 'jodyn_contact_response', '' ) ) ) {
 		set_theme_mod( 'jodyn_contact_response', '48 to 72 hours' );
+	}
+
+	// 12: the JoDyn admin colour scheme (inc/admin-brand.php) for administrators still on
+	// WordPress's default (Default, or Modern on newer installs); Users → Profile → Admin Color
+	// Scheme switches back.
+	if ( (int) get_option( 'jodyn_setup_version' ) < 12 ) {
+		foreach ( get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) as $admin ) {
+			if ( in_array( get_user_option( 'admin_color', $admin ), array( false, '', 'fresh', 'modern' ), true ) ) {
+				update_user_meta( $admin, 'admin_color', 'jodyn' );
+			}
+		}
 	}
 
 	// 11: WordPress's own "Sample Page" and "Hello world!" post, to the Trash while nobody has

@@ -1,0 +1,25 @@
+/* Login page (inc/admin-brand.php): forest, the white JoDyn logo, a white card and a lime button. */
+@font-face { font-family: "Google Sans Flex"; src: url("../fonts/google-sans-flex-latin.woff2") format("woff2"); font-weight: 100 1000; font-display: swap; }
+
+body.login { min-height: 100vh; background: #233831 radial-gradient(circle at 85% 110%, rgba(229, 253, 74, .14), rgba(229, 253, 74, 0) 55%); font-family: "Google Sans Flex", system-ui, -apple-system, "Segoe UI", sans-serif; color: #000; }
+.login #login { width: min(380px, calc(100% - 32px)); padding: 8vh 0 32px; }
+.login h1 a { width: 180px; height: 127px; margin: 0 auto 28px; background-size: contain; background-position: center; }
+
+.login form { margin-top: 0; padding: 28px; border: 0; border-radius: 20px; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .55); }
+.login form .input, .login input[type="text"], .login input[type="password"], .login input[type="email"] { min-height: 46px; margin-top: 6px; padding: 6px 14px; border: 1px solid #dbe2de; border-radius: 12px; font-size: 16px; box-shadow: none; }
+.login form .input:focus, .login input:focus { border-color: #233831; box-shadow: 0 0 0 2px rgba(35, 56, 49, .25); outline: 0; }
+.login label { color: #4a5a54; font-size: 14px; font-weight: 500; }
+.login .button.wp-hide-pw { min-height: 46px; margin-top: 6px; color: #233831; }
+.login .button.wp-hide-pw:focus { border-color: #233831; box-shadow: none; }
+.login input[type="checkbox"]:checked::before { content: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cpath%20d%3D%27M14.83%204.89l1.34.94-5.81%208.38H9.02L5.78%209.67l1.34-1.25%202.57%202.4z%27%20fill%3D%27%23233831%27%2F%3E%3C%2Fsvg%3E"); }
+.login input[type="checkbox"]:focus { border-color: #233831; box-shadow: 0 0 0 1px #233831; }
+
+.login .button-primary, .wp-core-ui.login .button-primary { min-height: 44px; padding: 0 22px; border: 0; border-radius: 999px; background: #e5fd4a; color: #233831; font-weight: 600; text-shadow: none; box-shadow: none; transition: background-color .2s; }
+.login .button-primary:hover, .login .button-primary:focus { background: #d4ec2a; color: #233831; box-shadow: 0 0 0 3px #fff, 0 0 0 5px #e5fd4a; }
+
+.login #nav, .login #backtoblog { padding: 0; text-align: center; }
+.login #nav a, .login #backtoblog a, .login .privacy-policy-page-link a { color: #b9c8c1; }
+.login #nav a:hover, .login #backtoblog a:hover, .login .privacy-policy-page-link a:hover { color: #e5fd4a; }
+.login .message, .login .notice, .login .success, .login #login_error { border-left-color: #e5fd4a; border-radius: 12px; }
+.login #login_error { border-left-color: #b42318; }
+.login .language-switcher { display: none; }
