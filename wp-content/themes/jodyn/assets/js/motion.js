@@ -98,5 +98,9 @@
     ScrollTrigger.refresh();
   }
 
-  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start);
+  // Start after the fonts are in and the page has been drawn at least once, at rest: Chrome times
+  // the page's main content (Largest Contentful Paint) from the first time it is drawn, so a title
+  // hidden for its entrance before that first frame would never count.
+  function afterFirstFrame() { requestAnimationFrame(function () { requestAnimationFrame(start); }); }
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(afterFirstFrame);
 })();

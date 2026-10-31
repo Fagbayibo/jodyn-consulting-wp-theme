@@ -172,8 +172,17 @@
 .jd-hero__inner > .jd-eyebrow {
   animation-delay: 300ms;
 }
+/* The headline slides up without fading in: Chrome measures the page's main content (Largest
+   Contentful Paint) from the first time it is drawn, and text drawn invisible never counts. The
+   full-screen poster counts as background, so the headline is what search engines time. */
+@keyframes jd-rise-visible {
+  from {
+    transform: translateY(28px);
+  }
+}
 .jd-hero__title {
-  animation-delay: 420ms;
+  animation-name: jd-rise-visible;
+  animation-delay: 120ms;
 }
 .jd-hero__aside > :nth-child(1) {
   animation-delay: 680ms;

@@ -1,7 +1,8 @@
 /**
  * Home hero film.
  *
- * - Starts the film only after the page has loaded; the poster image is the first paint.
+ * - Starts the film only after the page has loaded and the browser is idle; the poster image is
+ *   the first paint.
  * - Phones get the mobile file when one is set (Customize → Home hero).
  * - Data Saver and reduced-motion visitors keep the still poster and download no video.
  * - Pauses while the hero is off screen; the pause button (WCAG 2.2.2) always wins.
@@ -72,6 +73,12 @@
   }
 
   function start() { ready = true; sync(); }
-  if (document.readyState === 'complete') start();
-  else window.addEventListener('load', start, { once: true });
+  // After load, once the browser is idle: the film is the heaviest file on the site, so the page,
+  // its fonts and images all finish first (the poster covers the wait).
+  function whenIdle() {
+    if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 3000 });
+    else setTimeout(start, 1000);
+  }
+  if (document.readyState === 'complete') whenIdle();
+  else window.addEventListener('load', whenIdle, { once: true });
 })();
