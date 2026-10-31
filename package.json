@@ -4,7 +4,8 @@
   "description": "JoDyn Advisory & Consulting WordPress theme. The theme itself lives in wp-content/themes/jodyn.",
   "scripts": {
     "zip": "node dev/make-zip.js",
-    "release": "node dev/release.js"
+    "release": "node dev/release.js",
+    "articles": "node dev/build-articles.js"
   },
   "devDependencies": {
     "archiver": "^7.0.1"

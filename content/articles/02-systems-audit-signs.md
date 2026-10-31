@@ -41,7 +41,7 @@ This is not a question of trust. Even careful people make mistakes, take leave o
 
 Many growing businesses run on a mix of accounting software, spreadsheets, a sales or inventory system and email, with staff re-typing information from one to another. Every manual transfer is a chance for error, and a reason reports take longer than they should.
 
-Watch for spreadsheets that have become critical to running the business, figures that differ depending on which system you ask, and staff who spend hours each week copying data between tools. A systems audit reviews how your systems fit together, how information flows between them and who has access to what.
+Watch for spreadsheets that have become critical to running the business, figures that differ depending on which system you ask, and staff who spend hours each week copying data between tools. A systems audit reviews how your systems fit together, how information flows between them and who has access to what. Where those systems hold personal data about customers or staff, controlling access is also a legal duty under Nigeria's data protection law, overseen by the [Nigeria Data Protection Commission](https://ndpc.gov.ng/).
 
 > **Related service**
 > ### Systems Audit

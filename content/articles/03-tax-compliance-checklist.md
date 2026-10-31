@@ -18,7 +18,7 @@ Most penalties are not the result of deliberate wrongdoing. They come from oblig
 
 Nigeria's tax laws were overhauled in 2025. The Nigeria Tax Act and the Nigeria Tax Administration Act, in force from January 2026, brought many older tax laws together, changed how some taxes are calculated and administered, and changed some thresholds and exemptions.
 
-If your tax processes were set up before 2026, they should be reviewed against the new rules. Rates, thresholds and deadlines are set by law and can change, so this checklist does not quote them: confirm the current ones with your tax adviser or the tax authority before you rely on them.
+If your tax processes were set up before 2026, they should be reviewed against the new rules. Rates, thresholds and deadlines are set by law and can change, so this checklist does not quote them: confirm the current ones with your tax adviser or the [Nigeria Revenue Service](https://www.nrs.gov.ng/) before you rely on them.
 
 ## 1. Registration and Identification
 
@@ -44,7 +44,7 @@ Keep them organised and easy to retrieve, and keep them for as long as the law r
 Most growing businesses have obligations every month. Assign each one to a named person, with a deadline in the calendar.
 
 - **VAT:** charge VAT correctly on taxable sales, keep a record of VAT paid on purchases, and file and pay your returns on time.
-- **PAYE:** deduct income tax from employees' pay and remit it to the right state tax authority by the deadline.
+- **PAYE:** deduct income tax from employees' pay and remit it to the tax authority of the state where they live (in Lagos, the [Lagos State Internal Revenue Service](https://lirs.gov.ng/)) by the deadline.
 - **Withholding tax:** deduct tax from qualifying payments to suppliers, remit it on time and give the supplier evidence of the deduction.
 - **Reconciliations:** check each month that what you filed matches your accounts, so differences are caught while they are small.
 

@@ -29,3 +29,7 @@ Left out: **"Our 2027 Training Calendar Is Now Available"**, until the calendar 
 - `## Heading` lines become the article's sections and its "On this page" list.
 - A quoted block starting **Related programme** or **Related service** becomes the green box with a button.
 - The final **Key takeaways** list becomes the takeaways box.
+
+## Making the import file
+
+`npm run articles` builds `dist/jodyn-articles.xml` from these files (dev/build-articles.js). Upload it on the live site under Tools → Import → WordPress (install the importer when asked), assign the posts to an existing user and tick "Download and import file attachments". Articles are dated 28 October back to 30 September, so articles already published on the site stay on top. Re-importing skips articles that already exist.
