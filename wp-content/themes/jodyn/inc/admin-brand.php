@@ -7,8 +7,8 @@
  * - "JoDyn" admin colour scheme (assets/css/admin-colors.css): forest menu and toolbar, lime
  *   highlights. Setup version 12 gives it to administrators still on WordPress's default; anyone
  *   can switch under Users → Profile → Admin Color Scheme.
- * - Dashboard: a "JoDyn website" box with shortcuts and the last 30 days of form entries, in
- *   place of WordPress's news and quick-draft boxes. The toolbar's WordPress logo menu is
+ * - Dashboard: a "JoDyn website" box with shortcuts and the last 30 days of form entries, then
+ *   Site Health, At a Glance and Activity only: other boxes, including any a plugin adds, go. The toolbar's WordPress logo menu is
  *   removed and the footer names the site.
  *
  * @package JoDyn
@@ -52,22 +52,46 @@ add_action(
 /* ---------- Dashboard ---------- */
 
 /**
- * WordPress's welcome banner and its news, events and quick-draft boxes make way for the JoDyn box.
+ * The dashboard keeps four boxes: the JoDyn box first, then Site Health, At a Glance and
+ * Activity. WordPress's welcome banner, news and quick-draft boxes go, and so does any box
+ * another plugin adds, now or later.
+ */
+function jodyn_dashboard_boxes() {
+	return array( 'jodyn_welcome', 'dashboard_site_health', 'dashboard_right_now', 'dashboard_activity' );
+}
+
+add_action(
+	'wp_dashboard_setup',
+	static function () {
+		remove_action( 'welcome_panel', 'wp_welcome_panel' ); // added by WordPress after the theme loads
+		wp_add_dashboard_widget( 'jodyn_welcome', __( 'JoDyn website', 'jodyn' ), 'jodyn_dashboard_widget' );
+	}
+);
+
+/**
+ * Runs after every plugin has added its boxes.
  */
 add_action(
 	'wp_dashboard_setup',
 	static function () {
-		remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
-		remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
-		remove_action( 'welcome_panel', 'wp_welcome_panel' ); // added by WordPress after the theme loads
-		wp_add_dashboard_widget( 'jodyn_welcome', __( 'JoDyn website', 'jodyn' ), 'jodyn_dashboard_widget' );
-
-		// The JoDyn box first, at the top of the first column.
 		global $wp_meta_boxes;
-		$normal = $wp_meta_boxes['dashboard']['normal']['core'];
-		$ours   = array( 'jodyn_welcome' => $normal['jodyn_welcome'] );
-		$wp_meta_boxes['dashboard']['normal']['core'] = array_merge( $ours, $normal ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-	}
+		$keep = jodyn_dashboard_boxes();
+		foreach ( (array) ( $wp_meta_boxes['dashboard'] ?? array() ) as $context => $priorities ) {
+			foreach ( (array) $priorities as $priority => $boxes ) {
+				foreach ( array_keys( (array) $boxes ) as $id ) {
+					if ( ! in_array( $id, $keep, true ) ) {
+						unset( $wp_meta_boxes['dashboard'][ $context ][ $priority ][ $id ] );
+					}
+				}
+			}
+		}
+		// The JoDyn box first, at the top of the first column.
+		$normal = $wp_meta_boxes['dashboard']['normal']['core'] ?? array();
+		if ( isset( $normal['jodyn_welcome'] ) ) {
+			$wp_meta_boxes['dashboard']['normal']['core'] = array( 'jodyn_welcome' => $normal['jodyn_welcome'] ) + $normal; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
+	},
+	PHP_INT_MAX
 );
 
 /**
