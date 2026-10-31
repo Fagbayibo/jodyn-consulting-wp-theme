@@ -19,6 +19,7 @@ require_once get_template_directory() . '/inc/calendar-download.php';
 require_once get_template_directory() . '/inc/registration.php';
 require_once get_template_directory() . '/inc/enquiries.php';
 require_once get_template_directory() . '/inc/insights.php';
+require_once get_template_directory() . '/inc/authors.php';
 require_once get_template_directory() . '/inc/contact.php';
 require_once get_template_directory() . '/inc/legal.php';
 require_once get_template_directory() . '/inc/consent.php';

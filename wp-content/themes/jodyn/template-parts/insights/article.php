@@ -8,7 +8,8 @@
  * stays in view: On this page (the article's H2s, the one being read
  * highlighted; hidden under two headings) and the share buttons (LinkedIn, WhatsApp, X, email,
  * copy link). Then the article (the related programme box and Key takeaways are Group block
- * styles the writer adds: inc/insights.php) and the author box from the author's profile.
+ * styles the writer adds: inc/insights.php) and an author box for each author (Posts → Authors,
+ * or the publishing user's profile: inc/authors.php).
  * Copy: content/pages/insights.md, article template (approved).
  *
  * @package JoDyn
@@ -16,12 +17,8 @@
 
 list( $jodyn_html, $jodyn_heads ) = jodyn_article_content();
 $jodyn_cat    = jodyn_post_category( get_post() );
-$jodyn_author = (int) get_the_author_meta( 'ID' );
-$jodyn_name   = get_the_author();
-$jodyn_job    = get_the_author_meta( 'jodyn_job_title' );
-$jodyn_bio    = get_the_author_meta( 'description' );
-preg_match_all( '/(?<!\p{L})\p{L}/u', $jodyn_name, $jodyn_m ); // first letter of each word: initials for the avatar
-$jodyn_init   = mb_strtoupper( implode( '', array_slice( $jodyn_m[0], 0, 2 ) ) );
+$jodyn_authors = jodyn_article_authors(); // Posts → Authors, or the user who published it (inc/authors.php)
+$jodyn_names   = wp_sprintf( '%l', wp_list_pluck( $jodyn_authors, 'name' ) ); // "Ada Obi and Tunde Bello"
 $jodyn_share  = jodyn_share_links();
 $jodyn_photo  = jodyn_article_banner_id();
 $jodyn_icons  = array(
@@ -66,12 +63,12 @@ $jodyn_chev   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 			<?php endif; ?>
 			<h1 class="jd-art__title" id="jd-art-title" data-jd-lines><?php the_title(); ?></h1>
 			<div class="jd-art__meta" data-jd-rise="0.15">
-				<?php if ( $jodyn_name ) : ?>
-					<span class="jd-art__avatar" aria-hidden="true"><?php echo esc_html( $jodyn_init ); ?></span>
+				<?php if ( $jodyn_authors ) : ?>
+					<span class="jd-art__avatars"><?php echo implode( '', array_map( 'jodyn_author_avatar', $jodyn_authors ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				<?php endif; ?>
 				<span>
-					<?php if ( $jodyn_name ) : ?>
-						<b><?php echo esc_html( $jodyn_name ); ?></b>
+					<?php if ( $jodyn_authors ) : ?>
+						<b><?php echo esc_html( $jodyn_names ); ?></b>
 					<?php endif; ?>
 					<small>
 						<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date( 'j F Y' ) ); ?></time>
@@ -124,21 +121,21 @@ $jodyn_chev   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 				<?php echo $jodyn_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the_content output. ?>
 			</div>
 
-			<?php if ( $jodyn_name ) : ?>
+			<?php foreach ( $jodyn_authors as $jodyn_author ) : ?>
 			<aside class="jd-art__author" aria-label="<?php esc_attr_e( 'About the author', 'jodyn' ); ?>">
-				<span class="jd-art__avatar is-lg" aria-hidden="true"><?php echo esc_html( $jodyn_init ); ?></span>
+				<?php echo jodyn_author_avatar( $jodyn_author, 'is-lg' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<div>
 					<p class="jd-art__label"><?php esc_html_e( 'Written by', 'jodyn' ); ?></p>
-					<p class="jd-art__aname"><a href="<?php echo esc_url( get_author_posts_url( $jodyn_author ) ); ?>"><?php echo esc_html( $jodyn_name ); ?></a></p>
-					<?php if ( $jodyn_job ) : ?>
-						<p class="jd-art__role"><?php echo esc_html( $jodyn_job ); ?></p>
+					<p class="jd-art__aname"><?php echo esc_html( $jodyn_author['name'] ); ?></p>
+					<?php if ( $jodyn_author['job'] ) : ?>
+						<p class="jd-art__role"><?php echo esc_html( $jodyn_author['job'] ); ?></p>
 					<?php endif; ?>
-					<?php if ( $jodyn_bio ) : ?>
-						<p class="jd-art__bio"><?php echo esc_html( $jodyn_bio ); ?></p>
+					<?php if ( $jodyn_author['bio'] ) : ?>
+						<p class="jd-art__bio"><?php echo esc_html( $jodyn_author['bio'] ); ?></p>
 					<?php endif; ?>
 				</div>
 			</aside>
-			<?php endif; ?>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </article>

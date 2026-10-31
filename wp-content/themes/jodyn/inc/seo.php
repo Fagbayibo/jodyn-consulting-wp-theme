@@ -434,9 +434,18 @@ function jodyn_seo_schema() {
 				'mainEntityOfPage' => get_permalink( $post ),
 				'datePublished'    => get_the_date( 'c', $post ),
 				'dateModified'     => get_the_modified_date( 'c', $post ),
-				'author'           => array(
-					'@type' => 'Person',
-					'name'  => get_the_author_meta( 'display_name', $post->post_author ),
+				'author'           => array_map(
+					static function ( $author ) {
+						return array_filter(
+							array(
+								'@type'    => 'Person',
+								'name'     => $author['name'],
+								'jobTitle' => $author['job'],
+								'image'    => $author['photo'] ? wp_get_attachment_image_url( $author['photo'], 'medium' ) : '',
+							)
+						);
+					},
+					jodyn_article_authors( $post )
 				),
 				'publisher'        => $org,
 				'inLanguage'       => get_bloginfo( 'language' ),
