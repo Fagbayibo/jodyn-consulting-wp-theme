@@ -170,10 +170,11 @@ function jodyn_email_html( $args ) {
 		);
 	}
 
-	// Footer: the logo and the contact details from Customize → Contact & social.
+	// Footer: the JoDyn mark (the full logo is in the header) and the contact details from
+	// Customize → Contact & social.
 	$site    = wp_parse_url( home_url(), PHP_URL_HOST );
 	$details = array_filter( array( $c['phone'], $c['email'] ) );
-	$footer  = sprintf( '<img src="%1$s" width="84" alt="JoDyn Advisory and Consulting" style="display:inline-block;width:84px;height:auto;border:0;margin-bottom:14px">', esc_url( get_template_directory_uri() . '/assets/img/logo-white.png' ) );
+	$footer  = sprintf( '<img src="%1$s" width="30" alt="JoDyn" style="display:inline-block;width:30px;height:auto;border:0;margin-bottom:14px">', esc_url( get_template_directory_uri() . '/assets/img/mark-reverse.png' ) );
 	if ( $c['address'] || $details ) {
 		$footer .= jodyn_email_p( trim( esc_html( preg_replace( '/\s*\n\s*/', ', ', $c['address'] ) ) . ( $c['address'] && $details ? '<br>' : '' ) . esc_html( implode( ' · ', $details ) ) ), array( 'size' => 13, 'color' => $s['onDark'], 'margin' => '0 0 10px' ) );
 	}
@@ -188,7 +189,7 @@ function jodyn_email_html( $args ) {
 		. ( $a['preheader'] ? '<div style="display:none;max-height:0;overflow:hidden;opacity:0">' . esc_html( $a['preheader'] ) . '</div>' : '' )
 		. '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:' . $s['canvas'] . '"><tr><td align="center" style="padding:32px 12px">'
 		. '<table role="presentation" class="jd-w" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#ffffff;border-radius:20px;overflow:hidden">'
-		. sprintf( '<tr><td style="background:%1$s;padding:32px 40px;text-align:center"><img src="%2$s" width="120" alt="JoDyn Advisory and Consulting" style="width:120px;height:auto;border:0"></td></tr>', $s['forest'], esc_url( get_template_directory_uri() . '/assets/img/logo-white.png' ) )
+		. sprintf( '<tr><td style="background:%1$s;padding:32px 40px;text-align:center"><img src="%2$s" width="180" alt="JoDyn Advisory and Consulting" style="width:180px;height:auto;border:0"></td></tr>', $s['forest'], esc_url( get_template_directory_uri() . '/assets/img/logo-horizontal-reverse.png' ) )
 		. '<tr><td class="jd-px" style="padding:36px 40px">' . $body . '</td></tr>'
 		. '<tr><td class="jd-px" style="background:' . $s['forest'] . ';padding:28px 40px;text-align:center">' . $footer . '</td></tr>'
 		. '</table></td></tr></table></body></html>';

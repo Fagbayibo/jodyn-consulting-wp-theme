@@ -39,11 +39,8 @@ $jodyn_menu    = array(
     <div class="jd-header__bar">
       <a class="jd-logo" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
         <span class="screen-reader-text"><?php bloginfo('name'); ?></span>
-        <img class="jd-logo__white" src="<?php echo esc_url($jodyn_img . '/logo-white.svg'); ?>" alt="" width="687" height="483">
-        <picture class="jd-logo__color">
-          <source type="image/webp" srcset="<?php echo esc_url($jodyn_img . '/logo-color.webp'); ?>">
-          <img src="<?php echo esc_url($jodyn_img . '/logo-color.png'); ?>" alt="" width="480" height="333">
-        </picture>
+        <img class="jd-logo__white" src="<?php echo esc_url($jodyn_img . '/logo-horizontal-reverse.svg'); ?>" alt="" width="339" height="124">
+        <img class="jd-logo__color" src="<?php echo esc_url($jodyn_img . '/logo-horizontal.svg'); ?>" alt="" width="339" height="124">
       </a>
 
       <nav class="jd-nav" aria-label="<?php esc_attr_e('Primary', 'jodyn'); ?>">

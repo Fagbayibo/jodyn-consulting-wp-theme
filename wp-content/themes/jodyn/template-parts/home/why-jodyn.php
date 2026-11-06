@@ -47,7 +47,7 @@ $jodyn_side = static function ( $reasons ) {
 			<div class="jd-why__core" aria-hidden="true">
 				<span class="jd-why__ring"></span>
 				<span class="jd-why__ring"></span>
-				<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-white.svg' ); ?>" alt="" width="200" height="139" loading="lazy" decoding="async">
+				<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-stacked-reverse.svg' ); ?>" alt="" width="246" height="243" loading="lazy" decoding="async">
 			</div>
 			<ul class="jd-why__side jd-why__side--end"><?php $jodyn_side( array_slice( $jodyn_reasons, 3 ) ); ?></ul>
 		</div>

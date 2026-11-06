@@ -281,6 +281,41 @@ function jodyn_preload_font() {
 add_action( 'wp_head', 'jodyn_preload_font', 1 );
 
 /**
+ * The icons from the client's logo pack (assets/img/icons) for browser tabs, phone home screens
+ * and Google's results, while no Site Icon is chosen under Appearance → Customize → Site
+ * Identity; one chosen there takes over. Setup version 13 cleared the old Site Icon.
+ */
+function jodyn_icons() {
+	if ( has_site_icon() ) {
+		return;
+	}
+	$dir = get_template_directory_uri() . '/assets/img/icons/';
+	printf( '<link rel="icon" href="%s" sizes="32x32">' . "\n", esc_url( $dir . 'favicon.ico' ) );
+	printf( '<link rel="icon" href="%s" type="image/svg+xml">' . "\n", esc_url( $dir . 'favicon.svg' ) );
+	printf( '<link rel="icon" href="%s" sizes="48x48" type="image/png">' . "\n", esc_url( $dir . 'favicon-48x48.png' ) );
+	printf( '<link rel="icon" href="%s" sizes="192x192" type="image/png">' . "\n", esc_url( $dir . 'favicon-192x192.png' ) );
+	printf( '<link rel="apple-touch-icon" href="%s">' . "\n", esc_url( $dir . 'apple-touch-icon.png' ) );
+}
+add_action( 'wp_head', 'jodyn_icons', 99 );
+add_action( 'admin_head', 'jodyn_icons' );
+add_action( 'login_head', 'jodyn_icons' );
+
+/**
+ * /favicon.ico, which browsers and Google ask for directly: the JoDyn icon instead of WordPress's
+ * logo while no Site Icon is chosen. (A favicon.ico file in the site's root folder wins over this.)
+ */
+add_action(
+	'do_favicon',
+	static function () {
+		if ( ! has_site_icon() ) {
+			wp_safe_redirect( get_template_directory_uri() . '/assets/img/icons/favicon.ico' );
+			exit;
+		}
+	},
+	9
+);
+
+/**
  * Mark pages whose header floats over a full-screen hero.
  *
  * @param string[] $classes Body classes.

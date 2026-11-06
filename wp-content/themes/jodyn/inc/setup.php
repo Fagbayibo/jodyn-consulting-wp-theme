@@ -4,9 +4,9 @@
  *
  * Runs when the theme is activated, and once more after an update that raises
  * JODYN_SETUP_VERSION (on the next admin page load). It only adds what is missing; it never
- * edits or deletes existing content, with two exceptions: version 5 swaps the untouched Careers
- * menu item and empty page it created earlier for FAQs, and version 11 moves WordPress's untouched
- * sample page and post to the Trash.
+ * edits or deletes existing content, with three exceptions: version 5 swaps the untouched Careers
+ * menu item and empty page it created earlier for FAQs, version 11 moves WordPress's untouched
+ * sample page and post to the Trash, and version 13 clears the Site Icon made from the old logo.
  * - Pretty permalinks (/%postname%/) if the site still uses plain ?p=123 links: every link in
  *   the theme (/about-us/, /training/programmes/) depends on them.
  * - The pages in jodyn_site_pages() that don't exist yet. The theme's page-<slug>.php templates
@@ -23,6 +23,7 @@
  * - The client's response time (48 to 72 hours), if Customize has none yet.
  * - WordPress's untouched "Sample Page" and "Hello world!" post, moved to the Trash.
  * - The JoDyn admin colour scheme, for administrators still on WordPress's default.
+ * - The new logo's icons (functions.php: jodyn_icons) in place of the old Site Icon.
  *
  * @package JoDyn
  */
@@ -31,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const JODYN_SETUP_VERSION = 12;
+const JODYN_SETUP_VERSION = 13;
 
 /**
  * The header menu: top-level items, and the dropdowns under Services and Training.
@@ -326,6 +327,13 @@ function jodyn_site_setup() {
 				update_user_meta( $admin, 'admin_color', 'jodyn' );
 			}
 		}
+	}
+
+	// 13: the client's new logo pack (2026-11-06) replaces every logo, so the Site Icon made from
+	// the old one is cleared and the theme's icons from the pack show instead (jodyn_icons). The
+	// old image stays in the Media Library; a Site Icon chosen later takes over again.
+	if ( (int) get_option( 'jodyn_setup_version' ) < 13 && get_option( 'site_icon' ) ) {
+		delete_option( 'site_icon' );
 	}
 
 	// 11: WordPress's own "Sample Page" and "Hello world!" post, to the Trash while nobody has

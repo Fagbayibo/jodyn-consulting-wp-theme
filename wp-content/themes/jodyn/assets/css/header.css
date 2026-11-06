@@ -11,8 +11,8 @@
   --bar-h: var(--header-height);
   --pill-h: 72px;
   --pill-gap: 16px;
-  --logo-h: 76px;
-  --logo-h-condensed: 52px;
+  --logo-h: 64px;
+  --logo-h-condensed: 50px;
   position: fixed;
   inset: 0 0 auto 0;
   z-index: var(--z-header);
@@ -89,17 +89,14 @@
   display: block;
   flex: none;
   height: var(--logo-h);
-  aspect-ratio: 1.44;
+  aspect-ratio: 339 / 124;
   transition: height var(--dur-slow) var(--ease-out);
 }
-.jd-logo img,
-.jd-logo picture {
+.jd-logo img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-}
-.jd-logo img {
   object-fit: contain;
   object-position: left center;
 }
@@ -605,7 +602,7 @@
   .jd-header {
     --pill-h: 64px;
     --pill-gap: 12px;
-    --logo-h: 60px;
+    --logo-h: 52px;
     --logo-h-condensed: 44px;
   }
   .jd-nav,

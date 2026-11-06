@@ -9,3 +9,8 @@
 node_modules/
 .DS_Store
 Thumbs.db
+# Client handover guide and its screenshots (client-specific; kept locally)
+/handover/
+
+# The client's logo pack as sent (the theme uses the files it needs from assets/img)
+/JoDyn_Logo_Pack.zip

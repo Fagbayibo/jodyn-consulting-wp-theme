@@ -73,7 +73,7 @@ $jodyn_cta = apply_filters(
 		<div class="jd-footer__cols">
 			<div class="jd-footer__brand" data-jd-rise>
 				<a class="jd-footer__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-					<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-white.svg' ); ?>" alt="<?php bloginfo( 'name' ); ?>" width="687" height="483" loading="lazy">
+					<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-horizontal-reverse.svg' ); ?>" alt="<?php bloginfo( 'name' ); ?>" width="339" height="124" loading="lazy">
 				</a>
 				<p>JoDyn Advisory and Consulting helps organisations across Nigeria grow through expert advisory, systems audit, tax consultancy and practical training in strategy, leadership and workforce development.</p>
 			</div>

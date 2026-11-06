@@ -24,7 +24,7 @@ add_action(
 	'login_enqueue_scripts',
 	static function () {
 		wp_enqueue_style( 'jodyn-login', get_template_directory_uri() . '/assets/css/login.css', array(), jodyn_asset_version( 'assets/css/login.css' ) );
-		wp_add_inline_style( 'jodyn-login', '.login h1 a{background-image:url(' . esc_url( get_template_directory_uri() . '/assets/img/logo-white.svg' ) . ')}' );
+		wp_add_inline_style( 'jodyn-login', '.login h1 a{background-image:url(' . esc_url( get_template_directory_uri() . '/assets/img/logo-horizontal-reverse.svg' ) . ')}' );
 	}
 );
 add_filter( 'login_headerurl', static fn() => home_url( '/' ) );

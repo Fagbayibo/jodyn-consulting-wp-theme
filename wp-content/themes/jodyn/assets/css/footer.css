@@ -42,7 +42,7 @@
 /* ---- Columns ---- */
 .jd-footer__cols { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-7); padding-block: var(--space-9) var(--space-8); }
 .jd-footer__logo { display: inline-block; margin-bottom: var(--space-5); }
-.jd-footer__logo img { display: block; width: 128px; height: auto; }
+.jd-footer__logo img { display: block; width: 196px; height: auto; }
 .jd-footer__brand p { margin: 0; max-width: 40ch; font-size: var(--fs-small); line-height: 1.6; color: var(--on-forest-muted); }
 .jd-footer__h { margin: 0 0 var(--space-4); font-size: var(--fs-caption); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
 

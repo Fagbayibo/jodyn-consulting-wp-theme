@@ -153,7 +153,7 @@
 .jd-cal-dl__sheet--back { rotate: -8deg; translate: -18px 10px; background: var(--forest); }
 .jd-cal-dl__sheet--mid { rotate: -3.5deg; translate: -8px 4px; background: var(--lime); }
 .jd-cal-dl__sheet-top { display: flex; align-items: center; justify-content: space-between; }
-.jd-cal-dl__sheet-top img { display: block; width: auto; height: 40px; }
+.jd-cal-dl__sheet-top img { display: block; width: auto; height: 44px; }
 .jd-cal-dl__sheet-top span { padding: 3px 8px; border-radius: 6px; background: var(--forest); color: var(--lime); font-size: var(--fs-caption); font-weight: 700; letter-spacing: .08em; }
 .jd-cal-dl__sheet-title { padding-bottom: var(--space-3); border-bottom: 2px solid var(--forest); font-size: var(--fs-h3); font-weight: 600; color: var(--forest); }
 .jd-cal-dl__rows { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }

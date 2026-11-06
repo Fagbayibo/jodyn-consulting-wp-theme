@@ -24,10 +24,7 @@ $jodyn_img  = get_template_directory_uri() . '/assets/img';
 			<div class="jd-cal-dl__sheet jd-cal-dl__sheet--mid"></div>
 			<div class="jd-cal-dl__sheet">
 				<div class="jd-cal-dl__sheet-top">
-					<picture>
-						<source type="image/webp" srcset="<?php echo esc_url( $jodyn_img . '/logo-color.webp' ); ?>">
-						<img src="<?php echo esc_url( $jodyn_img . '/logo-color.png' ); ?>" alt="" width="480" height="333" loading="lazy">
-					</picture>
+					<img src="<?php echo esc_url( $jodyn_img . '/logo-horizontal.svg' ); ?>" alt="" width="339" height="124" loading="lazy">
 					<span>PDF</span>
 				</div>
 				<p class="jd-cal-dl__sheet-title">Training Calendar</p>

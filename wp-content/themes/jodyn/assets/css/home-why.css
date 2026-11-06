@@ -29,7 +29,7 @@
 .jd-why__item p { margin: 0; font-size: var(--fs-small); line-height: 1.6; color: var(--ink-muted); }
 
 .jd-why__core { position: relative; z-index: 1; display: grid; place-items: center; aspect-ratio: 1; border-radius: 50%; background: var(--forest); box-shadow: 0 30px 60px -30px rgba(35, 56, 49, .6); }
-.jd-why__core img { width: 52%; height: auto; }
+.jd-why__core img { width: 50%; height: auto; }
 .jd-why__ring { position: absolute; inset: -14px; border: 1.5px solid var(--forest); border-radius: 50%; opacity: .25; }
 .jd-why__ring + .jd-why__ring { inset: -32px; opacity: .12; }
 

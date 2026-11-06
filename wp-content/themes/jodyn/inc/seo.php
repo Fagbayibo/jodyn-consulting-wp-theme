@@ -265,9 +265,9 @@ function jodyn_seo_organization() {
 		'url'        => $home,
 		'logo'       => array(
 			'@type'  => 'ImageObject',
-			'url'    => get_template_directory_uri() . '/assets/img/logo-color.png',
-			'width'  => 480,
-			'height' => 333,
+			'url'    => get_template_directory_uri() . '/assets/img/logo-stacked.png',
+			'width'  => 600,
+			'height' => 593,
 		),
 		'image'       => get_template_directory_uri() . '/assets/img/share.jpg',
 		'description' => jodyn_seo_pages()[''][1],
