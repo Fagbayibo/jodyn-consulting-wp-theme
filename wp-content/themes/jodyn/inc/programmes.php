@@ -134,39 +134,39 @@ function jodyn_programme_meta_box_html( $post ) {
 	$hours  = get_post_meta( $post->ID, '_jodyn_time', true );
 	?>
 	<p><label for="jodyn-area"><strong><?php esc_html_e( 'Area', 'jodyn' ); ?></strong></label><br>
-		<select id="jodyn-area" name="jodyn_area" style="width:100%">
+		<select id="jodyn-area" name="jodyn_area" style="width:100%;max-width:100%;box-sizing:border-box">
 			<?php foreach ( jodyn_programme_areas() as $value => $label ) : ?>
 				<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $area, $value ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
 		</select></p>
 	<p><label for="jodyn-start"><strong><?php esc_html_e( 'Start date', 'jodyn' ); ?></strong></label><br>
-		<input type="date" id="jodyn-start" name="jodyn_start" value="<?php echo esc_attr( $start ); ?>" style="width:100%">
+		<input type="date" id="jodyn-start" name="jodyn_start" value="<?php echo esc_attr( $start ); ?>" style="width:100%;max-width:100%;box-sizing:border-box">
 		<span class="description"><?php esc_html_e( 'Leave empty until the next run is scheduled. The format, venue, fee and registration link apply to that run.', 'jodyn' ); ?></span></p>
 	<p><label for="jodyn-end"><strong><?php esc_html_e( 'End date (optional)', 'jodyn' ); ?></strong></label><br>
-		<input type="date" id="jodyn-end" name="jodyn_end" value="<?php echo esc_attr( $end ); ?>" style="width:100%">
+		<input type="date" id="jodyn-end" name="jodyn_end" value="<?php echo esc_attr( $end ); ?>" style="width:100%;max-width:100%;box-sizing:border-box">
 		<span class="description"><?php esc_html_e( 'For runs longer than a day. Leave empty for a one-day programme.', 'jodyn' ); ?></span></p>
 	<p><label for="jodyn-time"><strong><?php esc_html_e( 'Time (optional)', 'jodyn' ); ?></strong></label><br>
-		<input type="text" id="jodyn-time" name="jodyn_time" value="<?php echo esc_attr( $hours ); ?>" placeholder="<?php esc_attr_e( 'e.g. 9:00am – 4:00pm', 'jodyn' ); ?>" style="width:100%">
+		<input type="text" id="jodyn-time" name="jodyn_time" value="<?php echo esc_attr( $hours ); ?>" placeholder="<?php esc_attr_e( 'e.g. 9:00am – 4:00pm', 'jodyn' ); ?>" style="width:100%;max-width:100%;box-sizing:border-box">
 		<span class="description"><?php esc_html_e( 'Shown in the registration confirmation email.', 'jodyn' ); ?></span></p>
 	<p><label for="jodyn-seats"><strong><?php esc_html_e( 'Seats', 'jodyn' ); ?></strong></label><br>
-		<select id="jodyn-seats" name="jodyn_seats" style="width:100%">
+		<select id="jodyn-seats" name="jodyn_seats" style="width:100%;max-width:100%;box-sizing:border-box">
 			<?php foreach ( jodyn_programme_seats() as $value => $label ) : ?>
 				<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $seats ? $seats : 'open', $value ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
 		</select>
 		<span class="description"><?php esc_html_e( '"Fully booked" turns off Register Now on the Training calendar.', 'jodyn' ); ?></span></p>
 	<p><label for="jodyn-format"><strong><?php esc_html_e( 'Format', 'jodyn' ); ?></strong></label><br>
-		<select id="jodyn-format" name="jodyn_format" style="width:100%">
+		<select id="jodyn-format" name="jodyn_format" style="width:100%;max-width:100%;box-sizing:border-box">
 			<?php foreach ( jodyn_programme_formats() as $value => $label ) : ?>
 				<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $format, $value ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
 		</select></p>
 	<p><label for="jodyn-venue"><strong><?php esc_html_e( 'Venue (optional)', 'jodyn' ); ?></strong></label><br>
-		<input type="text" id="jodyn-venue" name="jodyn_venue" value="<?php echo esc_attr( $venue ); ?>" placeholder="<?php esc_attr_e( 'e.g. Victoria Island, Lagos', 'jodyn' ); ?>" style="width:100%"></p>
+		<input type="text" id="jodyn-venue" name="jodyn_venue" value="<?php echo esc_attr( $venue ); ?>" placeholder="<?php esc_attr_e( 'e.g. Victoria Island, Lagos', 'jodyn' ); ?>" style="width:100%;max-width:100%;box-sizing:border-box"></p>
 	<p><label for="jodyn-fee"><strong><?php esc_html_e( 'Fee', 'jodyn' ); ?></strong></label><br>
-		<input type="text" id="jodyn-fee" name="jodyn_fee" value="<?php echo esc_attr( $fee ); ?>" placeholder="<?php esc_attr_e( 'e.g. ₦250,000', 'jodyn' ); ?>" style="width:100%"></p>
+		<input type="text" id="jodyn-fee" name="jodyn_fee" value="<?php echo esc_attr( $fee ); ?>" placeholder="<?php esc_attr_e( 'e.g. ₦250,000', 'jodyn' ); ?>" style="width:100%;max-width:100%;box-sizing:border-box"></p>
 	<p><label for="jodyn-register"><strong><?php esc_html_e( 'Registration link (optional)', 'jodyn' ); ?></strong></label><br>
-		<input type="url" id="jodyn-register" name="jodyn_register_url" value="<?php echo esc_attr( $url ); ?>" placeholder="https://" style="width:100%">
+		<input type="url" id="jodyn-register" name="jodyn_register_url" value="<?php echo esc_attr( $url ); ?>" placeholder="https://" style="width:100%;max-width:100%;box-sizing:border-box">
 		<span class="description"><?php esc_html_e( 'Leave empty to use the site’s own registration form (Register page), with this programme already selected.', 'jodyn' ); ?></span></p>
 	<p class="description"><?php esc_html_e( 'Use the Excerpt for the short summary shown on the home page, and the Programme photo for its image.', 'jodyn' ); ?></p>
 	<?php
